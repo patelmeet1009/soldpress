@@ -8,11 +8,11 @@ Stable tag: 0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-SoldPress is a WordPress plugin to enable CREA’s members to easily disseminate MLS® listing content on WordPress Sites.
+SoldPress is a WordPress plugin to enable CREA's members to easily disseminate MLS listing content on WordPress Sites.
 
 == Description ==
 
-[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable CREA’s members to easily disseminate MLS® listing content on WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA’s trademarks correctly.
+[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable CREA's members to easily disseminate MLS listing content on WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA’s trademarks correctly.
 
 SoldPress is a designed to connect directly to CREA's RETS API without the need to integrate with Third Party Vendors.
 
@@ -32,7 +32,7 @@ There are two way to specify a listing key.
 
 	`[soldpress-listing listingkey="11937198" template="template.html"]`
 
-*Oprion B : Specify Listing Key in QueryString
+*Option B : Specify Listing Key in QueryString
 
 	`?ListingKey=11937198`
 
