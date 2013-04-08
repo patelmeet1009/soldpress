@@ -1,0 +1,82 @@
+=== SoldPress ===
+Contributors: Sanskript
+Donate link: http://sanskript.com/
+Tags: crea, rets, idx
+Requires at least: 3.0.1
+Tested up to: 3.5.1
+Stable tag: 0.9
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+
+SoldPress is a WordPress plugin to enable CREA’s members to easily disseminate MLS® listing content on WordPress Sites.
+
+== Description ==
+
+[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable CREA’s members to easily disseminate MLS® listing content on WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA’s trademarks correctly.
+
+SoldPress is a designed to connect directly to CREA's RETS API without the need to integrate with Third Party Vendors.
+
+It is highly *recommend* that you use a Cache plugin to minimize API calls.
+
+= How to Use =
+
+SoldPress uses Shortcode syntax to intergrate listing content on your WordPress site.
+
+`[soldpress-listing listingkey="11937198" template="template.html"]`
+
+**Listing Key**
+
+There are two way to specify a listing key.
+
+*Option A : Specifiy Listing Key in the Shortcode.
+
+	`[soldpress-listing listingkey="11937198" template="template.html"]`
+
+*Oprion B : Specify Listing Key in QueryString
+
+	`?ListingKey=11937198`
+
+= Contact Us =
+
+* Support (http://support.sanskript.com)
+* Facebook (http://facebook.com/sanskript)
+* Twitter (http://twitter.com/sanskript)
+
+== Installation ==
+
+1. Install SoldPress either via the WordPress.org plugin directory, or by uploading the files to your server.
+1. Click the Settings -> Soldpress. You need to add your authentication credentials.
+1. Click the "Test Connection" to verify the Connection.
+
+= Sample Data Feed Default Credentials =
+
+To help DDFTM clients to prepare their systems for receiving live data, a service is available which provides a wide variety of sample data. A small set of property, office and agent is available from this service, but it will be updated regularly to provide a true representation of the data flows clients can expect when receiving live data. 
+
+There is no need to register before accessing the sample RETS server, since access is provided through a shared, public set of credentials
+
+* Username 		: CXLHfDVrziCfvwgCuL8nUahC
+* Password		: mFqMsCSPdnb5WO1gpEEtDCHH
+* Url			: http://sample.data.crea.ca/Login.svc/Login
+* Template Location 	: wp-content/plugins/soldpress/template/
+
+
+== Frequently Asked Questions ==
+
+= Where do I get authentication credentials? =
+
+An email containing user name and password is sent to the email address submitted as Technical Contact when data feeds are registered in http://tools.realtorlink.ca.  The owner of the data feed can view credentials when editing the feed on the Data Feeds page..
+
+== Screenshots ==
+
+1. Sample - Basic Template File.
+2. Sample - No Template File
+
+== Changelog ==
+
+= 0.9 RC =
+* Release Candiate.
+
+== Upgrade Notice ==
+
+= 0.9 RC =
+* Release Candiate
