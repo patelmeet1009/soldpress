@@ -12,7 +12,7 @@ SoldPress is a WordPress plugin to enable CREA’s members to easily disseminate M
 
 == Description ==
 
-SoldPress is a WordPress plugin to enable CREA’s members to easily disseminate MLS® listing content on WordPress Sites.
+[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable CREA’s members to easily disseminate MLS® listing content on WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA’s trademarks correctly.
 
 SoldPress is a designed to connect directly to CREA's RETS API without the need to integrate with Third Party Vendors.
 
@@ -46,13 +46,19 @@ There are two way to specify a listing key.
 
 1. Install SoldPress either via the WordPress.org plugin directory, or by uploading the files to your server.
 1. Click the Settings -> Soldpress. You need to add your authentication credentials.
+1. Click the "Test Connection" to verify the Connection.
 
-* Username 		: Your Username
-* Password		: Your Password
+= Sample Data Feed Default Credentials =
+
+To help DDFTM clients to prepare their systems for receiving live data, a service is available which provides a wide variety of sample data. A small set of property, office and agent is available from this service, but it will be updated regularly to provide a true representation of the data flows clients can expect when receiving live data. 
+
+There is no need to register before accessing the sample RETS server, since access is provided through a shared, public set of credentials
+
+* Username 		: CXLHfDVrziCfvwgCuL8nUahC
+* Password		: mFqMsCSPdnb5WO1gpEEtDCHH
 * Url			: http://sample.data.crea.ca/Login.svc/Login
 * Template Location 	: wp-content/plugins/soldpress/template/
 
-1. Click the "Test Connection" to verify the Connection.
 
 == Frequently Asked Questions ==
 
@@ -62,13 +68,8 @@ An email containing user name and password is sent to the email address submitte
 
 == Screenshots ==
 
-Sample - Basic Template File.
-
-`/assets/template.png`
-
-Sample - No Template File
-
-`/assets/notemplate.png`
+1. Sample - Basic Template File.
+2. Sample - No Template File
 
 == Changelog ==
 
