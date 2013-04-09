@@ -16,9 +16,9 @@ SoldPress is a WordPress plugin to enable CREA's members to easily disseminate M
 
 SoldPress is designed to connect directly to CREA's API without the need to integrate with Third Party Vendors. The Plugin is **free** to use and comes with a basic templating engine.
 
-It is highly *recommend* that you use a Cache plugin to minimize API calls.
+It is highly *recommended* that you use a persistent cache plugin to minimize API calls.
 
-= How to Use =
+== Configuration Examples ==
 
 SoldPress uses Shortcode syntax to intergrate listing content on your WordPress site.
 
@@ -42,7 +42,7 @@ There are two methods to specify a Listing Key.
 
 **Templates**
 
-SoldPress uses a basic template enginge to render html output. A SoldPress template is simply a text file contains variables, which get replaced with values when the template is evaluated. The template engine is based soley on heredoc syntax.
+SoldPress uses a basic template enginge to render html output. A SoldPress template is a text file that contains variables, which get replaced with values when the template is evaluated. The template engine is based on heredoc syntax.
 
 The general syntax is `${$rets['ListPrice']}`. 
 
@@ -70,7 +70,7 @@ The default template location is wp-content/plugins/soldpress/template/
 
 = Sample Data Feed Default Credentials =
 
-To help DDFTM clients to prepare their systems for receiving live data, a service is available which provides a wide variety of sample data. A small set of property, office and agent is available from this service, but it will be updated regularly to provide a true representation of the data flows clients can expect when receiving live data. 
+A sample service is available which provides a wide variety of sample data. A small set of property, office and agent is available from this service.
 
 
 * Username 		: CXLHfDVrziCfvwgCuL8nUahC
@@ -89,6 +89,7 @@ An email containing user name and password is sent to the email address submitte
 
 1. Sample - Basic Template File.
 2. Sample - No Template File
+
 
 == Changelog ==
 
