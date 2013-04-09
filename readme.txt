@@ -1,7 +1,7 @@
 === SoldPress ===
 Contributors: Sanskript
 Donate link: http://sanskript.com/
-Tags: crea, rets, idx
+Tags: crea, rets, idx,ddf
 Requires at least: 3.0.1
 Tested up to: 3.5.1
 Stable tag: 0.9
@@ -12,9 +12,9 @@ SoldPress is a WordPress plugin to enable CREA's members to easily disseminate M
 
 == Description ==
 
-[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable CREA's members to easily disseminate MLS listing content on WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA’s trademarks correctly.
+[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily disseminate MLS listing content on WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
 
-SoldPress is a designed to connect directly to CREA's RETS API without the need to integrate with Third Party Vendors.
+SoldPress is designed to connect directly to CREA's API without the need to integrate with Third Party Vendors. The Plugin is **free** to use and comes with a basic templating engine.
 
 It is highly *recommend* that you use a Cache plugin to minimize API calls.
 
@@ -36,11 +36,27 @@ There are two way to specify a listing key.
 
 	`?ListingKey=11937198`
 
+The Querystring ListingKey paramerter superseeds the Shortcode.
+
+**Templates**
+
+SoldPress uses a basic template enginge to render html output. A SoldPress template is simply a text file contains variables, which get replaced with values when the template is evaluated. The template engine is based soley on heredoc syntax.
+
+The general syntax is `${$rets['ListPrice']}`. 
+
+A comprehensive list of variable names and descriptions can be found at [Data Distribution Facility Documentation](http://crea.ca/data-distribution-facility-documentation).
+
+
+The default template location is wp-content/plugins/soldpress/template/
+
 = Contact Us =
 
 * Support (http://support.sanskript.com)
 * Facebook (http://facebook.com/sanskript)
 * Twitter (http://twitter.com/sanskript)
+
+= CREA =
+* [Data Distribution Facility Documentation] (http://crea.ca/data-distribution-facility-documentation)
 
 == Installation ==
 
@@ -52,7 +68,6 @@ There are two way to specify a listing key.
 
 To help DDFTM clients to prepare their systems for receiving live data, a service is available which provides a wide variety of sample data. A small set of property, office and agent is available from this service, but it will be updated regularly to provide a true representation of the data flows clients can expect when receiving live data. 
 
-There is no need to register before accessing the sample RETS server, since access is provided through a shared, public set of credentials
 
 * Username 		: CXLHfDVrziCfvwgCuL8nUahC
 * Password		: mFqMsCSPdnb5WO1gpEEtDCHH
@@ -64,7 +79,7 @@ There is no need to register before accessing the sample RETS server, since acce
 
 = Where do I get authentication credentials? =
 
-An email containing user name and password is sent to the email address submitted as Technical Contact when data feeds are registered in http://tools.realtorlink.ca.  The owner of the data feed can view credentials when editing the feed on the Data Feeds page..
+An email containing user name and password is sent to the email address submitted as Technical Contact when data feeds are registered in http://tools.realtorlink.ca.  The owner of the data feed can view credentials when editing the feed on the Data Feeds page.
 
 == Screenshots ==
 
