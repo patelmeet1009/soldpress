@@ -12,7 +12,7 @@ SoldPress is a WordPress plugin to enable CREA's members to easily disseminate M
 
 == Description ==
 
-[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily disseminate MLS listing content on WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
+[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily disseminate MLS listing content on their WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
 
 SoldPress is designed to connect directly to CREA's API without the need to integrate with Third Party Vendors. The Plugin is **free** to use and comes with a basic templating engine.
 
@@ -24,19 +24,21 @@ SoldPress uses Shortcode syntax to intergrate listing content on your WordPress 
 
 `[soldpress-listing listingkey="11937198" template="template.html"]`
 
+
 **Listing Key**
 
-There are two way to specify a listing key.
+There are two methods to specify a Listing Key.
 
-*Option A : Specifiy Listing Key in the Shortcode.
+* Option A : Specifiy Listing Key in the Shortcode.
 
 	`[soldpress-listing listingkey="11937198" template="template.html"]`
 
-*Option B : Specify Listing Key in QueryString
+* Option B : Specify Listing Key in QueryString
 
 	`?ListingKey=11937198`
 
-The Querystring ListingKey paramerter superseeds the Shortcode.
+*The QueryString ListingKey paramerter superseeds the Shortcode.*
+
 
 **Templates**
 
@@ -44,7 +46,7 @@ SoldPress uses a basic template enginge to render html output. A SoldPress templ
 
 The general syntax is `${$rets['ListPrice']}`. 
 
-A comprehensive list of variable names and descriptions can be found at [Data Distribution Facility Documentation](http://crea.ca/data-distribution-facility-documentation).
+A comprehensive list of variable names and descriptions can be found at in the [Data Distribution Facility Documentation](http://crea.ca/data-distribution-facility-documentation).
 
 
 The default template location is wp-content/plugins/soldpress/template/
@@ -54,8 +56,10 @@ The default template location is wp-content/plugins/soldpress/template/
 * Support (http://support.sanskript.com)
 * Facebook (http://facebook.com/sanskript)
 * Twitter (http://twitter.com/sanskript)
+* Web Site (http://www.sanskript.com)
 
 = CREA =
+
 * [Data Distribution Facility Documentation] (http://crea.ca/data-distribution-facility-documentation)
 
 == Installation ==
