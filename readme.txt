@@ -18,9 +18,19 @@ SoldPress is designed to connect directly to CREA's Data Distribution Facility A
 
 It is highly *recommended* that you use a persistent cache plugin to minimize API calls.
 
+You may register for a data feed a http://tools.realtorlink.ca. An email containing user name and password is sent to the email address submitted as Technical Contact.
+
 Your site is required to comply with CREA [Data Distribution Policy and Rules](http://www.realtorlink.ca/portal/server.pt/document/3400226/data_distribution_facility_policy_and_rules_updated_april_30%2C_2012).
 
-You are required to register for a data feed a http://tools.realtorlink.ca. An email containing user name and password is sent to the email address submitted as Technical Contact.
+*Copyright*
+
+MLS®, REALTOR®, and the associated logos are trademarks of The Canadian Real Estate Association
+
+CREA isthe owner ofthe REALTOR® and MLS® trademarks: “REALTOR®, REALTORS®, and the REALTOR® logo are certificationmarksthat are owned by REALTOR® Canada Inc. and licensed exclusively to The Canadian Real Estate Association (CREA). These certification marks identify real estate professionals who aremembers of CREA and who must abide by CREA’s By‐Laws, Rules, and the REALTOR® Code. The MLS® trademark and the MLS® logo are owned by CREA and identify the quality ofservices provided by real estate professionals who aremembers of CREA.
+
+The information contained on thissite is based in whole orin part on information thatis provided by members of The Canadian Real Estate Association, who are responsible forits accuracy. CREA reproduces and distributesthisinformation as a service foritsmembers and assumes no responsibility forits accuracy
+
+The listing content on this website is protected by copyright and otherlaws, and isintended solely forthe private, non‐commercial use by individuals. Any otherreproduction, distribution or use ofthe content, in whole orin part, isspecifically forbidden. The prohibited usesinclude commercial use, “screen scraping”, “database scraping”, and any other activity intended to collect, store, reorganize or manipulate data on the pages produced by or displayed on this website.
 
 == Documentation ==
 
