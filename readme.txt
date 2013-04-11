@@ -8,17 +8,21 @@ Stable tag: 0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-SoldPress is a WordPress plugin to enable CREA's members to easily disseminate MLS listing content on WordPress Sites.
+SoldPress is a WordPress plugin to enable CREA's members to easily intergate MLS listing content on WordPress Sites using the Data Distribution Facility.
 
 == Description ==
 
-[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily disseminate MLS listing content on their WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
+[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily intergate MLS listing content on their WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
 
-SoldPress is designed to connect directly to CREA's API without the need to integrate with Third Party Vendors. The Plugin is **free** to use and comes with a basic templating engine.
+SoldPress is designed to connect directly to CREA's Data Distribution Facility API without the need to integrate with Third Party Vendors. The Plugin is **free** to use and comes with a basic templating engine.
 
-It is highly *recommend* that you use a Cache plugin to minimize API calls.
+It is highly *recommended* that you use a persistent cache plugin to minimize API calls.
 
-= How to Use =
+Your site is required to comply with CREA [Data Distribution Policy and Rules](http://www.realtorlink.ca/portal/server.pt/document/3400226/data_distribution_facility_policy_and_rules_updated_april_30%2C_2012).
+
+You are required to register for a data feed a http://tools.realtorlink.ca. An email containing user name and password is sent to the email address submitted as Technical Contact.
+
+== Documentation ==
 
 SoldPress uses Shortcode syntax to intergrate listing content on your WordPress site.
 
@@ -42,7 +46,7 @@ There are two methods to specify a Listing Key.
 
 **Templates**
 
-SoldPress uses a basic template enginge to render html output. A SoldPress template is simply a text file contains variables, which get replaced with values when the template is evaluated. The template engine is based soley on heredoc syntax.
+SoldPress uses a basic template enginge to render html output. A SoldPress template is a text file that contains variables, which get replaced with values when the template is evaluated. The template engine is based on heredoc syntax.
 
 The general syntax is `${$rets['ListPrice']}`. 
 
@@ -68,9 +72,12 @@ The default template location is wp-content/plugins/soldpress/template/
 1. Click the Settings -> Soldpress. You need to add your authentication credentials.
 1. Click the "Test Connection" to verify the Connection.
 
+**You are required to register for a data feed a http://tools.realtorlink.ca. An email containing user name and password is sent to the email address submitted as Technical Contact.**
+
+
 = Sample Data Feed Default Credentials =
 
-To help DDFTM clients to prepare their systems for receiving live data, a service is available which provides a wide variety of sample data. A small set of property, office and agent is available from this service, but it will be updated regularly to provide a true representation of the data flows clients can expect when receiving live data. 
+A sample service is available which provides a wide variety of sample data. A small set of property, office and agent is available from this service.
 
 
 * Username 		: CXLHfDVrziCfvwgCuL8nUahC
@@ -89,6 +96,7 @@ An email containing user name and password is sent to the email address submitte
 
 1. Sample - Basic Template File.
 2. Sample - No Template File
+
 
 == Changelog ==
 
