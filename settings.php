@@ -61,10 +61,10 @@ function soldpress_account_options() {
 	
 	if (isset($_POST["test_connection"])) {  
 	   		
-		$rets = new adapter();
-		if($rets->connect())
+		$adapter= new soldpress_adapter();
+		if($adapter->connect())
 		{
-			return $rets-> logserverinfo();		
+			return $adapter-> logserverinfo();		
 		}
 	} 
 }

@@ -1,13 +1,14 @@
 <?php
-class soldpress_Shortcodes {
+class soldpress_shortcodes {
 
 	static function listing($atts, $content = null, $code = "") {	
 
 		global $wp_query;
 
 		$template = $atts["template"];
-	
-		$rets = new adapter();
+		$culture = $atts["culture "];
+
+		$adapter= new soldpress_adapter();
 
 		$ListingKey = $wp_query->query["listingkey"];	
 	
@@ -21,9 +22,9 @@ class soldpress_Shortcodes {
 			}
         }
 
-		if($rets->Connect())
+		if($adapter->Connect())
 		{
-			return $rets->SearchResidentialProperty("ID=$ListingKey",$template);		
+			return $adapter->searchresidentialproperty("ID=$ListingKey",$template,$culture);		
 		}
 				
 		return "";

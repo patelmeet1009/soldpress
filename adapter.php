@@ -2,29 +2,29 @@
 
 require_once dirname(__FILE__).'/lib/phrets.php';
 
-class adapter{
+class soldpress_adapter{
 
 	private $loginURL = 'http://sample.data.crea.ca/Login.svc/Login';
 	private $userId = 'CXLHfDVrziCfvwgCuL8nUahC';
 	private $pass = 'mFqMsCSPdnb5WO1gpEEtDCHH';
 	private $templateLocation = "wp-content/plugins/soldpress/template/";
-	private $phrets;
+	private $service;
 		
-	public function adapter() 
+	public function soldpress_adapter() 
 	{ 
-		$this->phrets = new phRETS();
-		$this->phrets->SetParam('catch_last_response', true);
-		$this->phrets->SetParam('compression_enabled', true);
-		$this->phrets->SetParam('disable_follow_location', true);
+		$this->service= new phRETS();
+		$this->service->SetParam('catch_last_response', true);
+		$this->service->SetParam('compression_enabled', true);
+		$this->service->SetParam('disable_follow_location', true);
 
 		$cookie_file = 'soldpress';
 		@touch(cookie_file);
 		if (is_writable(cookie_file)) {
-			$this->phrets->SetParam('cookie_file', 'soldpress');
+			$this->service->SetParam('cookie_file', 'soldpress');
 		}
 		
-		$this->phrets->AddHeader('RETS-Version', 'RETS/1.7.2');
-		$this->phrets->AddHeader('Accept', '/');	
+		$this->service->AddHeader('RETS-Version', 'RETS/1.7.2');
+		$this->service->AddHeader('Accept', '/');	
 		
 		$this->loginURL = get_option("sc-url");
 		$this->userId = get_option("sc-username");
@@ -34,7 +34,7 @@ class adapter{
 	
 	public function connect() 
 	{ 
-		$connect = $this->phrets->Connect($this->loginURL, $this->userId, $this->pass);
+		$connect = $this->service->Connect($this->loginURL, $this->userId, $this->pass);
 
 		if ($connect === true) 
 		{
@@ -43,7 +43,7 @@ class adapter{
 		else 
 		{
 			$this->displayLog('Connection FAILED');
-			if ($error = $this->phrets->Error()) 
+			if ($error = $this->service->Error()) 
 			{
 				$this->displayLog('ERROR type ['.$error['type'].'] code ['.$error['code'].'] text ['.$error['text'].']');
 			}
@@ -55,9 +55,9 @@ class adapter{
 	public function logserverinfo()
 	{	
 		$this->DisplayHeader('Server Info');
-		$this->displaylog('Server Details: ' . implode($this->phrets->GetServerInformation()));
+		$this->displaylog('Server Details: ' . implode($this->service->GetServerInformation()));
 		echo "<br>";
-		$this->displaylog('RETS version: ' . $this->phrets->GetServerVersion());
+		$this->displaylog('RETS version: ' . $this->service->GetServerVersion());
 		echo "<br>";
 		$this->displaylog('Firewall: ' . $this->firewalltest());
 		echo "<br>";
@@ -66,33 +66,38 @@ class adapter{
 	
 	public function logtypeinfo()
 	{	
-		$this->displaylog(var_export($this->phrets->GetMetadataTypes(), true));
-		$this->displaylog(var_export($this->phrets->GetMetadataResources(), true));
+		$this->displaylog(var_export($this->service->GetMetadataTypes(), true));
+		$this->displaylog(var_export($this->service->GetMetadataResources(), true));
 		
-		$this->displaylog(var_dump($this->phrets->GetMetadataClasses("Property")));
-		$this->displaylog(var_dump($this->phrets->GetMetadataClasses("Office")));
-		$this->displaylog(var_dump($this->phrets->GetMetadataClasses("Agent")));
+		$this->displaylog(var_dump($this->service->GetMetadataClasses("Property")));
+		$this->displaylog(var_dump($this->service->GetMetadataClasses("Office")));
+		$this->displaylog(var_dump($this->service->GetMetadataClasses("Agent")));
 		
-		$this->displaylog(var_dump($this->phrets->GetMetadataTable("Property", "Property")));
-		$this->displaylog(var_dump($this->phrets->GetMetadataTable("Office", "Office")));
-		$this->displaylog(var_dump($this->phrets->GetMetadataTable("Agent", "Agent")));
+		$this->displaylog(var_dump($this->service->GetMetadataTable("Property", "Property")));
+		$this->displaylog(var_dump($this->service->GetMetadataTable("Office", "Office")));
+		$this->displaylog(var_dump($this->service->GetMetadataTable("Agent", "Agent")));
 		
-		$this->displaylog(var_dump($this->phrets->GetAllLookupValues("Property")));
-		$this->displaylog(var_dump($this->phrets->GetAllLookupValues("Office")));
-	    $this->displaylog(var_dump($this->phrets->GetAllLookupValues("Agent")));
+		$this->displaylog(var_dump($this->service->GetAllLookupValues("Property")));
+		$this->displaylog(var_dump($this->service->GetAllLookupValues("Office")));
+	    $this->displaylog(var_dump($this->service->GetAllLookupValues("Agent")));
 		
-		$this->displaylog(var_dump($this->phrets->GetMetadataObjects("Property")));
-		$this->displaylog(var_dump($this->phrets->GetMetadataObjects("Office")));
-		$this->displaylog(var_dump($this->phrets->GetMetadataObjects("Agent")));
+		$this->displaylog(var_dump($this->service->GetMetadataObjects("Property")));
+		$this->displaylog(var_dump($this->service->GetMetadataObjects("Office")));
+		$this->displaylog(var_dump($this->service->GetMetadataObjects("Agent")));
 	
 	}
 		
-	public function searchresidentialproperty($crit, $template)
+	public function searchresidentialproperty($crit, $template, $culture)
 	{	
 
-		$results = $this->phrets->SearchQuery("Property","Property",$crit,array("Limit" => 1));	
+		if($culture =='')
+		{
+			$culture = "en-CA";
+		}
+
+		$results = $this->service->SearchQuery("Property","Property",$crit,array("Limit" => 1,"Culture" => $culture));	
 		
-		while ($rets = $this->phrets->FetchRow($results )) {
+		while ($rets = $this->service->FetchRow($results )) {
 
 			if($template == ''){
 				foreach($rets as $key => &$val) {
@@ -107,14 +112,14 @@ class adapter{
 				eval("\$template = \"$template\";");
 			}
 		}
-		$this->phrets->FreeResult($results);
+		$this->service->FreeResult($results);
 
 		return $template;
 	}
 	
 	public function getpropertyobject($id, $type)
 	{
-		$record = $this->phrets->GetObject("Property", $type, $id);
+		$record = $this->service->GetObject("Property", $type, $id);
 		
 		//We won't log this due to data size potential (could be a large image)
 		//$this->DisplayLog(var_dump($record));		
@@ -124,21 +129,21 @@ class adapter{
 	
 	public function debug($logResponse = true)
 	{	
-		if ($last_request = $this->phrets->LastRequest()) 
+		if ($last_request = $this->service->LastRequest()) 
 		{
 			$this->displaylog('Reply Code '.$last_request['ReplyCode'].' ['.$last_request['ReplyText'].']');
 		}
-		$this->displaylog('LastRequestURL: '.$this->phrets->LastRequestURL().PHP_EOL);
+		$this->displaylog('LastRequestURL: '.$this->service->LastRequestURL().PHP_EOL);
 		
 		if($logResponse)
 		{
-			$this->displaylog($this->phrets->GetLastServerResponse());
+			$this->displaylog($this->service->GetLastServerResponse());
 		}
 	}	
 	
 	public function disconnect() 
 	{ 
-		$this->phrets->Disconnect();
+		$this->service->Disconnect();
 	}		
 	
 	private function displaylog($text) 

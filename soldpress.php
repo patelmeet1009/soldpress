@@ -13,7 +13,7 @@ add_filter( 'query_vars','soldpress_query_vars' );
 
 require_once(dirname(__FILE__)."/adapter.php");
 require_once(dirname(__FILE__)."/shortcodes.php");
-include_once(dirname(__FILE__).'/admin.php');
+include_once(dirname(__FILE__).'/settings.php');
 
 
 function soldpress_query_vars( $vars )
