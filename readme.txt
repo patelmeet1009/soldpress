@@ -1,14 +1,14 @@
 === SoldPress ===
 Contributors: Sanskript
 Donate link: http://sanskript.com/
-Tags: crea, rets, idx,ddf
+Tags: crea, rets, idx, ddf,Data Distribution Facility
 Requires at least: 3.0.1
 Tested up to: 3.5.1
 Stable tag: 0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-SoldPress is a WordPress plugin to enable CREA's members to easily intergate MLS listing content on WordPress Sites using the Data Distribution Facility.
+SoldPress is a WordPress plugin to enable CREA's members to easily intergate MLS listing content on WordPress Sites.
 
 == Description ==
 
