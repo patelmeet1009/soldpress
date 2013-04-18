@@ -1,26 +1,30 @@
 === SoldPress ===
 Contributors: Sanskript
 Donate link: http://sanskript.com/
-Tags: crea, rets, idx,ddf
+Tags: crea, rets, idx, ddf,Data Distribution Facility
 Requires at least: 3.0.1
 Tested up to: 3.5.1
 Stable tag: 0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-SoldPress is a WordPress plugin to enable CREA's members to easily intergate MLS listing content on WordPress Sites using the Data Distribution Facility.
+SoldPress is a WordPress plugin to enable CREA's members to easily intergate MLS® listing content on WordPress Sites.
 
 == Description ==
 
-[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily intergate MLS listing content on their WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
+[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily intergate MLS® listing content on their WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
 
 SoldPress is designed to connect directly to CREA's Data Distribution Facility API without the need to integrate with Third Party Vendors. The Plugin is **free** to use and comes with a basic templating engine.
 
 It is highly *recommended* that you use a persistent cache plugin to minimize API calls.
 
+You may register for a data feed a http://tools.realtorlink.ca. An email containing user name and password is sent to the email address submitted as Technical Contact.
+
 Your site is required to comply with CREA [Data Distribution Policy and Rules](http://www.realtorlink.ca/portal/server.pt/document/3400226/data_distribution_facility_policy_and_rules_updated_april_30%2C_2012).
 
-You are required to register for a data feed a http://tools.realtorlink.ca. An email containing user name and password is sent to the email address submitted as Technical Contact.
+**Copyright**
+
+MLS®, REALTOR®, and the associated logos are trademarks of The Canadian Real Estate Association
 
 == Documentation ==
 
@@ -99,6 +103,13 @@ An email containing user name and password is sent to the email address submitte
 
 
 == Changelog ==
+
+= 0.9.2 RC =
+Fixed issue with encoding on files. Using UTF-8 without BOM.
+
+= 0.9.1 RC =
+Added support for French.
+Fixed Issue with other pluigin referance to phRETS.
 
 = 0.9 RC =
 * Release Candiate.

@@ -27,19 +27,19 @@ function soldpress_account_options() {
     <table class="form-table">
         <tr valign="top">
         <th scope="row">Username</th>
-        <td><input type="text" class="regular-text" name="sc-username" value="<?php echo get_option('sc-username'); ?>" /></td>
+        <td><input type="text" class="regular-text" name="sc-username" value="<?php echo get_option('sc-username','CXLHfDVrziCfvwgCuL8nUahC'); ?>" /></td>
         </tr>
         <tr valign="top">
         <th scope="row">Password</th>
-        <td><input type="password" class="regular-text" name="sc-password" value="<?php echo get_option('sc-password'); ?>" /></td>
+        <td><input type="password" class="regular-text" name="sc-password" value="<?php echo get_option('sc-password','mFqMsCSPdnb5WO1gpEEtDCHH'); ?>" /></td>
         </tr>      
         <tr valign="top">
         <th scope="row">Url</th>
-        <td><input type="text" class="regular-text" name="sc-url" value="<?php echo get_option('sc-url'); ?>" /></td>
+        <td><input type="text" class="regular-text" name="sc-url" value="<?php echo get_option('sc-url','http://sample.data.crea.ca/Login.svc/Login'); ?>" /></td>
         </tr>
  		<tr valign="top">
         <th scope="row">Template Location</th>
-        <td><input type="text" class="regular-text" name="sc-template" value="<?php echo get_option('sc-template'); ?>" /></td>
+        <td><input type="text" class="regular-text" name="sc-template" value="<?php echo get_option('sc-template','wp-content/plugins/soldpress/template/'); ?>" /></td>
         </tr>
     </table>
     

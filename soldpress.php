@@ -23,4 +23,14 @@ function soldpress_query_vars( $vars )
     return $vars;
 }
 
+register_deactivation_hook(__FILE__, soldpress_deactivate);
+
+function soldpress_deactivate() 
+{
+	unregister_setting( 'sc-settings-group', 'sc-username' );
+	unregister_setting( 'sc-settings-group', 'sc-password' );
+	unregister_setting( 'sc-settings-group', 'sc-url' );
+	unregister_setting( 'sc-settings-group', 'sc-template' );
+}
+
 ?>

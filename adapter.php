@@ -26,10 +26,10 @@ class soldpress_adapter{
 		$this->service->AddHeader('RETS-Version', 'RETS/1.7.2');
 		$this->service->AddHeader('Accept', '/');	
 		
-		$this->loginURL = get_option("sc-url");
-		$this->userId = get_option("sc-username");
-		$this->pass= get_option("sc-password");
-		$this->templateLocation = get_option("sc-template");
+		$this->loginURL = get_option("sc-url","http://sample.data.crea.ca/Login.svc/Login");
+		$this->userId = get_option("sc-username","CXLHfDVrziCfvwgCuL8nUahC");
+		$this->pass= get_option("sc-password","mFqMsCSPdnb5WO1gpEEtDCHH");
+		$this->templateLocation = get_option("sc-template","wp-content/plugins/soldpress/template/");
 	}
 	
 	public function connect() 
@@ -55,6 +55,11 @@ class soldpress_adapter{
 	public function logserverinfo()
 	{	
 		$this->DisplayHeader('Server Info');
+		echo "<br>";
+		$this->displaylog('Login: ' . $this->loginURL);
+		echo "<br>";
+		$this->displaylog('UserId: ' . $this->userId);
+		echo "<br>";
 		$this->displaylog('Server Details: ' . implode($this->service->GetServerInformation()));
 		echo "<br>";
 		$this->displaylog('RETS version: ' . $this->service->GetServerVersion());
@@ -114,7 +119,7 @@ class soldpress_adapter{
 		}
 		$this->service->FreeResult($results);
 
-		return $template;
+		return 'Listing not found.'; 
 	}
 	
 	public function getpropertyobject($id, $type)
