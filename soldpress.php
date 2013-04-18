@@ -1,9 +1,9 @@
-﻿<?php
+<?php
 /*
 Plugin Name: SoldPress
 Plugin URI: http://www.sanskript.com/products/soldpress
 Description: SoldPress is a WordPress plugin to enable CREA’s members to easily disseminate MLS® listing content on WordPress Sites.
-Version: 0.9 RC
+Version: 0.9.2 RC
 Author: Amer Gill
 Author URI: http://www.sanskript.com
 License: GPL2
