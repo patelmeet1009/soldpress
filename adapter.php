@@ -94,6 +94,7 @@ class soldpress_adapter{
 		
 	public function searchresidentialproperty($crit, $template, $culture)
 	{	
+		$render = 'Listing not found.';
 
 		if($culture =='')
 		{
@@ -107,19 +108,21 @@ class soldpress_adapter{
 			if($template == ''){
 				foreach($rets as $key => &$val) {
 					if($val != NULL) {
-						$template .= $key . ":" . $val . "<br>" ;
+						$render .= $key . ":" . $val . "<br>" ;
 					}
  				}
 			}
 			else
 			{
-				$template=file_get_contents($this->templateLocation .$template);
-				eval("\$template = \"$template\";");
+				$render=file_get_contents($this->templateLocation .$template);
+				eval("\$render = \"$render\";");
+			
 			}
 		}
+
 		$this->service->FreeResult($results);
 
-		return 'Listing not found.'; 
+		return $render; 
 	}
 	
 	public function getpropertyobject($id, $type)
