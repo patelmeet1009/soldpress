@@ -44,7 +44,7 @@ function soldpress_account_options() {
         </tr>
 	<tr valign="top">
         <th scope="row">Last Update</th>
-        <td><?php echo get_option('sc-lastupdate' )?></td>
+        <td><?php echo date('r', get_option('sc-lastupdate' )) ?></td>
         </tr>
     </table>
     
@@ -79,7 +79,7 @@ function soldpress_account_options() {
 		$adapter= new soldpress_adapter();
 		if($adapter->connect())
 		{
-			return $adapter-> sync_residentialproperty("ID=$ListingKey","");		
+			return $adapter-> sync_residentialproperty("ID=11937198","");		
 		}
 	}
 }
