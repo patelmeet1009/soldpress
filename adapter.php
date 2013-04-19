@@ -52,6 +52,11 @@ class soldpress_adapter{
 		return true;
 	}
 	
+	public function disconnect() 
+	{ 
+		$this->service->Disconnect();
+	}	
+	
 	public function logserverinfo()
 	{	
 		$this->DisplayHeader('Server Info');
@@ -91,7 +96,146 @@ class soldpress_adapter{
 		$this->displaylog(var_dump($this->service->GetMetadataObjects("Agent")));
 	
 	}
+	
+	public function sync_residentialproperty($crit, $culture)
+	{	
+		if($culture =='')
+		{
+			$culture = "en-CA";
+		}
+
+		$results = $this->service->SearchQuery("Property","Property",$crit,array("Limit" => 1,"Culture" => $culture));	
 		
+		while ($rets = $this->service->FetchRow($results)) {
+			//Check And See If We Have A Post Mathing The Listing Key
+			$args = array(
+				'post_type' => 'property',
+				'meta_query' => array(
+					array(
+						'key' => 'ListingKey',
+						'value' => '11937198',)
+				)
+			 );
+			 
+			$posts_array = get_posts( $args );
+			
+			$title = $rets['ListingId'];
+			$content = $rets['PublicRemarks'];
+			
+		//	$post_id = '-1';
+
+			if( $posts_array ) {
+				$post = $posts_array[0];
+				$post->post_title = $title;
+  				$post->post_content  = $content;
+				wp_update_post($post);
+				$post_id = $post->ID;
+			}
+			else
+			{				
+				$post = array(
+					  'post_title'    => $title ,
+					  'post_content'  => $content,
+					  'post_status'   => 'publish',
+					  'post_author'   => 1,
+					  'post_type'   => 'property'
+				);
+				
+				$post_id = wp_insert_post( $post );
+			}
+
+			echo 'file1';
+			//Let's Property Image
+			//$this->getpropertyobject($rets['ListingKey'], 'ThumbnailPhoto',$post_id);
+			$this->sync_propertyobject($rets['ListingKey'], 'Photo',$post_id);
+		
+			//If No Tempalte This Begins The Import Phase
+			//	echo 'theid' . $post_id;
+
+				foreach($rets as $key => &$val) {
+					
+					update_post_meta($post_id,$key, $val);
+
+					if($val != NULL) {
+						$template .= $key . ":" . $val . "<br>" ;
+					}
+ 				}	
+			}		
+			
+		$this->service->FreeResult($results);
+
+		return true;
+	}
+	
+	public function sync_propertyobject($id, $type, $post_id)
+	{
+	
+		$args = array(
+	   'post_type' => 'attachment',
+	   'numberposts' => -1,
+	   'post_status' => null,
+	   'post_parent' => $post_id
+		);
+
+		$attachments = get_posts( $args );
+		
+		 if ( $attachments ) {
+			foreach ( $attachments as $attachment ) {
+			 //  echo '<li>';
+			 //  echo wp_get_attachment_image( $attachment->ID, 'full' );
+			 //  echo '<p>';
+			 //  echo apply_filters( 'the_title', $attachment->post_title );
+			 //  echo '</p></li>';
+			   wp_delete_attachment( $attachment->ID, true );
+			   //Let's Delete All The Attachments
+			  }
+		 }
+	
+		$record = $this->service->GetObject("Property", $type, $id);
+	
+		$isAttached = false;
+		foreach($record as &$image) 
+		{
+		//	echo $image["Content-Type"]; 
+		//	echo $image["Object-ID"];
+		//	echo $image["Content-ID"];
+			
+			$filename = $image["Content-ID"] .'-' . $type .'-'.$image["Object-ID"]. '.jpg';			
+			$wp_upload_dir = wp_upload_dir();
+			//Check Directory
+			$filePath = $wp_upload_dir[basedir]. '/soldpress/'.$filename;
+		  
+			file_put_contents($filePath,$image["Data"]); //We Change This In Settings
+			
+			
+			//Need a little work
+			//Check if files exists
+			//If attachement is already attached do nothing with the meta data just update the file.
+				
+			echo "Attachmet" . $filePath;
+			
+			$wp_filetype = wp_check_filetype(basename($filename), null );
+			$wp_upload_dir = wp_upload_dir();
+				  $attachment = array(
+					 'guid' => $wp_upload_dir['url'] . '/soldpress/' . basename( $filename ), 
+					 'post_mime_type' => $wp_filetype['type'],
+					 'post_title' => preg_replace('/\.[^.]+$/', '', basename($filename)),
+					 'post_content' => '',
+					 'post_status' => 'inherit'
+				  );
+				  
+			$attach_id = wp_insert_attachment( $attachment, '/soldpress/'. $filename, $post_id );
+			require_once(ABSPATH . 'wp-admin/includes/image.php');				
+			//Attach The First Object	
+			if(!$isAttached)
+			{			
+				$isAttached = true;
+				$attach_data = wp_generate_attachment_metadata( $attach_id, '/soldpress/' . $filename );
+				wp_update_attachment_metadata( $attach_id, $attach_data );
+			}
+ 		}	
+	}	
+	
 	public function searchresidentialproperty($crit, $template, $culture)
 	{	
 		$render = 'Listing not found.';
@@ -149,11 +293,7 @@ class soldpress_adapter{
 		}
 	}	
 	
-	public function disconnect() 
-	{ 
-		$this->service->Disconnect();
-	}		
-	
+			
 	private function displaylog($text) 
 	{
 		echo $text ."<br>";

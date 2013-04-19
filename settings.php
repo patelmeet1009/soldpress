@@ -12,6 +12,7 @@ function register_mysettings() {
 	register_setting( 'sc-settings-group', 'sc-password' );
 	register_setting( 'sc-settings-group', 'sc-url' );
 	register_setting( 'sc-settings-group', 'sc-template' );
+	register_setting( 'sc-settings-group', 'sc-lastupdate' );
 }
 
 function soldpress_account_options() {
@@ -41,6 +42,10 @@ function soldpress_account_options() {
         <th scope="row">Template Location</th>
         <td><input type="text" class="regular-text" name="sc-template" value="<?php echo get_option('sc-template','wp-content/plugins/soldpress/template/'); ?>" /></td>
         </tr>
+	<tr valign="top">
+        <th scope="row">Last Update</th>
+        <td><?php echo get_option('sc-lastupdate' )?></td>
+        </tr>
     </table>
     
     <?php submit_button(); ?>  
@@ -48,6 +53,7 @@ function soldpress_account_options() {
 
 <form method="post" id="test_connection">    
 	<?php submit_button('Test Connection', 'secondary', 'test_connection', false); ?> 
+	<?php submit_button('Manual Sync', 'secondary', 'sync', false); ?> 
 </form>
 <br><br>
 <div>
@@ -67,6 +73,15 @@ function soldpress_account_options() {
 			return $adapter-> logserverinfo();		
 		}
 	} 
+	
+	if (isset($_POST["sync"])) {  
+	
+		$adapter= new soldpress_adapter();
+		if($adapter->connect())
+		{
+			return $adapter-> sync_residentialproperty("ID=$ListingKey","");		
+		}
+	}
 }
 
 ?>

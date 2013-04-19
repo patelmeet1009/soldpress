@@ -14,7 +14,7 @@ add_filter( 'query_vars','soldpress_query_vars' );
 require_once(dirname(__FILE__)."/adapter.php");
 require_once(dirname(__FILE__)."/shortcodes.php");
 include_once(dirname(__FILE__).'/settings.php');
-
+include_once(dirname(__FILE__).'/custom_field_types.php');
 
 function soldpress_query_vars( $vars )
 {
@@ -23,7 +23,7 @@ function soldpress_query_vars( $vars )
     return $vars;
 }
 
-register_deactivation_hook(__FILE__, soldpress_deactivate);
+/*register_deactivation_hook(__FILE__, soldpress_deactivate);
 
 function soldpress_deactivate() 
 {
@@ -31,6 +31,20 @@ function soldpress_deactivate()
 	unregister_setting( 'sc-settings-group', 'sc-password' );
 	unregister_setting( 'sc-settings-group', 'sc-url' );
 	unregister_setting( 'sc-settings-group', 'sc-template' );
+}*/
+
+register_activation_hook(__FILE__, 'soldpress_activation');
+
+add_action('my_hourly_event', 'do_this_hourly');
+
+function soldpress_activation() {
+	echo "activate";
+	wp_schedule_event( time(), 'hourly', 'my_hourly_event');
+}
+
+function do_this_hourly() {
+	// do something every hour
+	update_option( 'sc-lastupdate', time() );
 }
 
 ?>
