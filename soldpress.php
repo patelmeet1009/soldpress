@@ -45,6 +45,30 @@ function soldpress_activation() {
 function do_this_hourly() {
 	// do something every hour
 	update_option( 'sc-lastupdate', time() );
+
+	$adapter= new soldpress_adapter();
+	if($adapter->connect())
+	{
+		return $adapter-> sync_residentialproperty("LastUpdated=2011-05-08T22:00:17Z","");	//HardCode Time For Testing	
+	}
+
+}
+
+add_filter( 'template_include', 'include_template_function', 1 );
+
+function include_template_function( $template_path ) {
+    if ( get_post_type() == 'property' ) {
+        if ( is_single() ) {
+            // checks if the file exists in the theme first,
+            // otherwise serve the file from the plugin
+            if ( $theme_file = locate_template( array ( 'single-property.php' ) ) ) {
+                $template_path = $theme_file;
+            } else {
+                $template_path = plugin_dir_path( __FILE__ ) . '/single-property.php';
+            }
+        }
+    }
+    return $template_path;
 }
 
 ?>

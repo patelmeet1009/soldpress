@@ -89,7 +89,7 @@ class soldpress_adapter{
 		
 		$this->displaylog(var_dump($this->service->GetAllLookupValues("Property")));
 		$this->displaylog(var_dump($this->service->GetAllLookupValues("Office")));
-	    $this->displaylog(var_dump($this->service->GetAllLookupValues("Agent")));
+	    	$this->displaylog(var_dump($this->service->GetAllLookupValues("Agent")));
 		
 		$this->displaylog(var_dump($this->service->GetMetadataObjects("Property")));
 		$this->displaylog(var_dump($this->service->GetMetadataObjects("Office")));
@@ -99,40 +99,45 @@ class soldpress_adapter{
 	
 	public function sync_residentialproperty($crit, $culture)
 	{	
+		echo $crit;
+
 		if($culture =='')
 		{
 			$culture = "en-CA";
 		}
 
-		$results = $this->service->SearchQuery("Property","Property",$crit,array("Limit" => 1,"Culture" => $culture));	
+		$results = $this->service->SearchQuery("Property","Property",$crit,array("Limit" => 'None',"Culture" => $culture));	
 		
 		while ($rets = $this->service->FetchRow($results)) {
+
+			$ListingKey = $rets['ListingKey'];
+			echo 'TheKeyIs' . $ListingKey .'<br>';
+			
 			//Check And See If We Have A Post Mathing The Listing Key
 			$args = array(
 				'post_type' => 'property',
 				'meta_query' => array(
 					array(
 						'key' => 'ListingKey',
-						'value' => '11937198',)
+						'value' => $ListingKey,)
 				)
 			 );
 			 
 			$posts_array = get_posts( $args );
 			
-			$title = $rets['ListingId'];
-			$content = $rets['PublicRemarks'];
-			
-		//	$post_id = '-1';
-
+			$title = $rets['UnparsedAddress'] .' (' . $rets['ListingId'] .')';
+			$content = time();
+		
 			if( $posts_array ) {
+			
 				$post = $posts_array[0];
 				$post->post_title = $title;
-  				$post->post_content  = $content;
+  				$post->post_content  = $content . 'Updated';
 				wp_update_post($post);
 				$post_id = $post->ID;
 			}
-			else
-			{				
+			else{				
+				
 				$post = array(
 					  'post_title'    => $title ,
 					  'post_content'  => $content,
@@ -144,23 +149,12 @@ class soldpress_adapter{
 				$post_id = wp_insert_post( $post );
 			}
 
-			echo 'file1';
-			//Let's Property Image
-			//$this->getpropertyobject($rets['ListingKey'], 'ThumbnailPhoto',$post_id);
 			$this->sync_propertyobject($rets['ListingKey'], 'Photo',$post_id);
 		
-			//If No Tempalte This Begins The Import Phase
-			//	echo 'theid' . $post_id;
-
-				foreach($rets as $key => &$val) {
-					
-					update_post_meta($post_id,$key, $val);
-
-					if($val != NULL) {
-						$template .= $key . ":" . $val . "<br>" ;
-					}
- 				}	
-			}		
+			foreach($rets as $key => &$val) {					
+				update_post_meta($post_id,$key, $val);
+			}	
+		}		
 			
 		$this->service->FreeResult($results);
 
@@ -212,7 +206,7 @@ class soldpress_adapter{
 			//Check if files exists
 			//If attachement is already attached do nothing with the meta data just update the file.
 				
-			echo "Attachmet" . $filePath;
+		//	echo "Attachmet" . $filePath;
 			
 			$wp_filetype = wp_check_filetype(basename($filename), null );
 			$wp_upload_dir = wp_upload_dir();
