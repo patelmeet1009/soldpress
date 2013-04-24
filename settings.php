@@ -12,7 +12,8 @@ function register_mysettings() {
 	register_setting( 'sc-settings-group', 'sc-password' );
 	register_setting( 'sc-settings-group', 'sc-url' );
 	register_setting( 'sc-settings-group', 'sc-template' );
-	register_setting( 'sc-settings-group', 'sc-lastupdate' );
+//	register_setting( 'sc-settings-group', 'sc-lastupdate' );
+//	register_setting( 'sc-settings-group', 'sc-status' );
 }
 
 function soldpress_account_options() {
@@ -47,13 +48,19 @@ function soldpress_account_options() {
         <td><?php echo date('r', get_option('sc-lastupdate' )) ?></td>
         </tr>
     </table>
-    
+    Status : <?php echo get_option('sc-status' ) ?>
+	 Start : <?php echo get_option('sc-sync-start' ) ?>
+	  End : <?php echo get_option('sc-sync-end' ) ?>
+	  Error : <?php echo get_option('sc-sync-error' ) ?> 
     <?php submit_button(); ?>  
 </form>
 
 <form method="post" id="test_connection">    
 	<?php submit_button('Test Connection', 'secondary', 'test_connection', false); ?> 
 	<?php submit_button('Manual Sync', 'secondary', 'sync', false); ?> 
+	<?php submit_button('Clear Listings', 'secondary', 'delete', false); ?> 
+	
+	
 </form>
 <br><br>
 <div>
@@ -79,7 +86,18 @@ function soldpress_account_options() {
 		$adapter= new soldpress_adapter();
 		if($adapter->connect())
 		{
-			return $adapter-> sync_residentialproperty("ID=11937198","");		
+			return $adapter-> sync_residentialproperty("LastUpdated=2011-05-08T22:00:17Z","");		
+		}
+	}
+	
+	if (isset($_POST["delete"])) {  
+		echo 'delete';
+		$mycustomposts = get_posts( array( 'post_type' => 'property', 'numberposts' => 500) );
+			foreach( $mycustomposts as $mypost ) {
+				echo $mypost->ID;
+			// Delete's each post.
+				wp_delete_post( $mypost->ID, true);
+			// Set to False if you want to send them to Trash.
 		}
 	}
 }

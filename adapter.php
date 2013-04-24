@@ -16,7 +16,8 @@ class soldpress_adapter{
 		$this->service->SetParam('catch_last_response', true);
 		$this->service->SetParam('compression_enabled', true);
 		$this->service->SetParam('disable_follow_location', true);
-
+		$this->service->SetParam('offset_support', true);
+		
 		$cookie_file = 'soldpress';
 		@touch(cookie_file);
 		if (is_writable(cookie_file)) {
@@ -98,15 +99,16 @@ class soldpress_adapter{
 	}
 	
 	public function sync_residentialproperty($crit, $culture)
-	{	
-		echo $crit;
-
+	{	echo "<br>Sync<br>";
+		update_option( 'sc-status', true );
+		update_option( 'sc-sync-start',time() ); 
+		//	echo $crit;
 		if($culture =='')
 		{
 			$culture = "en-CA";
 		}
 
-		$results = $this->service->SearchQuery("Property","Property",$crit,array("Limit" => 'None',"Culture" => $culture));	
+		$results = $this->service->SearchQuery("Property","Property",$crit,array("Limit" => '100',"Culture" => $culture));	
 		
 		while ($rets = $this->service->FetchRow($results)) {
 
@@ -135,6 +137,7 @@ class soldpress_adapter{
   				$post->post_content  = $content . 'Updated';
 				wp_update_post($post);
 				$post_id = $post->ID;
+				echo ' update';
 			}
 			else{				
 				
@@ -147,6 +150,7 @@ class soldpress_adapter{
 				);
 				
 				$post_id = wp_insert_post( $post );
+				echo ' insert';
 			}
 
 			$this->sync_propertyobject($rets['ListingKey'], 'Photo',$post_id);
@@ -158,6 +162,8 @@ class soldpress_adapter{
 			
 		$this->service->FreeResult($results);
 
+		update_option( 'sc-status', false );
+		update_option( 'sc-sync-end',time() ); 
 		return true;
 	}
 	
@@ -232,6 +238,7 @@ class soldpress_adapter{
 	
 	public function searchresidentialproperty($crit, $template, $culture)
 	{	
+	
 		$render = 'Listing not found.';
 
 		if($culture =='')

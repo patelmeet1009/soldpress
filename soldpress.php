@@ -3,7 +3,7 @@
 Plugin Name: SoldPress
 Plugin URI: http://www.sanskript.com/products/soldpress
 Description: SoldPress is a WordPress plugin to enable CREA’s members to easily disseminate MLS® listing content on WordPress Sites.
-Version: 0.9.2 RC
+Version: 0.9.5 A
 Author: Amer Gill
 Author URI: http://www.sanskript.com
 License: GPL2
@@ -23,6 +23,12 @@ function soldpress_query_vars( $vars )
     return $vars;
 }
 
+register_deactivation_hook(__FILE__,'deactivate_cron_hook');
+
+function deactivate_cron_hook(){
+wp_clear_scheduled_hook('soldpress_listing_sync');
+}
+
 /*register_deactivation_hook(__FILE__, soldpress_deactivate);
 
 function soldpress_deactivate() 
@@ -35,17 +41,18 @@ function soldpress_deactivate()
 
 register_activation_hook(__FILE__, 'soldpress_activation');
 
-add_action('my_hourly_event', 'do_this_hourly');
+add_action('soldpress_listing_sync', 'soldpress_hourly');
 
 function soldpress_activation() {
-	echo "activate";
-	wp_schedule_event( time(), 'hourly', 'my_hourly_event');
+
+	//wp_schedule_event( time(), 'daily', 'soldpress_listing_sync');
+	wp_schedule_event( time(), 'hourly', 'soldpress_listing_sync');
 }
 
-function do_this_hourly() {
+function soldpress_hourly() {
 	// do something every hour
 	update_option( 'sc-lastupdate', time() );
-
+	
 	$adapter= new soldpress_adapter();
 	if($adapter->connect())
 	{
