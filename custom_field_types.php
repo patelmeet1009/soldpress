@@ -23,7 +23,6 @@ function custom_post_type() {
 			'description'         => __( 'Property information pages', 'text_domain' ),
 			'labels'              => $labels,
 			'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'custom-fields', ),
-			'taxonomies'          => false,
 			'hierarchical'        => false,
 			'public'              => true,
 			'show_ui'             => true,
