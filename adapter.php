@@ -16,7 +16,7 @@ class soldpress_adapter{
 	{ 
 		$this->log = new Logging();
 		$wp_upload_dir = wp_upload_dir();
-		$this->log->lfile($wp_upload_dir[basedir]. '/soldpress/soldpress-log.txt');
+		$this->log->lfile($wp_upload_dir['basedir']. '/soldpress/soldpress-log.txt');
 		
 		$this->service= new phRETS();
 		$this->service->SetParam('catch_last_response', true);
@@ -25,8 +25,8 @@ class soldpress_adapter{
 		$this->service->SetParam('offset_support', true);
 		
 		$cookie_file = 'soldpress';
-		@touch(cookie_file);
-		if (is_writable(cookie_file)) {
+		@touch('cookie_file');
+		if (is_writable('cookie_file')) {
 			$this->service->SetParam('cookie_file', 'soldpress');
 		}
 		
@@ -105,172 +105,168 @@ class soldpress_adapter{
 	}
 	
 	public function sync_residentialproperty($crit, $culture)
-	{			
-	
-		//OPTIMIXATION: Get All Listing That Are Type property in a Array
-		$this->WriteLog('OPTIMIXATION');
-		$args2 = array(
-				'post_type' => 'property'
-				);
-		
-		$this->WriteLog('Get Data from service');	 
-		$posts_array2 = get_posts( $args2 ); // This can be optimized. //Reterive Only Once
-		$this->WriteLog('Data Get');
-		var_dump(count($posts_array2));		
-		//var_dump($posts_array2);
+	{	
+		$this->WriteLog('Sync Start');
 		global $wpdb;
-		$privates = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'property'");
-		var_dump(count($privates));		
-		var_dump($privates);	
-
-		//11937214
+		$wpdb->query("set wait_timeout = 1200"); //Thank You (johnorourke) http://stackoverflow.com/questions/14782494/keep-losing-the-database-in-wordpress		
+		$syncenabled = get_option("sc-sync-enabled",true);
+		if($syncenabled != true){
+				$this->WriteLog('Sync Disabled');
+				return;
+		}
 		
-	//	SELECT *,$wpdb->postmeta FROM $wpdb->posts $wpdb->postmeta WHERE $wpdb->posts.post_type = 'property';
-
-     //   AND $wpdb->postmeta.meta_key = 'key1'   
-     //   AND $wpdb->postmeta.meta_value = 'value1'*/
-		return;
-
 		//Get Time
 		//Get Culture
 	
 		update_option( 'sc-status', true );
 		update_option( 'sc-sync-start',time() ); 
 		update_option( 'sc-sync-end','' ); 
-		
-		$this->WriteLog('Sync Start');
-		
-		echo $crit;
 
 		if($culture =='')
 		{
 			$culture = "en-CA";
 		}
 
-		$this->WriteLog('Getting Results');
-		
-		$results = $this->service->SearchQuery("Property","Property",$crit,array("Limit" => '100',"Culture" => $culture));	
-		
-		$this->WriteLog('Reterived Results');
-		
-		
-		
+		$this->WriteLog('service->Search' . $crit);
 	
-		while ($rets = $this->service->FetchRow($results)) {
+		//Get As Disconnect Array So We Don't Worry Abour Releasing The Adapter
+		$properties = $this->service->Search("Property","Property",$crit,array("Limit" => '100',"Culture" => $culture));	
+		$this->WriteLog('Retrieved Results');
 
-			$ListingKey = $rets['ListingKey'];
-			echo 'ListingKey: ' . $ListingKey .'<br>';//
-					
-			//Check And See If We Have A Post Mathing The Listing Key
-			$args = array(
-				'post_type' => 'property',
-				'meta_query' => array(
-					array(
-						'key' => 'ListingKey',
-						'value' => $ListingKey,)
-				)
-			 );
-			 
-			$posts_array = get_posts( $args ); // This can be optimized. //Reterive Only Once
+		//Get Disconnect Array of Current Post
+		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'property'");
+		//Reset Data
+		$total = count($properties);
+		$count = 0;
+		$user_id = get_current_user_id();
+		//Loop Data
+		foreach ($properties as &$rets) {
 			
+			$count = $count + 1;
+			
+			$ListingKey = $rets['ListingKey'];
+			$this->WriteLog('$ListingKey' . $ListingKey);
+			$post = ''; //Want To Mat use unset
+			foreach($posts_array as $struct) {			
+				if ($ListingKey == $struct->post_name) {
+					$post = $struct;
+					break;
+				}
+			}
+	
 			$title = $rets['UnparsedAddress'] .' (' . $rets['ListingId'] .')';
 			$content = time();
-		
-			if( $posts_array ) {
 			
-								
-				$post = $posts_array[0];
-				
-			/*	if($post->ModificationTimestamp == $rets['ModificationTimestamp'])
-				{
-					$this->WriteLog($post->ID . ' No Change To Record' . $post->ModificationTimestamp );
-				
-				}
-				else
-				{*/
+			if($post != '') 
+			{										
 					$post->post_title = $title;
 					$post->post_content  = $content . 'Updated';
 					$post->post_name = $ListingKey;
-					wp_update_post($post);//
-					
+					$post->post_date = $rets['ModificationTimestamp'];
+
+					wp_update_post($post);
 					$post_id = $post->ID;
-					$this->WriteLog('Update ' . $ListingKey . '-' . $post_id);
+					$this->WriteLog('Update Post' . $ListingKey . '-' . $post_id . ' Record -' .$count . ' of ' . $total);	
 					
-					foreach($rets as $key => &$val) {					
-						//update_post_meta($post_id,$key, $val);	
+					//$this->WriteLog('Delete PostMeta' . $ListingKey . '-' . $post_id);				
+					$deleteQuery = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE post_id = %d AND meta_key like %s",$post_id,'dfd_%'); //Delte Only ListingData
+					$wpdb->query($deleteQuery);
 
-						//Don't Update Listing Key
-						if($key != 'ListingKey'){
-							//Direct Query Still Causing Problems
-							global $wpdb;			
-							$wpdb->query("UPDATE $wpdb->postmeta
-										  SET meta_value = '$val'
-										  WHERE post_id = $post_id 
-											AND meta_key = '$key'");
+					//$this->WriteLog('Insert PostMeta' . $ListingKey . '-' . $post_id);
+					$meta_values = array();
+					
+					//For Speed Optimization we Only Update Records That Have Values This Cuts down on the number of quires we will send to the server
+					foreach($rets as $key => &$value){
+						if($value != ''){
+							$meta_values[] = $wpdb->prepare('(%s, %s, %s)', $post_id, 'dfd_'.$key, $value);
 						}
-					
-					}
-				//}
-
+					}							
+					$values = implode(', ', $meta_values);
+					$wpdb->query("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $values");		
 			}
-			else{				
+			else
+			{				
+				
 				
 				$post = array(
 					  'post_title'    => $title ,
 					  'post_content'  => $content,
 					  'post_status'   => 'publish',
-					  'post_author'   => 1,
-					  'post_type'   => 'property'
+					  'post_author'   => $user_id,
+					  'post_type'   => 'property',
+					  'post_name' => $ListingKey,
+					  'post_date' => $rets['ModificationTimestamp']	
 				);
-				
-				$post_id = wp_insert_post( $post );
-				
-				$this->WriteLog('Insert ' . $ListingKey);
-		//		try{
-					
-				/*	foreach($rets as $key => &$val) {	
-					
-						try
-						{
-							add_post_meta($post_id,$key, $val);
-						}
-						catch(Exception $e){
-						
-							$this->WriteLog('Error Post Meta Insert ' . $ListingKey . $key . $e);
-						}
-					}*/
-					
-					global $wpdb;
+			
+				$post_id = wp_insert_post( $post, $wp_error);
+
+				if($post_id == 0){
+					$this->WriteLog('Insert Post' . $ListingKey . '-' . $post_id . ' Record -' .$count . ' of ' . $total . "Error:" . $wp_error . 'User:' . $user_id);	
+					//$this->WriteLog($wpdb->last_error);				
+				}
+				else
+				{
+
+					$this->WriteLog('Insert Post' . $ListingKey . '-' . $post_id . ' Record -' .$count . ' of ' . $total);	
+									
 					$meta_values = array();
 					foreach($rets as $key => &$value){
-						$meta_values[] = $wpdb->prepare('(%s, %s, %s)', $post_id, $key, $value);
-    				}							
-					$values = implode(', ', $meta_values);					
+						$meta_values[] = $wpdb->prepare('(%s, %s, %s)', $post_id,'dfd_'. $key, $value);
+					}							
+					$values = implode(', ', $meta_values);				
 					$wpdb->query("INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) VALUES $values");
-		//		} 
-		//		catch (Exception $e){
-		//			update_option( 'sc-sync-error',$e ); 
-		//		}
-								
+				}								
 			}
 
-		//	$this->sync_propertyobject($rets['ListingKey'], 'Photo',$post_id);
 			update_post_meta($post_id,'sc-sync-meta-end', time());			
 		}	
+		
 
 		$this->WriteLog('End Sync');		
-			
-		$this->service->FreeResult($results);
-
+		
 		update_option( 'sc-sync-end',time() ); 
 		update_option( 'sc-status', false ); 
 		
 		return true;
 	}
 	
-	public function sync_propertyobject($id, $type, $post_id)
+	public function sync_pictures()
 	{
+		echo 'pics';
+		global $wpdb;
+		$wpdb->query("set wait_timeout = 1200");
+		$this->WriteLog('Begin Picture Sync');	
+		//TODO:// we should be able to speed this up by only joining to the key
+		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'property'");
+		
+		foreach($posts_array as $listing) 
+		{		
+				$post_id = $listing->ID;
+				//Check and see if there if property data needs to be synced
+				$meta = get_post_meta( $post_id ,'sc-sync-picture');
+			
+				$listingKey = $listing->post_name;
+				if($listingKey){ //If Someone manually adds a listing the key is wrong
+				if($meta)
+				{		
+					$this->WriteLog('Photo Record is Synced' .$meta . 'listingkey' .$listingKey );
+				}else
+				{
+					
+					$this->WriteLog('Meta' .$meta . 'listingkey' .$listingKey );
+					$this->WriteLog('Begin Picture Sync' . $post_id );
+					$this->sync_propertyobject($listingKey, 'Photo',$post_id);
+					update_post_meta($post_id,'sc-sync-picture', true);	
+				
+				}
+				}
+		}
+		
+		$this->WriteLog('End Picture Sync');	
+	}
 	
+	public function sync_propertyobject($id, $type, $post_id)
+	{	
 		$args = array(
 	   'post_type' => 'attachment',
 	   'numberposts' => -1,
@@ -282,39 +278,19 @@ class soldpress_adapter{
 		
 		 if ( $attachments ) {
 			foreach ( $attachments as $attachment ) {
-			 //  echo '<li>';
-			 //  echo wp_get_attachment_image( $attachment->ID, 'full' );
-			 //  echo '<p>';
-			 //  echo apply_filters( 'the_title', $attachment->post_title );
-			 //  echo '</p></li>';
 			   wp_delete_attachment( $attachment->ID, true );
-			   //Let's Delete All The Attachments
 			  }
 		 }
 	
 		$record = $this->service->GetObject("Property", $type, $id);
-	
 		$isAttached = false;
 		foreach($record as &$image) 
 		{
-		//	echo $image["Content-Type"]; 
-		//	echo $image["Object-ID"];
-		//	echo $image["Content-ID"];
 			
 			$filename = $image["Content-ID"] .'-' . $type .'-'.$image["Object-ID"]. '.jpg';			
 			$wp_upload_dir = wp_upload_dir();
-			//Check Directory
-			$filePath = $wp_upload_dir[basedir]. '/soldpress/'.$filename;
-		  
-			file_put_contents($filePath,$image["Data"]); //We Change This In Settings
-			
-			
-			//Need a little work
-			//Check if files exists
-			//If attachement is already attached do nothing with the meta data just update the file.
-				
-		//	echo "Attachmet" . $filePath;
-			
+			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;		  
+			file_put_contents($filePath,$image["Data"]); //We Change This In Settings			
 			$wp_filetype = wp_check_filetype(basename($filename), null );
 			$wp_upload_dir = wp_upload_dir();
 				  $attachment = array(
@@ -396,7 +372,7 @@ class soldpress_adapter{
 	
 	private function WriteLog($text) 
 	{
-		update_option( 'sc-sync-status',$text ); 
+		//update_option( 'sc-sync-status',$text ); 
 		$this->log->lwrite($text.PHP_EOL);
 	}
 			

@@ -1,78 +1,130 @@
-<?php
- get_header(); 
+<div class="alert alert-warning"><strong>This is a template for a simple listing website. Use it as a starting point to create something more unique </div>
+
+<?php get_header(); ?>
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
+<h1><?php the_title(); ?></h1>
+<div class="container-fluid">
+	<div class="alert alert-success">
+	<div class="row">
+	<div class="span4">MLS®: <?php echo get_post_meta($post->ID,'dfd_ListingId',true); ?> </div>	
+	<div class="span4 pull-left">For Sale: $<?php echo get_post_meta($post->ID,'dfd_ListPrice',true); ?></div>
+	</div></div>
+
+<div class="row-fluid">
+<div class="span8">
+<p>
+<div class="cycle-slideshow" 
+    data-cycle-fx=scrollHorz
+    data-cycle-timeout=0
+    data-cycle-pager="#adv-custom-pager"
+    data-cycle-pager-template="<a href='#'><img src='{{src}}' width=40 height=40></a>">
+	<?php 
+$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
+	if($photos){
+		foreach ($photos as $photo) {
+			echo '<image src="' . wp_get_attachment_url($photo->ID,'thumbnail') . '">';
+		}
+	}
+	?>			
+<div id=adv-custom-pager class="center external"></div>
+</div></p>
+
+<p><div class="alert alert-success"><?php echo get_post_meta($post->ID,'dfd_UnparsedAddress',true); ?> <?php echo get_post_meta($post->ID,'dfd_City',true); ?>, <?php echo get_post_meta($post->ID,'dfd_StateOrProvince',true); ?> <?php echo get_post_meta($post->ID,'dfd_PostalCode',true); ?></div></p>
+<p><?php echo get_post_meta($post->ID,'dfd_PublicRemarks',true); ?></p>
+
+
+<p>
+<table class="table table-striped table-condensed ">
+              <tbody>
+                <tr>
+                  <td>Bathrooms</td>
+                  <td><?php echo get_post_meta($post->ID,'dfd_BathroomsTotal',true); ?></td>
+		<td>Bedrooms</td>
+                  <td><?php echo get_post_meta($post->ID,'dfd_BedroomsTotal',true); ?></td>
+ 		
+                </tr>
+                <tr>
+		  <td>Property Type</td>
+                  <td><?php echo get_post_meta($post->ID,'dfd_PropertyType',true); ?></td>
+                  <td>Built in</td>
+                  <td><?php echo get_post_meta($post->ID,'dfd_YearBuilt',true); ?></td>	
+                </tr>
+                <tr>
+                  <td>LotSize:</td>
+                  <td><?php echo get_post_meta($post->ID,'dfd_LotSizeArea',true); ?> <?php echo get_post_meta($post->ID,'dfd_LotSizeUnits',true); ?></td>
+		   <td>Building Area</td>
+                  <td><?php echo get_post_meta($post->ID,'dfd_BuildingAreaTotal',true); ?> <?php echo get_post_meta($post->ID,'dfd_BuildingAreaUnits',true); ?></td>	
+                </tr>
+              </tbody></table></p>  
+
+<table class="table table-striped table-condensed ">
+	 <caption>Rooms</caption>
+              <tbody>
+		<tr>
+			<th>Level</th>
+			<th>Type</th>
+			<th>Dimensions</th>
+		</tr>
+		<?php
+for ($i=1; $i<=20; $i++)
+  {	
+	 echo "<tr data-dp='".'dfd_RoomLevel' . $i . "'>";
+  	 echo "<td>" . get_post_meta($post->ID,'dfd_RoomLevel' . $i ,true) . "</td>";	
+	 echo "<td>" . get_post_meta($post->ID,'dfd_RoomType' . $i ,true) . "</td>";
+	 echo "<td>" . get_post_meta($post->ID,'dfd_RoomDimensions' . $i ,true) . "</td>";
+	 echo "</tr>";
+  }
 ?>
+              </tbody></table></p>   
+</div>
+<div class="span4">
+<!-- Agent --><h3>Agent Details</h3>
+<div class="row-fluid">
+<div class="span6">
+<address>
+  <strong><?php echo get_post_meta($post->ID,'dfd_ListAgentFullName',true); ?></strong><br>
+  <?php echo get_post_meta($post->ID,'dfd_ListAgentDesignation',true); ?><br>
 
-<div class="sixteen columns outercontainer bigheading">
-	<div class="four columns alpha">
-		&nbsp;
-	</div>
-	<div class="twelve columns omega">
-		<h2 id="title" class="blogtitle"><?php the_title(); ?></h2>
-	</div>
-</div>	
-
-
-<div class="sixteen columns outercontainer" id="content">
-	<div class="four columns alpha" id="leftsidebar">
-		<?php get_sidebar() ?>
-	</div>
-	
-	<div class="twelve columns omega">	
-	
-		<?php 
-				$arr_sliderimages = get_gallery_images();
-			?>	
-		<?php if (count($arr_sliderimages) > 0) { ?>
-					<div id="sliderimage">
-						<?php if(count($arr_sliderimages) > 1) { ?>
-							<div class="imagehover"></div>
-						<?php } ?>
-						
-						<?php
-							$count = 1;
-							$hide = "";
-							foreach ($arr_sliderimages as $image) { 
-							if($count != 1) {
-									$hide = "style='display: none;'";
-								}
-								$resized = aq_resize($image, 700, 400,true);
-								$resizedthumb = aq_resize($image, 62, 62,true);
-							?>
-							
-							<div class="image" <?php echo $hide; ?>>
-								<img class="detailpagebigimage" alt="" rel="<?php echo $resizedthumb ?>" src="<?php echo $resized ?>" />
-							</div>
-							
-						<?php
-						$count = $count + 1;
-						} ?>
-					</div><!-- end sliderimage -->
-				<?php } ?>
-				
-		<?php if (have_posts()) : while (have_posts()) : the_post(); ?>		
-			 <div <?php post_class() ?>    id="post-<?php echo the_ID(); ?>">
-		
-					<?php if (get_option('wp_showblogimage') == 'show') { ?> 
-						<?php
-						if ( has_post_thumbnail() ) {
-							
-							the_post_thumbnail('medium');
-						}  ?>
-					 <?php } ?>
-					
-<?php include get_template_directory() . '/includes/postmeta.php'; ?>
-<?php the_tags() ?>
-					<?php the_content(); ?>						
-					<?php if ($post->comment_status == "open") { ?>
-					<?php comments_template('', true); ?>
-					<?php } ?>
-				
-			</div>
-		<?php endwhile; else: ?>
-		 
-		
-<?php endif; ?>
+  <abbr title="Phone">O:</abbr> <?php echo get_post_meta($post->ID,'dfd_ListAgentOfficePhone',true); ?>
+  <abbr title="Pager">P:</abbr> <?php echo get_post_meta($post->ID,'dfd_ListAgentPager',true); ?>
+  <abbr title="Fax">H:</abbr> <?php echo get_post_meta($post->ID,'dfd_ListAgentFax',true); ?>
+  <abbr title="Web">W:</abbr> <?php echo get_post_meta($post->ID,'dfd_ListAgentURL',true); ?>
+  <abbr title="Cell">C:</abbr> <?php echo get_post_meta($post->ID,'dfd_ListAgentCellPhone',true); ?>
+</address>
+<address>
+<?php echo get_post_meta($post->ID,'dfd_ListOfficeName',true); ?>
+<?php echo get_post_meta($post->ID,'dfd_ListOfficePhone',true); ?>
+<?php echo get_post_meta($post->ID,'dfd_ListOfficeURL',true); ?>
+</address></div>		
+<div class="span6">			<!-- Co Agent -->
+<address>
+  <strong><?php echo get_post_meta($post->ID,'dfd_CoListAgentFullName',true); ?></strong><br>
+  <?php echo get_post_meta($post->ID,'dfd_CoListAgentDesignation',true); ?><br>
+  <abbr title="Phone">O:</abbr> <?php echo get_post_meta($post->ID,'dfd_CoListAgentOfficePhone',true); ?>
+  <abbr title="Pager">P:</abbr> <?php echo get_post_meta($post->ID,'dfd_CoListAgentPager',true); ?>
+  <abbr title="Fax">H:</abbr> <?php echo get_post_meta($post->ID,'dfd_CoListAgentFax',true); ?>
+  <abbr title="Web">W:</abbr> <?php echo get_post_meta($post->ID,'dfd_CoListAgentURL',true); ?>
+  <abbr title="Cell">C:</abbr> <?php echo get_post_meta($post->ID,'dfd_CoListAgentCellPhone',true); ?>
+</address>
+<address>
+<?php echo get_post_meta($post->ID,'dfd_CoListOfficeName',true); ?>
+<?php echo get_post_meta($post->ID,'dfd_CoListOfficePhone',true); ?>
+<?php echo get_post_meta($post->ID,'dfd_CoListOfficeURL',true); ?>
+</address>
 </div>
 </div>
+</div>
+</div>
+</div>
+<!-- empty element for pager links -->
+<?php //echo get_post_meta($post->ID,'dfd_AnalyticsClick',true); ?>
+<?php //echo get_post_meta($post->ID,'dfd_AnalyticsView',true); ?>
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+<script src="http://malsup.github.com/jquery.cycle2.js"></script>
+
 
 <?php get_footer(); ?>
+
+©1998-2013 The Canadian Real Estate Association. All rights reserved. MLS®, Multiple Listing Service®, and all related graphics are trademarks of The Canadian Real Estate Association. REALTOR®, REALTORS®, and all related graphics are trademarks of REALTOR® Canada Inc. a corporation owned by The Canadian Real Estate Association and the National Association of REALTORS®. 
+©2013 Soldpress Plugin

@@ -34,21 +34,12 @@ function custom_post_type() {
 			'can_export'          => true,
 			'has_archive'         => true,
 			'exclude_from_search' => false,
-			'publicly_queryable'  => true,
+			'publicly_queryable'  => true,		
 			'capability_type'     => 'page',
 		);
 
 		register_post_type( 'property', $args );
 	}
-
-// Hook into the 'init' action
-add_action('init', 'custom_post_type', 0 );
-add_action("admin_init", "admin_init");
- 
-function admin_init()
-{
-// add_meta_box( 'listing_meta_boxes', 'Property Details', 'listing_meta_boxes', 'property', 'normal', 'high' );
-}
 
 function listing_meta_boxes() {
 		global $post;			
@@ -66,5 +57,15 @@ function listing_meta_boxes() {
 					
 		}		
 	}
+
+// Hook into the 'init' action
+add_action('init', 'custom_post_type', 0 );
+add_action("admin_init", "admin_init");
+ 
+function admin_init()
+{
+// add_meta_box( 'listing_meta_boxes', 'Property Details', 'listing_meta_boxes', 'property', 'normal', 'high' );
+}
+
 
 ?>
