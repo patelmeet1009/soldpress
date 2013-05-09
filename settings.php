@@ -1,5 +1,4 @@
 <?php
-
 add_action( 'admin_menu', 'soldpress_admin_menu' );
 
 function soldpress_admin_menu() {
@@ -21,50 +20,61 @@ function soldpress_account_options() {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 	}
 
+$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'display_options';  
+
 ?>
 <h2>SoldPress Settings</h2>
 
-<form method="post" action="options.php">
-    <?php settings_fields( 'sc-settings-group' ); ?>
-    <table class="form-table">
-        <tr valign="top">
-        <th scope="row">Username</th>
-        <td><input type="text" class="regular-text" name="sc-username" value="<?php echo get_option('sc-username','CXLHfDVrziCfvwgCuL8nUahC'); ?>" /></td>
-        </tr>
-        <tr valign="top">
-        <th scope="row">Password</th>
-        <td><input type="password" class="regular-text" name="sc-password" value="<?php echo get_option('sc-password','mFqMsCSPdnb5WO1gpEEtDCHH'); ?>" /></td>
-        </tr>      
-        <tr valign="top">
-        <th scope="row">Url</th>
-        <td><input type="text" class="regular-text" name="sc-url" value="<?php echo get_option('sc-url','http://sample.data.crea.ca/Login.svc/Login'); ?>" /></td>
-        </tr>
- 		<tr valign="top">
-        <th scope="row">Template Location</th>
-        <td><input type="text" class="regular-text" name="sc-template" value="<?php echo get_option('sc-template','wp-content/plugins/soldpress/template/'); ?>" /></td>
-        </tr>
-		<tr valign="top">
-        <th scope="row">Language</th>
-        <td><input type="text" class="regular-text" name="sc-template" value="<?php echo get_option('sc-language','en-CA'); ?>" /></td>
-        </tr>
-		<tr valign="top">
-        <th scope="row">Sync Enabled</th>
-        <td><input type="text" class="regular-text" name="sc-template" value="<?php echo get_option('sc-sync-enabled','1'); ?>" /></td>
-        </tr>
-	<tr valign="top">
-        <th scope="row">Last Update</th>
-        <td><?php echo date('r', get_option('sc-lastupdate' )) ?></td>
-        </tr>
-    </table>
-    <?php submit_button(); ?>  
-</form>
+<h2 class="nav-tab-wrapper">  
+    <a href="?page=soldpress&tab=display_options" class="nav-tab <?php echo $active_tab == 'display_options' ? 'nav-tab-active' : ''; ?>">General Options</a>  
+    <a href="?page=soldpress&tab=sync_options" class="nav-tab <?php echo $active_tab == 'sync_options' ? 'nav-tab-active' : ''; ?>">Sync Options</a>  
+    <a href="?page=soldpress&tab=debug_options" class="nav-tab <?php echo $active_tab == 'debug_options' ? 'nav-tab-active' : ''; ?>">Debug Options</a>  
+</h2>  
+<?php  
 
+ if( $active_tab == 'display_options' ) {  ?>
+		<form method="post" action="options.php">
+			<?php settings_fields( 'sc-settings-group' ); ?>
+			<table class="form-table">
+				<tr valign="top">
+				<th scope="row">Username</th>
+				<td><input type="text" class="regular-text" name="sc-username" value="<?php echo get_option('sc-username','CXLHfDVrziCfvwgCuL8nUahC'); ?>" /></td>
+				</tr>
+				<tr valign="top">
+				<th scope="row">Password</th>
+				<td><input type="password" class="regular-text" name="sc-password" value="<?php echo get_option('sc-password','mFqMsCSPdnb5WO1gpEEtDCHH'); ?>" /></td>
+				</tr>      
+				<tr valign="top">
+				<th scope="row">Url</th>
+				<td><input type="text" class="regular-text" name="sc-url" value="<?php echo get_option('sc-url','http://sample.data.crea.ca/Login.svc/Login'); ?>" /></td>
+				</tr>
+				<tr valign="top">
+				<th scope="row">Template Location</th>
+				<td><input type="text" class="regular-text" name="sc-template" value="<?php echo get_option('sc-template','wp-content/plugins/soldpress/template/'); ?>" /></td>
+				</tr>
+				<tr valign="top">
+				<th scope="row">Language</th>
+				<td>
+					<input type="text" class="regular-text" name="sc-language" value="<?php echo get_option('sc-language','en-CA'); ?>" /></td>
+				</tr>
+				<tr valign="top">
+				<th scope="row">Sync Enabled</th>
+				<td>
+			<input name="sc-sync-enabled" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-sync-enabled' ) ); ?>  />
+			</td>
+				</tr>
+			<tr valign="top">
+				<th scope="row">Last Update</th>
+				<td><?php echo date('r', get_option('sc-lastupdate' )) ?></td>
+				</tr>
+			</table>
+			<?php submit_button(); ?>  
+		</form>
 <form method="post" id="test_connection">    
-	<?php submit_button('Test Connection', 'secondary', 'test_connection', false); ?> 
-	<?php submit_button('Manual Sync', 'secondary', 'sync', false); ?> 
-	<?php submit_button('Clear Listings', 'secondary', 'delete', false); ?> 
-</form>
-<br><br>
+		<?php submit_button('Test Connection', 'secondary', 'test_connection', false); ?> 
+</form>	
+<?php } ?>
+<?php if( $active_tab == 'sync_options' ) {  ?>
 	<?php if (get_option('sc-status' ) == true) { ?>
 		<div id="message" class="updated"><p>CREA Data Sync Active</p>
 		   <ul>
@@ -75,13 +85,17 @@ function soldpress_account_options() {
 				<li>Discription : <?php echo get_option('sc-sync-status' ) ?> </li>
 			</ul>
 		</div>
+	<?php } else {?>	
+		<div id="message" class="updated"><p>No Sync Active</p></div>
 	<?php } ?>	
-<br><br>
+	<br><br>
+	<form method="post" id="sync_connection">     
+		<?php submit_button('Manual Sync', 'secondary', 'sync', false); ?> 
+		<?php submit_button('Clear Listings', 'secondary', 'delete', false); ?> 
+	</form>
 <div>
-<img src="<?php echo plugins_url( 'images/soldpress.jpg' , __FILE__ );?>" >
-<br>
-&copy; 2013 Sanskript Solution, Inc.</div>
-
+<?php } ?>
+<?php if( $active_tab == 'debug_options' ) {  ?>
  <div class = "postbox">
             <div class = "handlediv">
                 <br>
@@ -110,6 +124,12 @@ function soldpress_account_options() {
                 </table>
             </div>
         </div>
+<?php } ?>
+
+<img src="<?php echo plugins_url( 'images/soldpress.jpg' , __FILE__ );?>" >
+<br>
+&copy; 2013 Sanskript Solution, Inc.</div>
+
 		
 <?php 
 
@@ -139,17 +159,6 @@ function soldpress_account_options() {
 	}
 	
 	if (isset($_POST["delete"])) {  
-
-	/*	global $wpdb;
-		$meta_values = array();
-foreach ($metadata as $key => $value) {
-	$meta_values[] = $wpdb->prepare('( %s, %s, %s)', $post_id, $key, $value);
-    }
-	$values = implode(', ', $meta_values);
-	$wpdb->query("INSERT INTO $wpdb->postmeta ($post_id, meta_key, meta_value) VALUES $values");
-*/
-
-		echo 'delete';
 		$mycustomposts = get_posts( array( 'post_type' => 'property', 'numberposts' => 500) );
 			foreach( $mycustomposts as $mypost ) {
 				echo $mypost->ID;

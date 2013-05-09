@@ -3,19 +3,19 @@
 function custom_post_type() {
 
 		$labels = array(
-			'name'                => _x( 'Properties', 'Post Type General Name', 'text_domain' ),
-			'singular_name'       => _x( 'Property', 'Post Type Singular Name', 'text_domain' ),
-			'menu_name'           => __( 'Property', 'text_domain' ),
-			'parent_item_colon'   => __( 'Parent Property:', 'text_domain' ),
-			'all_items'           => __( 'All Properties', 'text_domain' ),
-			'view_item'           => __( 'View Property', 'text_domain' ),
-			'add_new_item'        => __( 'Add New Property', 'text_domain' ),
-			'add_new'             => __( 'New Property', 'text_domain' ),
-			'edit_item'           => __( 'Edit Property', 'text_domain' ),
-			'update_item'         => __( 'Update Property', 'text_domain' ),
-			'search_items'        => __( 'Search properties', 'text_domain' ),
-			'not_found'           => __( 'No properties found', 'text_domain' ),
-			'not_found_in_trash'  => __( 'No properties found in Trash', 'text_domain' ),
+			'name'                => _x( 'Listings', 'Post Type General Name', 'text_domain' ),
+			'singular_name'       => _x( 'Listing', 'Post Type Singular Name', 'text_domain' ),
+			'menu_name'           => __( 'Listing', 'text_domain' ),
+			'parent_item_colon'   => __( 'Parent Listing', 'text_domain' ),
+			'all_items'           => __( 'All Listings', 'text_domain' ),
+			'view_item'           => __( 'View Listing', 'text_domain' ),
+			'add_new_item'        => __( 'Add New Listing', 'text_domain' ),
+			'add_new'             => __( 'New Listing', 'text_domain' ),
+			'edit_item'           => __( 'Edit Listing', 'text_domain' ),
+			'update_item'         => __( 'Update Listing', 'text_domain' ),
+			'search_items'        => __( 'Search listings', 'text_domain' ),
+			'not_found'           => __( 'No listing found', 'text_domain' ),
+			'not_found_in_trash'  => __( 'No listing found in Trash', 'text_domain' ),
 		);
 
 		$args = array(

@@ -133,7 +133,7 @@ class soldpress_adapter{
 		$properties = $this->service->Search("Property","Property",$crit,array("Limit" => '100',"Culture" => $culture));	
 		$this->WriteLog('Retrieved Results');
 
-		//Get Disconnect Array of Current Post
+		//Get Disconnect Array of Current Posts
 		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'property'");
 		//Reset Data
 		$total = count($properties);
@@ -155,12 +155,12 @@ class soldpress_adapter{
 			}
 	
 			$title = $rets['UnparsedAddress'] .' (' . $rets['ListingId'] .')';
-			$content = time();
+			$content = "";
 			
 			if($post != '') 
 			{										
 					$post->post_title = $title;
-					$post->post_content  = $content . 'Updated';
+					$post->post_content  = "";
 					$post->post_name = $ListingKey;
 					$post->post_date = $rets['ModificationTimestamp'];
 
@@ -232,7 +232,6 @@ class soldpress_adapter{
 	
 	public function sync_pictures()
 	{
-		echo 'pics';
 		global $wpdb;
 		$wpdb->query("set wait_timeout = 1200");
 		$this->WriteLog('Begin Picture Sync');	
