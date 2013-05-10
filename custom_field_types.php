@@ -18,8 +18,15 @@ function custom_post_type() {
 			'not_found_in_trash'  => __( 'No listing found in Trash', 'text_domain' ),
 		);
 
+		$rewrite = array(
+			'slug'                => 'listing',
+			'with_front'          => true,
+			'pages'               => true,
+			'feeds'               => true,
+		);
+
 		$args = array(
-			'label'               => __( 'property', 'text_domain' ),
+			'label'               => __( 'sp_property', 'text_domain' ),
 			'description'         => __( 'Property information pages', 'text_domain' ),
 			'labels'              => $labels,
 			'supports'            => array( 'title', 'editor', 'excerpt', 'author', 'thumbnail', 'custom-fields', ),
@@ -30,15 +37,17 @@ function custom_post_type() {
 			'show_in_nav_menus'   => true,
 			'show_in_admin_bar'   => true,
 			'menu_position'       => 5,
-			'menu_icon'           => '',
+			'menu_icon' 	      => plugins_url( '/images/soldpress-home-admin.png' , __FILE__ ), 
 			'can_export'          => true,
 			'has_archive'         => true,
 			'exclude_from_search' => false,
-			'publicly_queryable'  => true,		
+			'publicly_queryable'  => true,	
+			'rewrite'             => $rewrite,
 			'capability_type'     => 'page',
 		);
 
 		register_post_type( 'property', $args );
+		flush_rewrite_rules( false );
 	}
 
 function listing_meta_boxes() {
