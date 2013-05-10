@@ -46,7 +46,7 @@ function custom_post_type() {
 			'capability_type'     => 'page',
 		);
 
-		register_post_type( 'property', $args );
+		register_post_type( 'sp_property', $args );
 		flush_rewrite_rules( false );
 	}
 
