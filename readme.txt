@@ -26,6 +26,14 @@ Your site is required to comply with CREA [Data Distribution Policy and Rules](h
 
 MLS®, REALTOR®, and the associated logos are trademarks of The Canadian Real Estate Association
 
+**Industry Preview**
+
+**This version is intended to be an Industry Preview.** It allows industry professionals to provide valuable feedback to our development team. 
+
+Note: We strongly recommend using this Industry Preview for testing purposes only.
+
+The beta program is currently open and we are looking for participants. Please sign up to be a participant for the beta program here.https://www.sanskript.com/products/beta-program/
+
 == Documentation ==
 
 SoldPress uses Shortcode syntax to intergrate listing content on your WordPress site.
