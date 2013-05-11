@@ -12,27 +12,25 @@ SoldPress is a WordPress plugin to enable CREA's members to easily intergate MLS
 
 == Description ==
 
-[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily intergate MLS® listing content on their WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
+[SoldPress](http://www.sanskript.com/products/soldpress) **Industry Preview** is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily intergate MLS® listing content on their WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
 
 SoldPress is designed to connect directly to CREA's Data Distribution Facility API without the need to integrate with Third Party Vendors. The Plugin is **free** to use and comes with a basic templating engine.
 
-It is highly *recommended* that you use a persistent cache plugin to minimize API calls.
-
 You may register for a data feed a http://tools.realtorlink.ca. An email containing user name and password is sent to the email address submitted as Technical Contact.
 
-Your site is required to comply with CREA [Data Distribution Policy and Rules](http://www.realtorlink.ca/portal/server.pt/document/3400226/data_distribution_facility_policy_and_rules_updated_april_30%2C_2012).
-
-**Copyright**
-
-MLS®, REALTOR®, and the associated logos are trademarks of The Canadian Real Estate Association
+Your site is required to comply with CREA [Data Distribution Policy and Rules](http://www.realtorlink.ca/portal/server.pt/document/3400226/data_distribution_facility_policy_and_rules_updated_april_30%2C_2012). 
 
 **Industry Preview**
 
 **This version is intended to be an Industry Preview.** It allows industry professionals to provide valuable feedback to our development team. 
 
-Note: We strongly recommend using this Industry Preview for testing purposes only.
+We strongly recommend using this Industry Preview for testing purposes only.
 
-The beta program is currently open and we are looking for participants. Please sign up to be a participant for the beta program here.https://www.sanskript.com/products/beta-program/
+The beta program is currently open and we are looking for participants. Please sign up to be a participant for the [Beta Program](https://www.sanskript.com/products/beta-program/)
+
+**Copyright**
+
+MLS®, REALTOR®, and the associated logos are trademarks of The Canadian Real Estate Association
 
 == Documentation ==
 
