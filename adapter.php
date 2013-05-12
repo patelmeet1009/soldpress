@@ -134,13 +134,19 @@ class soldpress_adapter{
 		$this->WriteLog('Retrieved Results');
 
 		//Get Disconnect Array of Current Posts
-		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'property'");
+		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'sp_property'");
 		//Reset Data
 		$total = count($properties);
 		$count = 0;
 		$user_id = get_current_user_id();
 		//Loop Data
 		foreach ($properties as &$rets) {
+			
+			if($this->loginURL == http://sample.data.crea.ca/Login.svc/Login){
+				if($rets['City'] != "Vancouver"){
+					return;
+				}
+			}
 			
 			$count = $count + 1;
 			
@@ -158,7 +164,8 @@ class soldpress_adapter{
 			$content = "";
 			
 			if($post != '') 
-			{										
+			{				
+					
 					$post->post_title = $title;
 					$post->post_content  = "";
 					$post->post_name = $ListingKey;
@@ -193,7 +200,7 @@ class soldpress_adapter{
 					  'post_content'  => $content,
 					  'post_status'   => 'publish',
 					  'post_author'   => $user_id,
-					  'post_type'   => 'property',
+					  'post_type'   => 'sp_property',
 					  'post_name' => $ListingKey,
 					  'post_date' => $rets['ModificationTimestamp']	
 				);
@@ -236,7 +243,7 @@ class soldpress_adapter{
 		$wpdb->query("set wait_timeout = 1200");
 		$this->WriteLog('Begin Picture Sync');	
 		//TODO:// we should be able to speed this up by only joining to the key
-		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'property'");
+		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'sp_property'");
 		
 		foreach($posts_array as $listing) 
 		{		

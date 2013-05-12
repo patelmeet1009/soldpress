@@ -101,20 +101,20 @@ add_filter( 'template_include', 'include_template_function', 1 );
 function include_template_function( $template_path ) {
 
 //Thanks Brother : http://wp.tutsplus.com/tutorials/plugins/a-guide-to-wordpress-custom-post-types-taxonomies-admin-columns-filters-and-archives/
-    if ( get_post_type() == 'property' ) {
+    if ( get_post_type() == 'sp_property' ) {
         if ( is_single() ) {
             // checks if the file exists in the theme first,
             // otherwise serve the file from the plugin
-            if ( $theme_file = locate_template( array ( 'single-property.php' ) ) ) {
+            if ( $theme_file = locate_template( array ( 'single-sp_property.php' ) ) ) {
                 $template_path = $theme_file;
             } else {
-                $template_path = plugin_dir_path( __FILE__ ) . '/single-property.php';
+                $template_path = plugin_dir_path( __FILE__ ) . '/single-sp_property.php';
             }
         }
 	elseif ( is_archive() ) {
-            if ( $theme_file = locate_template( array ( 'archive-property.php' ) ) ) {
+            if ( $theme_file = locate_template( array ( 'archive-sp_property.php' ) ) ) {
                 $template_path = $theme_file;
-            } else { $template_path = plugin_dir_path( __FILE__ ) . '/archive-property.php';
+            } else { $template_path = plugin_dir_path( __FILE__ ) . '/archive-sp_property.php';
  
             }
         }
