@@ -86,7 +86,7 @@ SoldPress Settings</h2>
 					</tr>
 					<tr valign="top">
 					<th scope="row">Last Update</th>
-					<td><?php echo date('r', get_option('sc-lastupdate' )) ?></td>
+					<td><?php echo get_option('sc-lastupdate' )->format('Y-m-d'); ?></td>
 					</tr>
 				</table>
 				<table>
@@ -111,18 +111,18 @@ SoldPress Settings</h2>
 		<table class="widefat">
 			<thead>
 				<tr class="thead">
-					<th scope="col" class="check-column"><input type="checkbox" class="check-all-entries"></th>
+					<th>Job</th>
 					<th>Time</th>
-					<th>Function</th>
 					<th>Schedule</th>
 					<th>Interval</th>
-					<th>Options</th>
+					<th>Last Start</th>
+					<th>Last End</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr class="thead">
-					<th scope="col" class="check-column"><input type="checkbox" class="check-all-entries"></th>
-					<th>Function</th>
+					
+					<th>Job</th>
 					<th>Time</th>
 					<th>Schedule</th>
 					<th>Interval</th>
@@ -131,32 +131,34 @@ SoldPress Settings</h2>
 				</tr>
 			</tfoot>
 			<tbody>
-				<tr class="entry-row alternate">
-					<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>
-					<td>soldpress_listing_sync
-						<div class="row-actions" style="margin:0; padding:0;">
-								<a href="/wp-admin/admin.php?page=pluginbuddy_backupbuddy-scheduling&amp;edit=1">Edit this schedule</a>
-							</div>
-					</td>
-					<td style="white-space: nowrap;">daily</td>
-					<td style="white-space: nowrap;">86400</td>
-					<td>Mar 30, 2013 6:27PM</td>
-					<td>Mar 30, 2013 6:27PM</td>
-					<td>Run Now</td>
-				</tr>
-				<tr class="entry-row alternate">
-					<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>
-					<td>soldpress_photo_sync
-						<div class="row-actions" style="margin:0; padding:0;">
-								<a href="/wp-admin/admin.php?page=pluginbuddy_backupbuddy-scheduling&amp;edit=1">Edit this schedule</a>
-							</div>
-					</td>
-					<td style="white-space: nowrap;">hourly</td>
-					<td style="white-space: nowrap;">3600</td>
-					<td>Mar 30, 2013 6:27PM</td>
-					<td>Mar 30, 2013 6:27PM</td>
-					<td>Run Now</td>
-				</tr>
+	
+	<?php $time_slots = _get_cron_array();
+		
+	    $tr_class = "";
+            foreach ($time_slots as $key => $jobs) {	
+                foreach ($jobs as $job => $value) {
+					if($job == 'soldpress_photo_sync' || $job == 'soldpress_listing_sync'){
+							echo '<tr>';
+						//	echo '<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>';
+							echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="/wp-admin/admin.php?page=pluginbuddy_backupbuddy-scheduling&amp;edit=1">Run Now</a> | <a href="/wp-admin/admin.php?page=pluginbuddy_backupbuddy-scheduling&amp;edit=1">Disable</a></div></td>';
+							
+							echo '<td>'.date("r", $key).'</td>';							
+							$schedule = $value[key($value)];
+							echo '<td>'.(isset($schedule["schedule"]) ? $schedule["schedule"] : "").'</td>';
+							echo '<td class="aright">'.(isset($schedule["interval"]) ? $schedule["interval"] : "").'</td>';							
+							echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-start' )) ;
+							echo '</td>';
+							echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-end' )) ;
+							echo '</td>';
+							echo '</tr>';
+							if ($tr_class == "")
+								$tr_class = "entry-row alternate ";
+							else
+								$tr_class = "entry-row";
+							}
+				}
+            }
+?>
 			</tbody>
 		</table>
 		<h3 class="title">Advance</h3>
@@ -168,6 +170,7 @@ SoldPress Settings</h2>
 	<?php } ?>
 	
 	<?php if( $active_tab == 'debug_options' ) {  ?>
+	<a href="/wp-content/uploads/soldpress/soldpress-log.txt">debug log</a>
 	 <div class = "postbox">
 				<div class = "handlediv">
 					<br>
@@ -198,9 +201,7 @@ SoldPress Settings</h2>
 			</div>
 	<?php } ?>
 
-	<img src="<?php echo plugins_url( 'images/soldpress.jpg' , __FILE__ );?>" >
-	<br>
-	&copy; 2013 Sanskript Solution, Inc.</div>
+	<div>&copy; 2013 Sanskript Solution, Inc.</div>
 
 		
 	<?php 
@@ -211,10 +212,31 @@ SoldPress Settings</h2>
 		 */
 		function admin_footer() {
 			$plugin_data = get_plugin_data( __FILE__ );
-			printf('%1$s ' . __("plugin", 'soldpress') .' | ' . __("Version", 'soldpress') . ' %2$s | '. __('by', 'soldpress') . ' %3$s<br />', $plugin_data['Title'], $plugin_data['Version'], $plugin_data['Author']);
+			printf('%1$s ' . __("plugin", 'SoldPress') .' | ' . __("Version", 'SoldPress') . ' %2$s | '. __('by', 'SoldPress') . ' %3$s<br />', $plugin_data['Title'], $plugin_data['Version'], $plugin_data['Author']);
+			printf('%1$s ' . __("plugin", 'soldpress') .' | ' . __("Version", 'soldpress') . ' %2$s | '. __('by', 'soldpress') . ' %3$s<br />', "SoldPress", "0.5A", "Replace");
 		}
 	//$date = new DateTime();
 	//echo $date->getTimestamp();
+		//We Do The Get Before
+		if (isset($_GET["spa"])) {
+			$sp_action = $_GET["spa"];
+			if ($sp_action != '') {
+                    switch ($$sp_action) {
+                        case "unsevt":
+                          
+                           // wp_redirect(remove_query_arg(array('time', 'job', 'spa', 'key'), stripslashes($_SERVER['REQUEST_URI'])));
+                            exit();
+                            break;
+                        case "runevt":
+                            $job = $_GET['job'];
+                            do_action($job);
+                            wp_redirect(remove_query_arg(array('job', 'spa'), stripslashes($_SERVER['REQUEST_URI'])));
+                            exit();
+                            break;
+					}
+			}
+							
+		}
 		
 		if (isset($_POST["test_connection"])) {  
 				
@@ -227,11 +249,11 @@ SoldPress Settings</h2>
 		
 		if (isset($_POST["sync"])) {  
 		
-			 soldpress_listintgs();
+			do_action('soldpress_listing_sync');
 		}
 		
 		if (isset($_POST["delete"])) {  
-			$mycustomposts = get_posts( array( 'post_type' => 'property', 'numberposts' => 500) );
+			$mycustomposts = get_posts( array( 'post_type' => 'sp_property', 'numberposts' => 500) );
 				foreach( $mycustomposts as $mypost ) {
 					echo $mypost->ID;
 				// Delete's each post.

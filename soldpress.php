@@ -80,8 +80,8 @@ function soldpress_listintgs() {
 	
 	if($adapter->connect())
 	{
-		return $adapter-> sync_residentialproperty("LastUpdated=2011-05-08T22:00:17Z","");	
-		//return $adapter-> sync_residentialproperty("LastUpdated=" . $date->format('Y-m-d'),"");	
+		return $adapter-> sync_residentialproperty("LastUpdated=2011-05-08T22:00:17Z");	
+		//return $adapter-> sync_residentialproperty("LastUpdated=" . $date->format('Y-m-d'));	
 	}
 	
 

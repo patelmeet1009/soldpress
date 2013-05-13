@@ -104,47 +104,46 @@ class soldpress_adapter{
 	
 	}
 	
-	public function sync_residentialproperty($crit, $culture)
+	public function sync_residentialproperty($crit)
 	{	
+
 		$this->WriteLog('Sync Start');
 		global $wpdb;
 		$wpdb->query("set wait_timeout = 1200"); //Thank You (johnorourke) http://stackoverflow.com/questions/14782494/keep-losing-the-database-in-wordpress		
 		$syncenabled = get_option("sc-sync-enabled",true);
 		if($syncenabled != true){
-				$this->WriteLog('Sync Disabled');
-				return;
+			$this->WriteLog('Sync Disabled');
+			return;
 		}
 		
-		//Get Time
-		//Get Culture
-	
 		update_option( 'sc-status', true );
-		update_option( 'sc-sync-start',time() ); 
-		update_option( 'sc-sync-end','' ); 
-
-		if($culture =='')
-		{
-			$culture = "en-CA";
-		}
+		update_option( 'sc-soldpress_listing_sync-start',time() ); 
+		update_option( 'sc-soldpress_listing_sync-end','' ); 
+	
+		$culture = get_option("sc-language","en-CA");
 
 		$this->WriteLog('service->Search' . $crit);
 	
 		//Get As Disconnect Array So We Don't Worry Abour Releasing The Adapter
 		$properties = $this->service->Search("Property","Property",$crit,array("Limit" => '100',"Culture" => $culture));	
 		$this->WriteLog('Retrieved Results');
-
+		$total = count($properties);
+		$this->WriteLog("Retrieved Results Total" .$total );
+		
 		//Get Disconnect Array of Current Posts
 		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'sp_property'");
+		
 		//Reset Data
-		$total = count($properties);
 		$count = 0;
 		$user_id = get_current_user_id();
 		//Loop Data
 		foreach ($properties as &$rets) {
 			
-			if($this->loginURL == http://sample.data.crea.ca/Login.svc/Login){
+			//If sample data set we are only going to insert Vancouver Listing.
+		
+			if($this->loginURL == "http://sample.data.crea.ca/Login.svc/Login"){
 				if($rets['City'] != "Vancouver"){
-					return;
+					continue;
 				}
 			}
 			
@@ -160,6 +159,9 @@ class soldpress_adapter{
 				}
 			}
 	
+			$postdate  = DateTime::createFromFormat("d/m/Y H:i:s A", $rets['ModificationTimestamp']);	
+			$this->WriteLog($postdate->format('Y-m-d') . " " . $postdate->getTimestamp());
+//it's false if an error occurs) but you should also definitely check DateTime::getLastErrors();
 			$title = $rets['UnparsedAddress'] .' (' . $rets['ListingId'] .')';
 			$content = "";
 			
@@ -169,7 +171,7 @@ class soldpress_adapter{
 					$post->post_title = $title;
 					$post->post_content  = "";
 					$post->post_name = $ListingKey;
-					$post->post_date = $rets['ModificationTimestamp'];
+					$post->post_date = $postdate->format('Y-m-d H:i:s');
 
 					wp_update_post($post);
 					$post_id = $post->ID;
@@ -202,18 +204,20 @@ class soldpress_adapter{
 					  'post_author'   => $user_id,
 					  'post_type'   => 'sp_property',
 					  'post_name' => $ListingKey,
-					  'post_date' => $rets['ModificationTimestamp']	
+					  'post_date' => $postdate->format('Y-m-d H:i:s')
 				);
 			
-				$post_id = wp_insert_post( $post, $wp_error);
+				$post_id = wp_insert_post( $post, true);
 
-				if($post_id == 0){
-					$this->WriteLog('Insert Post' . $ListingKey . '-' . $post_id . ' Record -' .$count . ' of ' . $total . "Error:" . $wp_error . 'User:' . $user_id);	
-					//$this->WriteLog($wpdb->last_error);				
+				if (is_wp_error($post_id)) {
+						$this->WriteLog(' Insert Post - Error' . $ListingKey . '-' . $post_id . ' Record -' .$count . ' of '. 'User:' . $user_id);
+						$errors = $post_id->get_error_messages();
+						foreach ($errors as $error) {
+							$this->WriteLog( var_dump($error)); 
+						}
 				}
 				else
 				{
-
 					$this->WriteLog('Insert Post' . $ListingKey . '-' . $post_id . ' Record -' .$count . ' of ' . $total);	
 									
 					$meta_values = array();
@@ -231,7 +235,7 @@ class soldpress_adapter{
 
 		$this->WriteLog('End Sync');		
 		
-		update_option( 'sc-sync-end',time() ); 
+		update_option( 'sc-soldpress_listing_sync-end',time() ); 
 		update_option( 'sc-status', false ); 
 		
 		return true;
@@ -239,9 +243,14 @@ class soldpress_adapter{
 	
 	public function sync_pictures()
 	{
+		
 		global $wpdb;
 		$wpdb->query("set wait_timeout = 1200");
 		$this->WriteLog('Begin Picture Sync');	
+		
+		update_option( 'sc-soldpress_photo_sync-start-status', true ); 
+		update_option( 'sc-soldpress_photo_sync-start',time() );
+		update_option( 'sc-soldpress_photo_sync-end','' );
 		//TODO:// we should be able to speed this up by only joining to the key
 		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'sp_property'");
 		
@@ -268,6 +277,8 @@ class soldpress_adapter{
 				}
 		}
 		
+		update_option( 'sc-soldpress_photo_sync-end',time() );
+		update_option( 'sc-soldpress_photo_sync-start-status', false );
 		$this->WriteLog('End Picture Sync');	
 	}
 	
