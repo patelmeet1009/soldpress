@@ -96,7 +96,7 @@ class soldpress_adapter{
 		
 		$this->displaylog(var_dump($this->service->GetAllLookupValues("Property")));
 		$this->displaylog(var_dump($this->service->GetAllLookupValues("Office")));
-	    	$this->displaylog(var_dump($this->service->GetAllLookupValues("Agent")));
+	    $this->displaylog(var_dump($this->service->GetAllLookupValues("Agent")));
 		
 		$this->displaylog(var_dump($this->service->GetMetadataObjects("Property")));
 		$this->displaylog(var_dump($this->service->GetMetadataObjects("Office")));

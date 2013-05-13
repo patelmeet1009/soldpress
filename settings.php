@@ -25,13 +25,12 @@ function soldpress_account_options() {
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'display_options';  
 ?>
 	
-	<h2><img src="http://soldvancouver.sanskript.com/wp-content/plugins/soldpress/images/soldpress.jpg" width="32px" height="32px">
-SoldPress Settings</h2>
+	<h2><img src="<?php echo plugins_url( '/images/soldpress-m.png' , __FILE__ ); ?>"" width="32px" height="32px">SoldPress Settings</h2>
 
 	<h2 class="nav-tab-wrapper">  
 		<a href="?page=soldpress&tab=display_options" class="nav-tab <?php echo $active_tab == 'display_options' ? 'nav-tab-active' : ''; ?>">General Options</a>  
 		<a href="?page=soldpress&tab=sync_options" class="nav-tab <?php echo $active_tab == 'sync_options' ? 'nav-tab-active' : ''; ?>">Sync Options</a>  
-		<a href="?page=soldpress&tab=debug_options" class="nav-tab <?php echo $active_tab == 'debug_options' ? 'nav-tab-active' : ''; ?>">Debug Options</a>  
+		<a href="?page=soldpress&tab=debug_options" class="nav-tab <?php echo $active_tab == 'debug_options' ? 'nav-tab-active' : ''; ?>">Debug</a>  
 		</h2>  
 	<?php  
 
@@ -93,21 +92,8 @@ SoldPress Settings</h2>
 				
 				<?php submit_button(); ?>  
 			</form>
-		
-		<?php if (get_option('sc-status' ) == true) { ?>
-			<div id="message" class="updated"><p>CREA Data Sync Active</p>
-			   <ul>
-					<li>Status : <?php echo get_option('sc-status' ) ?></li>
-					<li>Start : <?php echo get_option('sc-sync-start' ) ?></li>
-					<li>End : <?php echo get_option('sc-sync-end' ) ?></li>
-					<li>Error : <?php echo get_option('sc-sync-error' ) ?> </li>	  
-					<li>Discription : <?php echo get_option('sc-sync-status' ) ?> </li>
-				</ul>
-			</div>
-		<?php } else {?>	
-			<div id="message" class="updated"><p>No Sync Active</p></div>
-		<?php } ?>	
 		<h3 class="title">Schedule</h3>
+		
 		<table class="widefat">
 			<thead>
 				<tr class="thead">
@@ -131,44 +117,35 @@ SoldPress Settings</h2>
 				</tr>
 			</tfoot>
 			<tbody>
-	
-	<?php $time_slots = _get_cron_array();
-		
-	    $tr_class = "";
-            foreach ($time_slots as $key => $jobs) {	
-                foreach ($jobs as $job => $value) {
-					if($job == 'soldpress_photo_sync' || $job == 'soldpress_listing_sync'){
-							echo '<tr>';
-						//	echo '<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>';
-							echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="/wp-admin/admin.php?page=pluginbuddy_backupbuddy-scheduling&amp;edit=1">Run Now</a> | <a href="/wp-admin/admin.php?page=pluginbuddy_backupbuddy-scheduling&amp;edit=1">Disable</a></div></td>';
-							
-							echo '<td>'.date("r", $key).'</td>';							
-							$schedule = $value[key($value)];
-							echo '<td>'.(isset($schedule["schedule"]) ? $schedule["schedule"] : "").'</td>';
-							echo '<td class="aright">'.(isset($schedule["interval"]) ? $schedule["interval"] : "").'</td>';							
-							echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-start' )) ;
-							echo '</td>';
-							echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-end' )) ;
-							echo '</td>';
-							echo '</tr>';
-							if ($tr_class == "")
-								$tr_class = "entry-row alternate ";
-							else
-								$tr_class = "entry-row";
+				<?php $time_slots = _get_cron_array();		
+					$tr_class = "";
+						foreach ($time_slots as $key => $jobs) {	
+							foreach ($jobs as $job => $value) {
+								if($job == 'soldpress_photo_sync' || $job == 'soldpress_listing_sync'){
+										echo '<tr>';
+										//echo '<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>';
+										echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options&spa=runevt&job='.$job.'">Run Now</a> || <a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options">Disable</a></div></td>';
+										
+										echo '<td>'.date("r", $key).'</td>';							
+										$schedule = $value[key($value)];
+										echo '<td>'.(isset($schedule["schedule"]) ? $schedule["schedule"] : "").'</td>';
+										echo '<td class="aright">'.(isset($schedule["interval"]) ? $schedule["interval"] : "").'</td>';							
+										echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-start' )) ;
+										echo '</td>';
+										echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-end' )) ;
+										echo '</td>';
+										echo '</tr>';
+										if ($tr_class == "")
+											$tr_class = "entry-row alternate ";
+										else
+											$tr_class = "entry-row";
+										}
 							}
-				}
-            }
-?>
+						}
+				?>
 			</tbody>
-		</table>
-		<h3 class="title">Advance</h3>
-		<form method="post" id="sync_connection">     
-			<?php submit_button('Manual Sync', 'secondary', 'sync', false); ?> 
-			<?php submit_button('Clear Listings', 'secondary', 'delete', false); ?> 
-		</form>
-	<div>
+		</table>		
 	<?php } ?>
-	
 	<?php if( $active_tab == 'debug_options' ) {  ?>
 	<a href="/wp-content/uploads/soldpress/soldpress-log.txt">debug log</a>
 	 <div class = "postbox">
@@ -199,29 +176,34 @@ SoldPress Settings</h2>
 					</table>
 				</div>
 			</div>
+			<h3 class="title">Advance</h3>
+					<form method="post" id="sync_connection">     
+						<?php submit_button('Manual Sync', 'secondary', 'sync', false); ?> 
+						<?php submit_button('Clear Listings', 'secondary', 'delete', false); ?> 
+					</form>
+			<?php if (get_option('sc-status' ) == true) { ?>
+			<div id="message" class="updated"><p>CREA Data Sync Active</p>
+			   <ul>
+					<li>Status : <?php echo get_option('sc-status' ) ?></li>
+					<li>Start : <?php echo get_option('sc-sync-start' ) ?></li>
+					<li>End : <?php echo get_option('sc-sync-end' ) ?></li>
+					<li>Error : <?php echo get_option('sc-sync-error' ) ?> </li>	  
+					<li>Discription : <?php echo get_option('sc-sync-status' ) ?> </li>
+				</ul>
+			</div>
+		<?php } else {?>	
+			<div id="message" class="updated"><p>No Sync Active</p></div>
+		<?php } ?>
 	<?php } ?>
-
-	<div>&copy; 2013 Sanskript Solution, Inc.</div>
-
+		<p>
+			<div>&copy; 2013 Sanskript Solution, Inc.</div>
+		</p>
 		
 	<?php 
-
-		add_action( 'in_admin_footer', 'admin_footer' );
-		/**
-		 * Adds Footer links. Based on http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
-		 */
-		function admin_footer() {
-			$plugin_data = get_plugin_data( __FILE__ );
-			printf('%1$s ' . __("plugin", 'SoldPress') .' | ' . __("Version", 'SoldPress') . ' %2$s | '. __('by', 'SoldPress') . ' %3$s<br />', $plugin_data['Title'], $plugin_data['Version'], $plugin_data['Author']);
-			printf('%1$s ' . __("plugin", 'soldpress') .' | ' . __("Version", 'soldpress') . ' %2$s | '. __('by', 'soldpress') . ' %3$s<br />', "SoldPress", "0.5A", "Replace");
-		}
-	//$date = new DateTime();
-	//echo $date->getTimestamp();
-		//We Do The Get Before
 		if (isset($_GET["spa"])) {
 			$sp_action = $_GET["spa"];
 			if ($sp_action != '') {
-                    switch ($$sp_action) {
+                    switch ($sp_action) {
                         case "unsevt":
                           
                            // wp_redirect(remove_query_arg(array('time', 'job', 'spa', 'key'), stripslashes($_SERVER['REQUEST_URI'])));
@@ -233,6 +215,14 @@ SoldPress Settings</h2>
                             wp_redirect(remove_query_arg(array('job', 'spa'), stripslashes($_SERVER['REQUEST_URI'])));
                             exit();
                             break;
+						 case "testevt":
+							$adapter= new soldpress_adapter();
+							if($adapter->connect())
+							{
+								return $adapter-> logserverinfo();		
+							}
+							exit();
+							break;
 					}
 			}
 							
@@ -263,4 +253,4 @@ SoldPress Settings</h2>
 		}
 	}
 
-	?>
+?>

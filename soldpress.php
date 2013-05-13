@@ -122,4 +122,13 @@ function include_template_function( $template_path ) {
     return $template_path;
 }
 
+	add_action( 'in_admin_footer', 'admin_footer' );
+		/**
+		 * Adds Footer links. Based on http://striderweb.com/nerdaphernalia/2008/06/give-your-wordpress-plugin-credit/
+		 */
+		function admin_footer() {
+			$plugin_data = get_plugin_data( __FILE__ );
+			printf('%1$s ' . __("plugin", 'SoldPress') .' | ' . __("Version", 'SoldPress') . ' %2$s | '. __('by', 'SoldPress') . ' %3$s<br />', $plugin_data['Title'], $plugin_data['Version'], $plugin_data['Author']);
+		}
+
 ?>
