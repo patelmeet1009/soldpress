@@ -122,24 +122,25 @@ function soldpress_account_options() {
 						foreach ($time_slots as $key => $jobs) {	
 							foreach ($jobs as $job => $value) {
 								if($job == 'soldpress_photo_sync' || $job == 'soldpress_listing_sync'){
-										echo '<tr>';
-										//echo '<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>';
-										echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options&spa=runevt&job='.$job.'">Run Now</a> || <a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options">Disable</a></div></td>';
-										
-										echo '<td>'.date("r", $key).'</td>';							
-										$schedule = $value[key($value)];
-										echo '<td>'.(isset($schedule["schedule"]) ? $schedule["schedule"] : "").'</td>';
-										echo '<td class="aright">'.(isset($schedule["interval"]) ? $schedule["interval"] : "").'</td>';							
-										echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-start' )) ;
-										echo '</td>';
-										echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-end' )) ;
-										echo '</td>';
-										echo '</tr>';
-										if ($tr_class == "")
-											$tr_class = "entry-row alternate ";
-										else
-											$tr_class = "entry-row";
-										}
+									echo '<tr>';
+									//echo '<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>';
+									echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options&spa=runevt&job='.$job.'">Run Now</a> || <a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options">Disable</a></div></td>';								
+									echo '<td>'.date("r", $key).'</td>';							
+									$schedule = $value[key($value)];
+									echo '<td>'.(isset($schedule["schedule"]) ? $schedule["schedule"] : "").'</td>';
+									echo '<td class="aright">'.(isset($schedule["interval"]) ? $schedule["interval"] : "").'</td>';							
+									echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-start' )) ;
+									echo '</td>';
+									echo '<td class="aright">'. Date('r',get_option('sc-'.$job.'-end' )) ;
+									echo '</td>';
+									echo '</tr>';
+									if ($tr_class == ""){
+										$tr_class = "entry-row alternate ";
+									}
+									else{
+										$tr_class = "entry-row";
+									}
+								}
 							}
 						}
 				?>
@@ -147,7 +148,9 @@ function soldpress_account_options() {
 		</table>		
 	<?php } ?>
 	<?php if( $active_tab == 'debug_options' ) {  ?>
-	<a href="/wp-content/uploads/soldpress/soldpress-log.txt">debug log</a>
+	<h3 class="title">Log File</h3>
+	<a target="_blank" href="/wp-content/uploads/soldpress/soldpress-log.txt">debug log</a>
+	<h3 class="title">Debug</h3>
 	 <div class = "postbox">
 				<div class = "handlediv">
 					<br>
@@ -200,13 +203,15 @@ function soldpress_account_options() {
 		</p>
 		
 	<?php 
+		//Process Get Actions First
 		if (isset($_GET["spa"])) {
 			$sp_action = $_GET["spa"];
 			if ($sp_action != '') {
                     switch ($sp_action) {
                         case "unsevt":
-                          
-                           // wp_redirect(remove_query_arg(array('time', 'job', 'spa', 'key'), stripslashes($_SERVER['REQUEST_URI'])));
+							$job = $_GET['job'];
+							wp_clear_scheduled_hook($job);
+                            wp_redirect(remove_query_arg(array('job', 'spa'), stripslashes($_SERVER['REQUEST_URI'])));
                             exit();
                             break;
                         case "runevt":
@@ -227,7 +232,7 @@ function soldpress_account_options() {
 			}
 							
 		}
-		
+		//Process Data Post Actions
 		if (isset($_POST["test_connection"])) {  
 				
 			$adapter= new soldpress_adapter();

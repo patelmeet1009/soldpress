@@ -110,7 +110,7 @@ class soldpress_adapter{
 		$this->WriteLog('Sync Start');
 		global $wpdb;
 		$wpdb->query("set wait_timeout = 1200"); //Thank You (johnorourke) http://stackoverflow.com/questions/14782494/keep-losing-the-database-in-wordpress		
-		$syncenabled = get_option("sc-sync-enabled",true);
+		$syncenabled = get_option("sc-sync-enabled",false);
 		if($syncenabled != true){
 			$this->WriteLog('Sync Disabled');
 			return;
