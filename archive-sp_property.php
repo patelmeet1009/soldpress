@@ -72,57 +72,50 @@ function wpbeginner_numeric_posts_nav() {
 
 ?>
 <section>
-    <div id="content" role="main">
-	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
-    <?php if ( have_posts() ) : ?>
+     <?php if ( have_posts() ) : ?>
+	 <div id="content" role="main">
+		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">
         <header class="page-header">
             <h1 class="page-title">Property Listings</h1> 
         </header>
- <div class="container">
-	<div class="hero-unit">test</div>
-	<?php wpbeginner_numeric_posts_nav(); ?>
-            <!-- Display table headers -->
-            <?php while ( have_posts() ) : the_post(); ?>
-<div class="row">
-			<div class="span2">
-				<?php 
-$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
-if ($photos) {
-		foreach ($photos as $photo) {
-			// get the correct image html for the selected size
-			echo '<a href="<?php the_permalink(); ?>" class="thumbnail"><image src="' . wp_get_attachment_url($photo->ID,'thumbnail') . '"></a>';
-			//$thumbimg = wp_get_attachment_link( $attachment->ID, 'thumbnail-size', true );
-			//echo $thumbimg;
-			break;
-		}
-}else{
-		echo 'No Image';
-}
-?>			
-			</div>	 			
-			<div class="span8">
-				<a href="<?php the_permalink(); ?>">
-                    <?php the_title(); ?></a></br><?php echo esc_html( get_post_meta( get_the_ID(), 'ListPrice', true ) ); ?><br>
-<?php echo esc_html( get_post_meta( get_the_ID(), 'City', true ) ); ?><br>
-<?php echo esc_html( get_post_meta( get_the_ID(), 'BedroomsTotal', true ) ); ?> Bedrooms |  
-<?php echo esc_html( get_post_meta( get_the_ID(), 'BathroomsTotal', true ) ); ?> Bathrooms | <?php echo esc_html( get_post_meta( get_the_ID(), 'LotSizeArea', true ) ); ?>  
-<?php echo esc_html( get_post_meta( get_the_ID(), 'LotSizeUnits', true ) ); ?> 	  
-			</div>
-		</div>
-            <?php endwhile; ?>
+		<div class="container">
+			<?php wpbeginner_numeric_posts_nav(); ?>
+				<?php while ( have_posts() ) : the_post(); ?>
+					<div class="row">
+						<div class="span2">
+							<?php 
+								$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
+								if ($photos) {
+										foreach ($photos as $photo) {
+											echo '<a href="' .  get_the_ID() . '" class="thumbnail"><image src="' . wp_get_attachment_url($photo->ID,'thumbnail') . '"></a>';
+											break;
+										}
+								}else{
+										echo 'No Image';
+								}
+								?>			
+						</div>	 			
+						<div class="span8">
+							<a href="<?php the_permalink(); ?>">								
+								<?php the_title(); ?></a></br><?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_ListPrice', true ) ); ?><br>
+								<?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_City', true )); ?><br>
+								<?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_BedroomsTotal', true ) ); ?> Bedrooms |  
+								<?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_BathroomsTotal', true ) ); ?> Bathrooms | <?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_LotSizeArea', true ) ); ?>  
+								<?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_LotSizeUnits', true ) ); ?> 	
+						</div>
+				</div>
+			<?php endwhile; ?>
 
-		
-	
-            <!-- Display page navigation -->
-        <?php global $wp_query;
-        if ( isset( $wp_query->max_num_pages ) && $wp_query->max_num_pages > 1 ) { ?>
-            <nav id="<?php echo $nav_id; ?>">
-                <div class="nav-previous"><?php next_posts_link( '<span class="meta-nav">&larr;</span> Older listings'); ?></div>
-                <div class="nav-next"><?php previous_posts_link( 'Newer listins<span class= "meta-nav">&rarr;</span>' ); ?></div>
-            </nav>
-        <?php };
-    endif; ?>
-</div>
+			<!-- Display page navigation -->
+			<?php global $wp_query;
+			if ( isset( $wp_query->max_num_pages ) && $wp_query->max_num_pages > 1 ) { ?>
+				<nav id="<?php echo $nav_id; ?>">
+					<div class="nav-previous"><?php next_posts_link( '<span class="meta-nav">&larr;</span> Older listings'); ?></div>
+					<div class="nav-next"><?php previous_posts_link( 'Newer listins<span class= "meta-nav">&rarr;</span>' ); ?></div>
+				</nav>
+			<?php };
+			endif; ?>
+		</div>
     </div>
 </section>
 <br /><br />
