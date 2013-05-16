@@ -75,6 +75,10 @@ add_action('wp_footer', 'sp_copywrite');
 		.sp_value{
 			display: block;
 		}
+		
+		.table td{
+			width:50%;
+		}
 	</style>
 	<h1><?php the_title(); ?></h1>		
 		<div class="well2">
@@ -82,181 +86,120 @@ add_action('wp_footer', 'sp_copywrite');
 				<div class="span4">MLS®: <?php echo get_post_meta($post->ID,'dfd_ListingId',true); ?> </div>	
 				<div class="span4 pull-right"><span class="pull-right">For Sale: $<?php echo get_post_meta($post->ID,'dfd_ListPrice',true); ?></span></div>
 			</div>
-		</div>
+		</div>	
 	<div class="container-fluid">	
 		<div class="row-fluid">
 				<div class="span8">
-							<p>
-								<div class="cycle-slideshow" data-cycle-fx="scrollHorz" data-cycle-timeout="0" data-cycle-pager="#adv-custom-pager" data-cycle-pager-template="<a href='#'><img src='{{src}}' width=40 height=40></a>">
-									<?php 
-										$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
-										if($photos){
-											foreach ($photos as $photo) {
-												echo '<image src="' . wp_get_attachment_url($photo->ID,'thumbnail') . '">';
-											}
-										}
-									?>			
-									<div id=adv-custom-pager class="center external"></div>
-								</div>
-							</p>
-							<p>
-								<div class="addressbox"><?php echo get_post_meta($post->ID,'dfd_UnparsedAddress',true); ?> <?php echo get_post_meta($post->ID,'dfd_City',true); ?>, <?php echo get_post_meta($post->ID,'dfd_StateOrProvince',true); ?> <?php echo get_post_meta($post->ID,'dfd_PostalCode',true); ?>
-								</div>
-							</p>
-							<p class="muted">
-								<?php echo get_post_meta($post->ID,'dfd_PublicRemarks',true); ?>
-							</p>
-								<table class="table table-striped table-condensed ">
-											  <tbody>
-												<tr>
-													<td class="sp_key">Bathrooms</td>
-													<td><?php echo get_post_meta($post->ID,'dfd_BathroomsTotal',true); ?></td>
-													<td class="sp_key">Bedrooms</td>
-													<td><?php echo get_post_meta($post->ID,'dfd_BedroomsTotal',true); ?></td>			
-												</tr>
-												<tr>
-													<td class="sp_key">Property Type</td>
-													<td><?php echo get_post_meta($post->ID,'dfd_PropertyType',true); ?></td>
-													<td class="sp_key">Built in</td>
-													<td><?php echo get_post_meta($post->ID,'dfd_YearBuilt',true); ?></td>	
-												</tr>
-												<tr>
-													<?php if(get_post_meta($post->ID,'dfd_LotSizeArea',true) != '0'){ ?>   
-														<td class="sp_key">LotSize:</td>
-														<td><?php echo get_post_meta($post->ID,'dfd_LotSizeArea',true); ?> <?php echo get_post_meta($post->ID,'dfd_LotSizeUnits',true); ?></td>
-													<?php } else {?> 
-														<td></td>
-														<td></td>
-													<?php } ?> 
-													<td class="sp_key">Building Area</td>
-													<td><?php echo get_post_meta($post->ID,'dfd_BuildingAreaTotal',true); ?> <?php echo get_post_meta($post->ID,'dfd_BuildingAreaUnits',true); ?></td>	
-												</tr>
-											  </tbody>
-								</table>
-								<table class="table">
-									 <caption>Building</caption>
-										<tbody>
-											<tr>
-												<td><span class="sp_key">Bathrooms</span><span><?php echo get_post_meta($post->ID,'dfd_BathroomsTotal',true);?></span></td>
-												<td><span class="sp_key">Bedrooms</span><span><?php echo get_post_meta($post->ID,'dfd_BedroomsTotal',true);?></span></td>
-											</tr>
-											<tr>
-												<td><span class="sp_key">Property Type</span><span><?php echo get_post_meta($post->ID,'dfd_PropertyType',true);?></span></td>
-												<td><span class="sp_key">Built in</span><span><?php echo get_post_meta($post->ID,'dfd_YearBuilt',true);?></span></td>
-											</tr>
-											<tr>
-												<td><span class="sp_key">LotSize</span><span><?php echo get_post_meta($post->ID,'dfd_LotSizeArea',true); ?> <?php echo get_post_meta($post->ID,'dfd_LotSizeUnits',true); ?></span></td>
-												<td><span class="sp_key">Building Area</span><span><?php echo get_post_meta($post->ID,'dfd_BuildingAreaTotal',true); ?> <?php echo get_post_meta($post->ID,'dfd_BuildingAreaUnits',true); ?></span></td>
-											</tr>											
-										</tbody>
-								</table>
-								<table class="table">
-									 <caption>Building</caption>
-										<tbody>
-											<tr>
-												<td><span class="sp_key">Garage</span><span><?php echo get_post_meta($post->ID,'dfd_GarageYN',true);?></span></td>
-												<td><span class="sp_key">Carport</span><span><?php echo get_post_meta($post->ID,'dfd_CarportYN',true);?></span></td>
-											</tr>
-											<tr>
-												<td><span class="sp_key">CoveredSpaces</span><span><?php echo get_post_meta($post->ID,'dfd_CoveredSpaces',true);?></span></td>
-												<td><span class="sp_key">Attached Garage</span><span><?php echo get_post_meta($post->ID,'dfd_AttachedGarageYN',true);?></span></td>
-											</tr>
-											<tr>
-												<td><span class="sp_key">Open Parking</span><span><?php echo get_post_meta($post->ID,'dfd_OpenParkingYN',true);?></span></td>
-												<td><span class="sp_key">GarageSpaces</span><span><?php echo get_post_meta($post->ID,'dfd_CoveredSpaces',true);?></span></td>
-											</tr>											
-											<tr>
-												<td><span class="sp_key">Lot Features</span><span><?php echo get_post_meta($post->ID,'dfd_LotFeatures',true);?></span></td>
-												<td><span class="sp_key"></span><span><?php echo get_post_meta($post->ID,'dfd_Dummy',true);?></span></td>
-											</tr>
-										</tbody>
-								</table>
-								<table class="table table-striped table-condensed ">
-									 <caption>Building</caption>
-										<tbody>
-											<tr>
-												<td class="sp_key">CoveredSpaces</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_CoveredSpaces',true); ?></td>
-												<td class="sp_key">GarageSpaces</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_GarageSpaces',true); ?></td			
-											</tr>
-											<tr>
-												<td class="sp_key">Open Parking</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_OpenParkingYN',true); ?></td>
-												<td class="sp_key">GarageSpaces</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_GarageSpaces',true); ?></td			
-											</tr>
-											<tr>
-												<td class="sp_key">Lot Features</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_LotFeatures',true); ?></td>
-												<td class="sp_key"></td>
-												<td><?php echo get_post_meta($post->ID,'dfd_Dummy',true); ?></td			
-											</tr>
-										</tbody>
-								</table>
-								<table class="table table-striped table-condensed ">
-									 <caption>Building</caption>
-										<tbody>
-											<tr>
-												<td class="sp_key">Bathrooms(Half)</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_BathroomsHalf',true); ?></td>
-												<td class="sp_key">Flooring</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_Flooring',true); ?></td>			
-											</tr>
-											<tr>
-												<td class="sp_key">Cooling</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_Cooling',true); ?></td>
-												<td class="sp_key"></td>
-												<td><?php echo get_post_meta($post->ID,'dfd_Dummy',true); ?></td>	
-											</tr>
-											<tr>
-												<td class="sp_key">Heating</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_Heating',true); ?></td>	
-												<td class="sp_key">Heating Fuel</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_HeatingFuel',true); ?></td>														
-										
-											</tr>
-											<tr>
-												<td class="sp_key">Fireplace Fuel</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_FireplaceFuel',true); ?></td>
-												<td class="sp_key">Fireplace Features</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_FireplaceFeatures',true); ?></td>	
-											</tr>
-											<tr>
-												<td class="sp_key">Fireplaces</td>
-												<td><?php echo get_post_meta($post->ID,'dfd_FireplacesTotal',true); ?></td>	
-												<td class="sp_key"></td>
-												<td><?php echo get_post_meta($post->ID,'dfd_Dummy',true); ?></td>	
-											</tr>	
-											
-											
-										</tbody>
-								</table>
-								<table class="table table-striped table-condensed ">
-									 <caption>Rooms</caption>
-									 <tbody>
-										<tr>
-											<th>Level</th>
-											<th>Type</th>
-											<th>Dimensions</th>
-										</tr>									
-										<?php
-											for ($i=1; $i<=20; $i++)
-											  {	
-												if(get_post_meta($post->ID,'dfd_RoomLevel' . $i ,true) != ''){
-													 echo "<tr data-dp='".'dfd_RoomLevel' . $i . "'>";
-													 echo "<td>" . get_post_meta($post->ID,'dfd_RoomLevel' . $i ,true) . "</td>";	
-													 echo "<td>" . get_post_meta($post->ID,'dfd_RoomType' . $i ,true) . "</td>";
-													 echo "<td>" . get_post_meta($post->ID,'dfd_RoomDimensions' . $i ,true) . "</td>";
-													 echo "</tr>";
-												 }
-											  }
-											?>
-									</tbody>
-								</table>
-							<p>
-								<?php echo get_post_meta($post->ID,'dfd_ListAOR',true); ?> <?php echo get_post_meta($post->ID,'dfd_ModificationTimestamp',true); ?> 
-							</p>
+				<p>
+					<div class="cycle-slideshow" data-cycle-fx="carousel" data-cycle-timeout="0" data-cycle-pager="#adv-custom-pager" data-cycle-pager-template="<a class='tumbnail' href='#'><img  src='{{src}}' width=40 height=40></a>">
+						<?php 
+							$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
+							if($photos){
+								foreach ($photos as $photo) {
+									echo '<image src="' . wp_get_attachment_url($photo->ID,'thumbnail') . '">';
+								}
+							}
+						?>			
+						<div id=adv-custom-pager class="center external"></div>
+					</div>
+				</p>											
+					<table class="table">
+						 <caption><?php echo get_post_meta($post->ID,'dfd_UnparsedAddress',true); ?> , <?php echo get_post_meta($post->ID,'dfd_City',true); ?> , <?php echo get_post_meta($post->ID,'dfd_StateOrProvince',true); ?> <?php echo get_post_meta($post->ID,'dfd_PostalCode',true); ?></caption>
+							<tbody>
+								<tr>
+									<td><span class="sp_key">Bathrooms</span><span><?php echo get_post_meta($post->ID,'dfd_BathroomsTotal',true);?></span></td>
+									<td><span class="sp_key">Bedrooms</span><span><?php echo get_post_meta($post->ID,'dfd_BedroomsTotal',true);?></span></td>
+								</tr>
+								<tr>
+									<td><span class="sp_key">Property Type</span><span><?php echo get_post_meta($post->ID,'dfd_PropertyType',true);?></span></td>
+									<td><span class="sp_key">Built in</span><span><?php echo get_post_meta($post->ID,'dfd_YearBuilt',true);?></span></td>
+								</tr>
+								<tr>
+									<td><span class="sp_key">LotSize</span><span><?php echo get_post_meta($post->ID,'dfd_LotSizeArea',true); ?> <?php echo get_post_meta($post->ID,'dfd_LotSizeUnits',true); ?></span></td>
+									<td><span class="sp_key">Building Area</span><span><?php echo get_post_meta($post->ID,'dfd_BuildingAreaTotal',true); ?> <?php echo get_post_meta($post->ID,'dfd_BuildingAreaUnits',true); ?></span></td>
+								</tr>											
+							</tbody>
+					</table>
+					<table class="table">
+						 <caption>Description</caption>
+						 <tbody>
+								<tr>
+									<td>
+										<p class="muted">
+											<?php echo get_post_meta($post->ID,'dfd_PublicRemarks',true); ?>
+										</p>
+									</td>
+								</tr>
+							</tbody>
+					</table>
+					<table class="table">
+						 <caption>Details</caption>
+							<tbody>
+								<tr>
+									<td><span class="sp_key">Garage</span><span><?php echo get_post_meta($post->ID,'dfd_GarageYN',true);?></span></td>
+									<td><span class="sp_key">Carport</span><span><?php echo get_post_meta($post->ID,'dfd_CarportYN',true);?></span></td>
+								</tr>
+								<tr>
+									<td><span class="sp_key">CoveredSpaces</span><span><?php echo get_post_meta($post->ID,'dfd_CoveredSpaces',true);?></span></td>
+									<td><span class="sp_key">Attached Garage</span><span><?php echo get_post_meta($post->ID,'dfd_AttachedGarageYN',true);?></span></td>
+								</tr>
+								<tr>
+									<td><span class="sp_key">Open Parking</span><span><?php echo get_post_meta($post->ID,'dfd_OpenParkingYN',true);?></span></td>
+									<td><span class="sp_key">GarageSpaces</span><span><?php echo get_post_meta($post->ID,'dfd_CoveredSpaces',true);?></span></td>
+								</tr>											
+								<tr>
+									<td><span class="sp_key">Lot Features</span><span><?php echo get_post_meta($post->ID,'dfd_LotFeatures',true);?></span></td>
+									<td><span class="sp_key"></span><span><?php echo get_post_meta($post->ID,'dfd_Dummy',true);?></span></td>
+								</tr>
+							</tbody>
+					</table>
+						<table class="table">
+						 <caption>Building</caption>
+							<tbody>
+								<tr>
+									<td><span class="sp_key">Bathrooms(Half)</span><span><?php echo get_post_meta($post->ID,'dfd_BathroomsHalf',true);?></span></td>
+									<td><span class="sp_key">Flooring</span><span><?php echo get_post_meta($post->ID,'dfd_Flooring',true);?></span></td>
+								</tr>
+								<tr>
+									<td><span class="sp_key">Cooling</span><span><?php echo get_post_meta($post->ID,'dfd_Cooling',true);?></span></td>
+									<td><span class="sp_key"></span><span><?php echo get_post_meta($post->ID,'dfd_Dummy',true);?></span></td>
+								</tr>
+								<tr>
+									<td><span class="sp_key">Heating</span><span><?php echo get_post_meta($post->ID,'dfd_Heating',true);?></span></td>
+									<td><span class="sp_key">Heating Fuel</span><span><?php echo get_post_meta($post->ID,'dfd_HeatingFuel',true);?></span></td>
+								</tr>											
+								<tr>
+									<td><span class="sp_key">Fireplace Fuel</span><span><?php echo get_post_meta($post->ID,'dfd_FireplaceFuel',true);?></span></td>
+									<td><span class="sp_key">Fireplace Features</span><span><?php echo get_post_meta($post->ID,'dfd_FireplaceFeatures',true);?></span></td>
+								</tr>
+								<tr>
+									<td><span class="sp_key">Fireplaces</span><span><?php echo get_post_meta($post->ID,'dfd_FireplacesTotal',true);?></span></td>
+									<td><span class="sp_key"></span><span><?php echo get_post_meta($post->ID,'dfd_Dummy',true);?></span></td>
+								</tr>
+							</tbody>
+					</table>
+					<table class="table table-striped table-condensed ">
+						 <caption>Rooms</caption>
+						 <tbody>
+							<tr>
+								<th>Level</th>
+								<th>Type</th>
+								<th>Dimensions</th>
+							</tr>									
+							<?php
+								for ($i=1; $i<=20; $i++)
+								  {	
+									if(get_post_meta($post->ID,'dfd_RoomLevel' . $i ,true) != ''){
+										 echo "<tr data-dp='".'dfd_RoomLevel' . $i . "'>";
+										 echo "<td>" . get_post_meta($post->ID,'dfd_RoomLevel' . $i ,true) . "</td>";	
+										 echo "<td>" . get_post_meta($post->ID,'dfd_RoomType' . $i ,true) . "</td>";
+										 echo "<td>" . get_post_meta($post->ID,'dfd_RoomDimensions' . $i ,true) . "</td>";
+										 echo "</tr>";
+									 }
+								  }
+								?>
+						</tbody>
+					</table>
 				</div>
 				<div class="span4">
 					<!-- Agent --><h3>Agent Details</h3>
@@ -282,12 +225,14 @@ add_action('wp_footer', 'sp_copywrite');
 							<?php }?> 
 							</address>
 							<address>
-							<?php echo get_post_meta($post->ID,'dfd_ListOfficeName',true); ?></br>
+							<small><?php echo get_post_meta($post->ID,'dfd_ListOfficeName',true); ?></small></br>
 							<?php echo get_post_meta($post->ID,'dfd_ListOfficePhone',true); ?></br>
+							<?php echo get_post_meta($post->ID,'dfd_ListOfficeFax',true); ?></br>
 							<?php echo get_post_meta($post->ID,'dfd_ListOfficeURL',true); ?></br>
 							</address>
 						</div>	
 					</div>	
+					<?php if(get_post_meta($post->ID,'dfd_CoListAgentFullName',true) != ''){ ?>  
 					<div class="row-fluid">			
 						<div class="span12">	
 							<!-- Co Agent -->
@@ -311,19 +256,30 @@ add_action('wp_footer', 'sp_copywrite');
 								<?php }?> 							
 							</address>
 							<address>
-							<?php echo get_post_meta($post->ID,'dfd_CoListOfficeName',true); ?></br>
+							<small><?php echo get_post_meta($post->ID,'dfd_CoListOfficeName',true); ?></small></br>
 							<?php echo get_post_meta($post->ID,'dfd_CoListOfficePhone',true); ?></br>
 							<?php echo get_post_meta($post->ID,'dfd_CoListOfficeURL',true); ?></br>
 							</address>
-						</div>	
+						</div>
+										
 					</div>
-				</div>
+					<?php }?> 
+					<div class="row-fluid">			
+						<div class="span12">
+					<p><small>Data Provided by <?php echo get_post_meta($post->ID,'dfd_ListAOR',true); ?></small></p>
+					<p><small>Last Modified<?php echo get_post_meta($post->ID,'dfd_ModificationTimestamp',true); ?></small></p>		
+						</div>
+					</div>
+				</div>	
+			</div>				
 		</div>
 	</div>
 <!-- empty element for pager links -->
 <?php //echo get_post_meta($post->ID,'dfd_AnalyticsClick',true); ?>
 <?php //echo get_post_meta($post->ID,'dfd_AnalyticsView',true); ?>
-<p>
-©1998-2013 The Canadian Real Estate Association. All rights reserved. MLS®, Multiple Listing Service®, and all related graphics are trademarks of The Canadian Real Estate Association. REALTOR®, REALTORS®, and all related graphics are trademarks of REALTOR® Canada Inc. a corporation owned by The Canadian Real Estate Association and the National Association of REALTORS®. </p>
-<p>©2013 Sanskript Solutions, Inc. All rights reserved. Powered by SoldPress.</p>
+<p><small>
+©1998-2013 The Canadian Real Estate Association. All rights reserved. MLS®, Multiple Listing Service®, and all related graphics are trademarks of The Canadian Real Estate Association. REALTOR®, REALTORS®, and all related graphics are trademarks of REALTOR® Canada Inc. a corporation owned by The Canadian Real Estate Association and the National Association of REALTORS®.</small> </p>
+<p><small>©2013 Sanskript Solutions, Inc. All rights reserved. Powered by SoldPress.</small></p>
 <?php get_footer(); ?>
+
+<script =http://malsup.github.com/min/jquery.cycle2.carousel.min.js">
