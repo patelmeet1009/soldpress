@@ -118,6 +118,8 @@ dd {
 	<h2><?php the_title(); ?></h2>	
 		<div class="well2">
 			<div class="cycle-slideshow" data-cycle-fx="carousel" data-cycle-timeout="2000">
+			<div class="cycle-prev"></div>
+			<div class="cycle-next"></div>
 							<?php 
 								$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
 								if($photos){
@@ -173,101 +175,80 @@ dd {
 								</tr>
 							</tbody>
 					</table>
-				</div>
+				</div>							
 				<div class="well3">
-					<table class="table ">
-						 <caption>Details</caption>
-							<tbody>
-								<tr>
-								 
-									<dl>
-									<?php 
-									$array = array("dfd_GarageYN" => "Garage", "dfd_CarportYN" => "Carport", "dfd_CoveredSpaces" => "Coverd Spaces","dfd_AttachedGarageYN" => "Attached Garage", "dfd_OpenParkingYN" => "Open Parking", "dfd_LotFeatures" => "Features","dfd_WaterfrontYN" => "Waterfront","dfd_PoolYN" => "Pool");
-										foreach ($array as $i => $value) {
-											$meta = get_post_meta($post->ID,$i,true);
-											$name = $value;
-											echo '<dt>'. $name .'</dt><dd>'. $meta .'</dd>';
-										}										
-									?>
-									</dl>
-								</tr>
-								
-							</tbody>
-					</table>
-				</div>
-				<?php
+					<?php
 				
 				$max_per_row = 2;
 				$item_count = 0;
-				echo "<table>";
-				echo "<tr>";
+				echo '<table class="table"><caption>Details</caption><tbody>';
+				echo '<tr>';
 				$array = array("dfd_GarageYN" => "Garage", "dfd_CarportYN" => "Carport", "dfd_CoveredSpaces" => "Coverd Spaces","dfd_AttachedGarageYN" => "Attached Garage", "dfd_OpenParkingYN" => "Open Parking", "dfd_LotFeatures" => "Features","dfd_WaterfrontYN" => "Waterfront","dfd_PoolYN" => "Pool");
 				foreach ($array as $i => $value) {
 					if ($item_count == $max_per_row)
 					{
-						echo "</tr><tr>";
+						echo '</tr><tr>';
 						$item_count = 0;
 					}
 					$meta = get_post_meta($post->ID,$i,true);
-					$name = $value;
-					echo '<td><span class="sp_key">' .$name.'</span><span>' .$meta .'</span></td>';
-					$item_count++;
+					$meta = trim($meta,",");
+					if($meta != "0"){	
+							if($meta != ""){
+								$name = $value;
+								echo '<td><span class="sp_key">' .$name.'</span><span>' .$meta .'</span></td>';					
+								$item_count++;	
+							}							
+						}
 				}
-				echo "</tr>";
-				echo "</table>";
+				if ($item_count != $max_per_row )
+					{
+						if ($item_count != 0)
+						{
+							echo '<td></td>';
+						}
+					}
+				echo '</tr>';
+				echo '</tbody></table>';
 				
 				?>
-				
-				<div class="well3">
-					<table class="table ">
-						 <caption>Details</caption>
-							<tbody>
-								<tr>
-									<td><span class="sp_key">Garage</span><span><?php echo get_post_meta($post->ID,'dfd_GarageYN',true);?></span></td>
-									<td><span class="sp_key">Carport</span><span><?php echo get_post_meta($post->ID,'dfd_CarportYN',true);?></span></td>
-								</tr>
-								<tr>
-									<td><span class="sp_key">CoveredSpaces</span><span><?php echo get_post_meta($post->ID,'dfd_CoveredSpaces',true);?></span></td>
-									<td><span class="sp_key">Attached Garage</span><span><?php echo get_post_meta($post->ID,'dfd_AttachedGarageYN',true);?></span></td>
-								</tr>
-								<tr>
-									<td><span class="sp_key">Open Parking</span><span><?php echo get_post_meta($post->ID,'dfd_OpenParkingYN',true);?></span></td>
-									<td><span class="sp_key">GarageSpaces</span><span><?php echo get_post_meta($post->ID,'dfd_CoveredSpaces',true);?></span></td>
-								</tr>											
-								<tr>
-									<td><span class="sp_key">Lot Features</span><span><?php echo get_post_meta($post->ID,'dfd_LotFeatures',true);?></span></td>
-									<td><span class="sp_key"></span><span><?php echo get_post_meta($post->ID,'dfd_Dummy',true);?></span></td>
-								</tr>
-							</tbody>
-					</table>
-
 				</div>
 				<div class="well3">
-					<table class="table">
-					 <caption>Building</caption>
-						<tbody>
-							<tr>
-								<td><span class="sp_key">Bathrooms(Half)</span><span><?php echo get_post_meta($post->ID,'dfd_BathroomsHalf',true);?></span></td>
-								<td><span class="sp_key">Flooring</span><span><?php echo get_post_meta($post->ID,'dfd_Flooring',true);?></span></td>
-							</tr>
-							<tr>
-								<td><span class="sp_key">Cooling</span><span><?php echo get_post_meta($post->ID,'dfd_Cooling',true);?></span></td>
-								<td><span class="sp_key"></span><span><?php echo get_post_meta($post->ID,'dfd_Dummy',true);?></span></td>
-							</tr>
-							<tr>
-								<td><span class="sp_key">Heating</span><span><?php echo get_post_meta($post->ID,'dfd_Heating',true);?></span></td>
-								<td><span class="sp_key">Heating Fuel</span><span><?php echo get_post_meta($post->ID,'dfd_HeatingFuel',true);?></span></td>
-							</tr>											
-							<tr>
-								<td><span class="sp_key">Fireplace Fuel</span><span><?php echo get_post_meta($post->ID,'dfd_FireplaceFuel',true);?></span></td>
-								<td><span class="sp_key">Fireplace Features</span><span><?php echo get_post_meta($post->ID,'dfd_FireplaceFeatures',true);?></span></td>
-							</tr>
-							<tr>
-								<td><span class="sp_key">Fireplaces</span><span><?php echo get_post_meta($post->ID,'dfd_FireplacesTotal',true);?></span></td>
-								<td><span class="sp_key"></span><span><?php echo get_post_meta($post->ID,'dfd_Dummy',true);?></span></td>
-							</tr>
-						</tbody>
-					</table>
+				
+				<?php
+				
+					$max_per_row = 2;
+					$item_count = 0;
+					echo '<table class="table"><caption>Building</caption><tbody>';
+					echo '<tr>';
+					$array = array("dfd_BathroomsHalf" => "Bathrooms(Half)", "dfd_Flooring" => "Flooring", "dfd_Cooling" => "Cooling","dfd_Heating" => "Heating", "dfd_HeatingFuel" => "Heating Fuel", "dfd_FireplaceFuel" => "Fireplace Fuel","dfd_FireplaceFeatures" => "Fireplace Features","dfd_FireplacesTotal" => "Fireplaces");
+					foreach ($array as $i => $value) {
+						if ($item_count == $max_per_row)
+						{
+							echo '</tr><tr>';
+							$item_count = 0;
+						}
+						$meta = get_post_meta($post->ID,$i,true);
+						$meta = trim($meta,",");
+						
+						if($meta != "0"){	
+							if($meta != ""){
+								$name = $value;
+								echo '<td><span class="sp_key">' .$name.'</span><span>' .$meta .'</span></td>';					
+								$item_count++;	
+							}							
+						}
+					}
+					if ($item_count != $max_per_row )
+					{
+						if ($item_count != 0)
+						{
+							echo '<td></td>';
+						}
+					}
+					echo '</tr>';
+					echo '</tbody></table>';
+					
+					?>
 				</div>				
 				<div class="well3">			
 				<table class="table table-striped table-condensed ">
@@ -312,11 +293,12 @@ dd {
 									zoom: 15,
 									center: latlng,
 									mapTypeId: google.maps.MapTypeId.ROADMAP, 
-									streetViewControl: true
+									//streetViewControl: true
 								};
 						  
 								map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-								
+								/*
+								mapstreet = new google.maps.Map(document.getElementById('map-street'), mapOptions);								
 								var panoramaOptions = {
 									position: map.latlngbyaddress,
 									  pov: {
@@ -327,9 +309,9 @@ dd {
 									visible: true
 								};
 								
-								var panorama = new  google.maps.StreetViewPanorama(document.getElementById("streetview"), panoramaOptions);
-								map.setStreetView(panorama);
-								panorama.setVisible(true);
+								var panorama = new  google.maps.StreetViewPanorama(document.getElementById("map-street"), panoramaOptions);
+								mapstreet.setStreetView(panorama);
+								panorama.setVisible(true);*/
 								
 							}else{
 							//	alert("Geocode was not successful for the following reason: " + status);
@@ -344,9 +326,10 @@ dd {
 				<table class="table table-striped table-condensed ">
 						 <caption>Map</caption>
 						 <tbody>
-							<tr><td>
-								<div id="map-canvas" class="well-map"></div>
-								<div id="streetview" class="well-map"></div>
+							<tr>
+								<td>
+									<!--<div id="map-street" class="well-map"></div>-->
+									<div id="map-canvas" class="well-map"></div>									
 								</td>
 							</tr>
 						</tbody>
