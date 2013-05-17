@@ -101,19 +101,12 @@ padding-right: 0px;
 padding-left: 0px;
 }
 
-dl {
-  @include columns(2);
-}
+.cycle-prev, .cycle-next { position: absolute; top: 0; width: 30%; opacity: 0; filter: alpha(opacity=0); z-index: 800; height: 100%; cursor: pointer; }
+.cycle-prev { left: 0;  background: url(http://malsup.github.com/images/left.png) 50% 50% no-repeat;}
+.cycle-next { right: 0; background: url(http://malsup.github.com/images/right.png) 50% 50% no-repeat;}
+.cycle-prev:hover, .cycle-next:hover { opacity: .7; filter: alpha(opacity=70) }
 
-dt {
-  @include column-break-after(avoid);
-  break-after: avoid;
-}
 
-dd {
-  @include column-break-before(avoid);
-  break-before: avoid;
-}
 	</style>
 	<h2><?php the_title(); ?></h2>	
 		<div class="well2">
@@ -161,6 +154,40 @@ dd {
 								</tr>											
 							</tbody>
 					</table>
+						<?php
+				
+				$max_per_row = 2;
+				$item_count = 0;
+				echo '<table class="table"><caption>' . get_post_meta($post->ID,'dfd_UnparsedAddress',true) . ',' . get_post_meta($post->ID,'dfd_City',true) . ',' . get_post_meta($post->ID,'dfd_StateOrProvince',true) . get_post_meta($post->ID,'dfd_PostalCode',true) . '</caption><tbody>';
+				echo '<tr>';
+				$array = array("dfd_BathroomsTotal" => "Bathrooms", "dfd_BedroomsTotal" => "Bedrooms", "dfd_PropertyType" => "Property Type","dfd_PropertyType" => "Attached Garage", "dfd_YearBuilt" => "Built in", "dfd_LotSizeArea" => "LotSize","dfd_BuildingAreaTotal" => "Building Area");
+				foreach ($array as $i => $value) {
+					if ($item_count == $max_per_row)
+					{
+						echo '</tr><tr>';
+						$item_count = 0;
+					}
+					$meta = get_post_meta($post->ID,$i,true);
+					$meta = trim($meta,",");
+					if($meta != "0"){	
+							if($meta != ""){
+								$name = $value;
+								echo '<td><span class="sp_key">' .$name.'</span><span>' .$meta .'</span></td>';					
+								$item_count++;	
+							}							
+						}
+				}
+				if ($item_count != $max_per_row )
+					{
+						if ($item_count != 0)
+						{
+							echo '<td></td>';
+						}
+					}
+				echo '</tr>';
+				echo '</tbody></table>';
+				
+				?>
 				</div>
 				<div class="well3">
 					<table class="table">
