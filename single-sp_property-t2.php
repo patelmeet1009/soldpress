@@ -1,4 +1,3 @@
-
 <?php if(get_option('sp_debug') == '1'){ ?>   
 <div class="alert alert-warning"><strong>This is a template for a simple listing website. Use it as a starting point to create something more unique </div>
 <?php } ?>   
@@ -71,6 +70,14 @@ add_action('wp_footer', 'sp_copywrite');
 		border: 1px solid #e3e3e3;
 		}
 		
+		.well-map {
+		min-height: 300px;
+		padding: 19px;
+		margin-bottom: 20px;
+		background-color: white;
+		border: 1px solid #e3e3e3;
+		}
+
 		.addressbox {
 			padding: 5px;
 			background: #F3F3F3;
@@ -93,6 +100,20 @@ add_action('wp_footer', 'sp_copywrite');
 padding-right: 0px;
 padding-left: 0px;
 }
+
+dl {
+  @include columns(2);
+}
+
+dt {
+  @include column-break-after(avoid);
+  break-after: avoid;
+}
+
+dd {
+  @include column-break-before(avoid);
+  break-before: avoid;
+}
 	</style>
 	<h2><?php the_title(); ?></h2>	
 		<div class="well2">
@@ -113,6 +134,8 @@ padding-left: 0px;
 						</div>
 						
 			</div>	
+			
+			
 			<i class="icon-camera"></i><i class="icon-map-marker"></i> 
 		</div>	
 	<div class="container-fluid">	
@@ -156,6 +179,50 @@ padding-left: 0px;
 						 <caption>Details</caption>
 							<tbody>
 								<tr>
+								 
+									<dl>
+									<?php 
+									$array = array("dfd_GarageYN" => "Garage", "dfd_CarportYN" => "Carport", "dfd_CoveredSpaces" => "Coverd Spaces","dfd_AttachedGarageYN" => "Attached Garage", "dfd_OpenParkingYN" => "Open Parking", "dfd_LotFeatures" => "Features","dfd_WaterfrontYN" => "Waterfront","dfd_PoolYN" => "Pool");
+										foreach ($array as $i => $value) {
+											$meta = get_post_meta($post->ID,$i,true);
+											$name = $value;
+											echo '<dt>'. $name .'</dt><dd>'. $meta .'</dd>';
+										}										
+									?>
+									</dl>
+								</tr>
+								
+							</tbody>
+					</table>
+				</div>
+				<?php
+				
+				$max_per_row = 2;
+				$item_count = 0;
+				echo "<table>";
+				echo "<tr>";
+				$array = array("dfd_GarageYN" => "Garage", "dfd_CarportYN" => "Carport", "dfd_CoveredSpaces" => "Coverd Spaces","dfd_AttachedGarageYN" => "Attached Garage", "dfd_OpenParkingYN" => "Open Parking", "dfd_LotFeatures" => "Features","dfd_WaterfrontYN" => "Waterfront","dfd_PoolYN" => "Pool");
+				foreach ($array as $i => $value) {
+					if ($item_count == $max_per_row)
+					{
+						echo "</tr><tr>";
+						$item_count = 0;
+					}
+					$meta = get_post_meta($post->ID,$i,true);
+					$name = $value;
+					echo '<td><span class="sp_key">' .$name.'</span><span>' .$meta .'</span></td>';
+					$item_count++;
+				}
+				echo "</tr>";
+				echo "</table>";
+				
+				?>
+				
+				<div class="well3">
+					<table class="table ">
+						 <caption>Details</caption>
+							<tbody>
+								<tr>
 									<td><span class="sp_key">Garage</span><span><?php echo get_post_meta($post->ID,'dfd_GarageYN',true);?></span></td>
 									<td><span class="sp_key">Carport</span><span><?php echo get_post_meta($post->ID,'dfd_CarportYN',true);?></span></td>
 								</tr>
@@ -172,8 +239,8 @@ padding-left: 0px;
 									<td><span class="sp_key"></span><span><?php echo get_post_meta($post->ID,'dfd_Dummy',true);?></span></td>
 								</tr>
 							</tbody>
-					</table>dfd_WaterfrontYN
-dfd_PoolYN
+					</table>
+
 				</div>
 				<div class="well3">
 					<table class="table">
@@ -201,9 +268,9 @@ dfd_PoolYN
 							</tr>
 						</tbody>
 					</table>
-				</div>
-				<div class="well3">
-					<table class="table table-striped table-condensed ">
+				</div>				
+				<div class="well3">			
+				<table class="table table-striped table-condensed ">
 						 <caption>Rooms</caption>
 						 <tbody>
 							<tr>
@@ -223,6 +290,65 @@ dfd_PoolYN
 									 }
 								  }
 								?>
+						</tbody>
+					</table>
+					
+					<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&"></script> <!-- &language=ja -->
+				<script>
+					// Enable the visual refresh
+					google.maps.visualRefresh = true;
+
+					var address = '<?php echo get_post_meta($post->ID,'dfd_UnparsedAddress',true); ?> , <?php echo get_post_meta($post->ID,'dfd_StateOrProvince',true); ?> <?php echo get_post_meta($post->ID,'dfd_PostalCode',true); ?>';	
+
+							
+					var map;
+					
+					function initialize() {					
+						var geocoder = new google.maps.Geocoder();		
+						geocoder.geocode( { 'address' : address }, function( results, status ) {
+							if( status == google.maps.GeocoderStatus.OK ) {
+								var latlng = results[0].geometry.location;
+								var mapOptions = {
+									zoom: 15,
+									center: latlng,
+									mapTypeId: google.maps.MapTypeId.ROADMAP, 
+									streetViewControl: true
+								};
+						  
+								map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+								
+								var panoramaOptions = {
+									position: map.latlngbyaddress,
+									  pov: {
+										heading: 0,
+										pitch: 0,
+										zoom: 1
+									  },
+									visible: true
+								};
+								
+								var panorama = new  google.maps.StreetViewPanorama(document.getElementById("streetview"), panoramaOptions);
+								map.setStreetView(panorama);
+								panorama.setVisible(true);
+								
+							}else{
+							//	alert("Geocode was not successful for the following reason: " + status);
+							}
+						});
+					}
+					
+					google.maps.event.addDomListener(window, 'load', initialize);
+				</script>
+
+				
+				<table class="table table-striped table-condensed ">
+						 <caption>Map</caption>
+						 <tbody>
+							<tr><td>
+								<div id="map-canvas" class="well-map"></div>
+								<div id="streetview" class="well-map"></div>
+								</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>
