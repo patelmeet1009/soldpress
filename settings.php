@@ -124,7 +124,7 @@ function soldpress_account_options() {
 								if($job == 'soldpress_photo_sync' || $job == 'soldpress_listing_sync'){
 									echo '<tr>';
 									//echo '<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>';
-									echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options&spa=runevt&job='.$job.'">Run Now</a> || <a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options">Disable</a></div></td>';								
+									echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options&spa=runevt&job='.$job.'">Run Now</a></div></td>';								
 									echo '<td>'.date("r", $key).'</td>';							
 									$schedule = $value[key($value)];
 									echo '<td>'.(isset($schedule["schedule"]) ? $schedule["schedule"] : "").'</td>';
@@ -149,7 +149,7 @@ function soldpress_account_options() {
 	<?php } ?>
 	<?php if( $active_tab == 'debug_options' ) {  ?>
 	<h3 class="title">Log File</h3>
-	<a target="_blank" href="/wp-content/uploads/soldpress/soldpress-log.txt">debug log</a>
+	<a target="_blank" href="wp-content/uploads/soldpress/soldpress-log.txt">debug log</a>
 	<h3 class="title">Debug</h3>
 	 <div class = "postbox">
 				<div class = "handlediv">
@@ -183,6 +183,7 @@ function soldpress_account_options() {
 					<form method="post" id="sync_connection">     
 						<?php submit_button('Manual Sync', 'secondary', 'sync', false); ?> 
 						<?php submit_button('Clear Listings', 'secondary', 'delete', false); ?> 
+						<?php submit_button('Delete Log', 'secondary', 'deletelog', false); ?> 
 					</form>
 			<?php if (get_option('sc-status' ) == true) { ?>
 			<div id="message" class="updated"><p>CREA Data Sync Active</p>
@@ -201,7 +202,7 @@ function soldpress_account_options() {
 		<p>
 			<div>&copy; 2013 Sanskript Solution, Inc.</div>
 		</p>
-		
+	
 	<?php 
 		//Process Get Actions First
 		if (isset($_GET["spa"])) {
@@ -245,6 +246,11 @@ function soldpress_account_options() {
 		if (isset($_POST["sync"])) {  
 		
 			do_action('soldpress_listing_sync');
+		}
+		
+		if (isset($_POST["deletelog"])) {  	
+				$wp_upload_dir = wp_upload_dir();
+				unlink($wp_upload_dir['basedir']. '/soldpress/soldpress-log.txt');
 		}
 		
 		if (isset($_POST["delete"])) {  

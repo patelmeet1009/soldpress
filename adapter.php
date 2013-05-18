@@ -262,18 +262,51 @@ class soldpress_adapter{
 			
 				$listingKey = $listing->post_name;
 				if($listingKey){ //If Someone manually adds a listing the key is wrong
-				if($meta)
-				{		
-					$this->WriteLog('Photo Record is Synced' .$meta . 'listingkey' .$listingKey );
-				}else
-				{
+					if($meta)
+					{		
+						//$this->WriteLog('Photo Record is Synced' .$meta . 'listingkey' .$listingKey );
+					}else
+					{
+						
+						$this->WriteLog('Meta' .$meta . 'listingkey' .$listingKey );
+						$this->WriteLog('Begin Picture Sync' . $post_id );
+						$this->sync_propertyobject($listingKey, 'Photo',$post_id);
+						update_post_meta($post_id,'sc-sync-picture', true);	
 					
-					$this->WriteLog('Meta' .$meta . 'listingkey' .$listingKey );
-					$this->WriteLog('Begin Picture Sync' . $post_id );
-					$this->sync_propertyobject($listingKey, 'Photo',$post_id);
-					update_post_meta($post_id,'sc-sync-picture', true);	
-				
+					}				
 				}
+				
+				$metaagent = get_post_meta( $post_id ,'sc-sync-picture-agent',true);
+				$metaagent = false;
+				if(!$metaagent)
+				{
+					//List Agent
+					
+					$agentKey = get_post_meta( $post_id ,'dfd_ListAgentKey',true);	
+					$this->WriteLog('Begin Agent Picture Sync' . $post_id . 'AgentKey' . $agentKey);					
+					$this->sync_agentobject($agentKey, 'ThumbnailPhoto',$post_id,'agent');
+					
+					//Co Agent
+					$coagentKey = get_post_meta( $post_id ,'dfd_CoListAgentKey',true);
+					if($coagentKey != "")
+					{					
+						$this->WriteLog('Begin CoAgent Picture Sync' . $post_id . 'CoAgentKey' . $coagentKey);					
+						$this->sync_agentobject($coagentKey, 'ThumbnailPhoto',$post_id,'coagent');
+						update_post_meta($post_id,'sc-sync-picture-agent', true,'coagent');
+					}
+
+				}
+				
+				$metaoffice = get_post_meta( $post_id ,'sc-sync-picture-office',true);
+				$metaoffice = false;
+				if(!$metaoffice)
+				{
+					//List Agent
+					
+					$officeKey = get_post_meta( $post_id ,'dfd_ListOfficeKey',true);	
+					$this->WriteLog('Begin Office Picture Sync' . $post_id . 'AgentKey' . $officeKey);					
+					$this->sync_listingobject($officeKey, 'ThumbnailPhoto',$post_id,'office');
+					
 				}
 		}
 		
@@ -329,6 +362,36 @@ class soldpress_adapter{
 			}
  		}	
 	}	
+	
+	public function sync_agentobject($id, $type, $post_id,$metatype)
+	{	
+		$record = $this->service->GetObject("Agent", $type, $id);
+		foreach($record as &$image) 
+		{	
+			$filename = $id .'-agent-' . $type . '.jpg';				
+			$wp_upload_dir = wp_upload_dir();
+			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;		
+			file_put_contents($filePath,$image["Data"]); //We Change This In Settings
+			update_post_meta($post_id,'sc-sync-picture-'.$metatype.'-file', $filename);		
+ 		}	
+		
+		return true;
+	}
+	
+	public function sync_listingobject($id, $type, $post_id)
+	{	
+		$record = $this->service->GetObject("Office", $type, $id);
+		foreach($record as &$image) 
+		{	
+			$filename = $id .'-listing-' . $type . '.jpg';				
+			$wp_upload_dir = wp_upload_dir();
+			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;		
+			file_put_contents($filePath,$image["Data"]); //We Change This In Settings
+			update_post_meta($post_id,'sc-sync-picture-listing-file', $filename);					
+ 		}	
+		
+		return true;
+	}
 	
 	public function searchresidentialproperty($crit, $template, $culture)
 	{	

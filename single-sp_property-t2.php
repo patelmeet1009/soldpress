@@ -10,6 +10,7 @@ function my_scripts_method() {
 		array('jquery'), 
         '2.3.1', 
         true);
+		
 	wp_enqueue_script(
 		'jquery.cycle2',
 		'//cdnjs.cloudflare.com/ajax/libs/jquery.cycle2/20130409/jquery.cycle2.min.js',
@@ -97,9 +98,9 @@ add_action('wp_footer', 'sp_copywrite');
 		}
 
 		.container-fluid {
-padding-right: 0px;
-padding-left: 0px;
-}
+			padding-right: 0px;
+			padding-left: 0px;
+		}
 
 .cycle-prev, .cycle-next { position: absolute; top: 0; width: 30%; opacity: 0; filter: alpha(opacity=0); z-index: 800; height: 100%; cursor: pointer; }
 .cycle-prev { left: 0;  background: url(http://malsup.github.com/images/left.png) 50% 50% no-repeat;}
@@ -109,58 +110,38 @@ padding-left: 0px;
 
 	</style>
 	<h2><?php the_title(); ?></h2>	
-		<div class="well2">
-			<div class="cycle-slideshow" data-cycle-fx="carousel" data-cycle-timeout="2000">
+	<div class="well2">
+		<div class="cycle-slideshow" data-cycle-fx="carousel" data-cycle-timeout="2000">
 			<div class="cycle-prev"></div>
 			<div class="cycle-next"></div>
-							<?php 
-								$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
-								if($photos){
-									foreach ($photos as $photo) {
-										echo '<image src="' . wp_get_attachment_url($photo->ID,'thumbnail') . '">';
-									}
-								}
-							?>			
-						</div>
-			<div class="well3">
-						<div class="row">
-							<div class="span4">MLS®: <?php echo get_post_meta($post->ID,'dfd_ListingId',true); ?> </div>	
-							<div class="span4 pull-right"><span class="pull-right">For Sale: $<?php echo get_post_meta($post->ID,'dfd_ListPrice',true); ?></span></div>
-						</div>
-						
-			</div>	
-			
-			
-			<i class="icon-camera"></i><i class="icon-map-marker"></i> 
-		</div>	
+			<?php 
+				$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
+				if($photos){
+					foreach ($photos as $photo) {
+						echo '<image src="' . wp_get_attachment_url($photo->ID,'thumbnail') . '">';
+					}
+				}
+			?>			
+		</div>
+		<div class="well3">
+			<div class="row">
+				<div class="span4">MLS®: <?php echo get_post_meta($post->ID,'dfd_ListingId',true); ?> </div>	
+				<div class="span4 pull-right"><span class="pull-right"><strong>For Sale: $<?php echo get_post_meta($post->ID,'dfd_ListPrice',true); ?></strong></span></div>
+			</div>					
+		</div>		
+		<img src="http://www.realtor.ca/presentation/images/en-CA/various/realtor.jpg"> MLS® 
+	</div>	
 	<div class="container-fluid">	
 		<div class="row-fluid">
 			<div class="span8">	
 				<div class="well3">									
-					<table class="table">
-						 <caption><?php echo get_post_meta($post->ID,'dfd_UnparsedAddress',true); ?> , <?php echo get_post_meta($post->ID,'dfd_City',true); ?> , <?php echo get_post_meta($post->ID,'dfd_StateOrProvince',true); ?> <?php echo get_post_meta($post->ID,'dfd_PostalCode',true); ?></caption>
-							<tbody>
-								<tr>
-									<td><span class="sp_key">Bathrooms</span><span><?php echo get_post_meta($post->ID,'dfd_BathroomsTotal',true);?></span></td>
-									<td><span class="sp_key">Bedrooms</span><span><?php echo get_post_meta($post->ID,'dfd_BedroomsTotal',true);?></span></td>
-								</tr>
-								<tr>
-									<td><span class="sp_key">Property Type</span><span><?php echo get_post_meta($post->ID,'dfd_PropertyType',true);?></span></td>
-									<td><span class="sp_key">Built in</span><span><?php echo get_post_meta($post->ID,'dfd_YearBuilt',true);?></span></td>
-								</tr>
-								<tr>
-									<td><span class="sp_key">LotSize</span><span><?php echo get_post_meta($post->ID,'dfd_LotSizeArea',true); ?> <?php echo get_post_meta($post->ID,'dfd_LotSizeUnits',true); ?></span></td>
-									<td><span class="sp_key">Building Area</span><span><?php echo get_post_meta($post->ID,'dfd_BuildingAreaTotal',true); ?> <?php echo get_post_meta($post->ID,'dfd_BuildingAreaUnits',true); ?></span></td>
-								</tr>											
-							</tbody>
-					</table>
 						<?php
 				
 				$max_per_row = 2;
 				$item_count = 0;
 				echo '<table class="table"><caption>' . get_post_meta($post->ID,'dfd_UnparsedAddress',true) . ',' . get_post_meta($post->ID,'dfd_City',true) . ',' . get_post_meta($post->ID,'dfd_StateOrProvince',true) . get_post_meta($post->ID,'dfd_PostalCode',true) . '</caption><tbody>';
 				echo '<tr>';
-				$array = array("dfd_BathroomsTotal" => "Bathrooms", "dfd_BedroomsTotal" => "Bedrooms", "dfd_PropertyType" => "Property Type","dfd_PropertyType" => "Attached Garage", "dfd_YearBuilt" => "Built in", "dfd_LotSizeArea" => "LotSize","dfd_BuildingAreaTotal" => "Building Area");
+				$array = array("dfd_BathroomsTotal" => "Bathrooms", "dfd_BedroomsTotal" => "Bedrooms", "dfd_PropertyType" => "Property Type","dfd_YearBuilt" => "Built in", "dfd_LotSizeArea" => "LotSize","dfd_BuildingAreaTotal" => "Building Area");
 				foreach ($array as $i => $value) {
 					if ($item_count == $max_per_row)
 					{
@@ -169,13 +150,22 @@ padding-left: 0px;
 					}
 					$meta = get_post_meta($post->ID,$i,true);
 					$meta = trim($meta,",");
-					if($meta != "0"){	
-							if($meta != ""){
-								$name = $value;
-								echo '<td><span class="sp_key">' .$name.'</span><span>' .$meta .'</span></td>';					
-								$item_count++;	
-							}							
-						}
+									
+					if($meta != "0"){
+						if($meta != ""){
+							if($i == 'dfd_LotSizeArea'){
+								$meta =  $meta . ' ' .get_post_meta($post->ID,'dfd_LotSizeUnits',true); 
+							}
+					
+							if($i == 'dfd_BuildingAreaTotal'){
+								$meta =  $meta . ' ' .get_post_meta($post->ID,'dfd_BuildingAreaUnits',true); 
+							}
+							
+							$name = $value;
+							echo '<td><span class="sp_key">' .$name.'</span><span>' .$meta .'</span></td>';					
+							$item_count++;	
+						}							
+					}
 				}
 				if ($item_count != $max_per_row )
 					{
@@ -210,7 +200,31 @@ padding-left: 0px;
 				$item_count = 0;
 				echo '<table class="table"><caption>Details</caption><tbody>';
 				echo '<tr>';
-				$array = array("dfd_GarageYN" => "Garage", "dfd_CarportYN" => "Carport", "dfd_CoveredSpaces" => "Coverd Spaces","dfd_AttachedGarageYN" => "Attached Garage", "dfd_OpenParkingYN" => "Open Parking", "dfd_LotFeatures" => "Features","dfd_WaterfrontYN" => "Waterfront","dfd_PoolYN" => "Pool");
+				$array = array("dfd_GarageYN" => "Garage", 
+					"dfd_CarportYN" => "Carport",
+					"dfd_CarportSpaces" => "Carport Spaces",
+					"dfd_CoveredSpaces" => "Coverd Spaces",
+					"dfd_AttachedGarageYN" => "Attached Garage",
+					"dfd_OpenParkingYN" => "Open Parking",
+					"dfd_OpenParkingSpaces" => "Open Parking Spaces",
+					"dfd_ParkingTotal" => "Parking Total",
+					"dfd_GarageYN" => "Garage",
+					"dfd_LotFeatures" => "Features",
+					"dfd_WaterfrontYN" => "Waterfront",				
+					"dfd_ArchitecturalStyle" => "Architectural Style",
+					,"dfd_CommunityFeatures" => "Community Features",
+					,"dfd_ConstructionMaterials" => "Construction Materials",
+					,"dfd_Fencing" => "Fencing",
+					,"dfd_FrontageLength" => "Frontage Length",
+					,"dfd_FrontageType" => "Frontage Type",
+					,"dfd_GreenBuildingCertification" => "Green Building Certification",
+					,"dfd_GreenCertificationRating" => "Green CertificationRating",
+					,"dfd_Roof" => "Roof",
+					,"dfd_View" => "View",
+					,"dfd_ViewYN" => "View",
+					,"dfd_WaterBodyName" => "Water Body Name",
+					,"dfd_WaterfrontYN" => "Waterfront",
+					,"dfd_Zoning" => "Zoning");
 				foreach ($array as $i => $value) {
 					if ($item_count == $max_per_row)
 					{
@@ -247,7 +261,22 @@ padding-left: 0px;
 					$item_count = 0;
 					echo '<table class="table"><caption>Building</caption><tbody>';
 					echo '<tr>';
-					$array = array("dfd_BathroomsHalf" => "Bathrooms(Half)", "dfd_Flooring" => "Flooring", "dfd_Cooling" => "Cooling","dfd_Heating" => "Heating", "dfd_HeatingFuel" => "Heating Fuel", "dfd_FireplaceFuel" => "Fireplace Fuel","dfd_FireplaceFeatures" => "Fireplace Features","dfd_FireplacesTotal" => "Fireplaces");
+									
+					$array = array("dfd_BathroomsHalf" => "Bathrooms(Half)",
+					"dfd_Flooring" => "Flooring",
+					"dfd_Cooling" => "Cooling",
+					"dfd_CoolingYN" => "CoolingYN",
+					"dfd_Heating" => "Heating",
+					"dfd_HeatingFuel" => "Heating Fuel", 
+					"dfd_FireplaceFuel" => "Fireplace Fuel",
+					"dfd_FireplacesTotal" => "Fireplaces",
+					"dfd_Levels" => "Levels",
+					"dfd_NumberOfUnitsTotal" => "Number Of Units Total",
+					"dfd_PoolYN" => "Pool",					
+					"dfd_PoolFeatures" => "Pool Features",
+					"dfd_Sewer" => "Sewer",	
+					"dfd_Stories" => "Stories");
+					
 					foreach ($array as $i => $value) {
 						if ($item_count == $max_per_row)
 						{
@@ -299,9 +328,8 @@ padding-left: 0px;
 								  }
 								?>
 						</tbody>
-					</table>
-					
-					<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&"></script> <!-- &language=ja -->
+				</table>					
+				<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&"></script> <!-- &language=ja -->
 				<script>
 					// Enable the visual refresh
 					google.maps.visualRefresh = true;
@@ -347,9 +375,7 @@ padding-left: 0px;
 					}
 					
 					google.maps.event.addDomListener(window, 'load', initialize);
-				</script>
-
-				
+				</script>				
 				<table class="table table-striped table-condensed ">
 						 <caption>Map</caption>
 						 <tbody>
@@ -367,6 +393,9 @@ padding-left: 0px;
 				<!-- Agent --><h3>Agent Details</h3>
 				<div class="row-fluid">
 					<div class="well3 span12">
+						<?php if(get_post_meta($post->ID,'sc-sync-picture-agent',true) != ''){ ?> 
+							<img src="<?php $wp_upload_dir = wp_upload_dir();  echo $wp_upload_dir[baseurl] .'/soldpress/'. get_post_meta($post->ID,'sc-sync-picture-agent-file',true); ?>">
+						<?php }?>
 						<address>
 						  <strong><?php echo get_post_meta($post->ID,'dfd_ListAgentFullName',true); ?></strong><br>
 						<?php echo get_post_meta($post->ID,'dfd_ListAgentDesignation',true); ?><br>
@@ -386,6 +415,9 @@ padding-left: 0px;
 						  <abbr title="Cell">C:</abbr> <?php echo get_post_meta($post->ID,'dfd_ListAgentCellPhone',true); ?></br>
 						<?php }?> 
 						</address>
+						<?php if(get_post_meta($post->ID,'sc-sync-picture-office',true) != ''){ ?> 
+							<img src="<?php $wp_upload_dir = wp_upload_dir();  echo $wp_upload_dir[baseurl] .'/soldpress/'. get_post_meta($post->ID,'sc-sync-picture-office-file',true); ?>">
+						<?php }?>
 						<address>
 						<small><?php echo get_post_meta($post->ID,'dfd_ListOfficeName',true); ?></small></br>
 						<?php echo get_post_meta($post->ID,'dfd_ListOfficePhone',true); ?></br>
@@ -397,7 +429,9 @@ padding-left: 0px;
 				<?php if(get_post_meta($post->ID,'dfd_CoListAgentFullName',true) != ''){ ?>  
 				<div class="row-fluid">			
 					<div class="well3 span12">	
-						<!-- Co Agent -->
+						<?php if(get_post_meta($post->ID,'sc-sync-picture-agent',true) != ''){ ?> 
+							<img src="<?php $wp_upload_dir = wp_upload_dir();  echo $wp_upload_dir[baseurl] .'/soldpress/'. get_post_meta($post->ID,'sc-sync-picture-coagent-file',true); ?>">
+						<?php }?>
 						<address>
 							<strong><?php echo get_post_meta($post->ID,'dfd_CoListAgentFullName',true); ?></strong><br>
 							<?php echo get_post_meta($post->ID,'dfd_CoListAgentDesignation',true); ?><br>
@@ -441,6 +475,6 @@ padding-left: 0px;
 <?php //echo get_post_meta($post->ID,'dfd_AnalyticsView',true); ?>
 <p><small>
 ©1998-2013 The Canadian Real Estate Association. All rights reserved. MLS®, Multiple Listing Service®, and all related graphics are trademarks of The Canadian Real Estate Association. REALTOR®, REALTORS®, and all related graphics are trademarks of REALTOR® Canada Inc. a corporation owned by The Canadian Real Estate Association and the National Association of REALTORS®.</small> </p>
-<p><small>©2013 Sanskript Solutions, Inc. All rights reserved. Powered by SoldPress.</small></p>
+<p><small>Powered by SoldPress. ©2013 Sanskript Solutions, Inc. All rights reserved. </small></p>
 <?php get_footer(); ?>
 <script src="http://malsup.github.com/jquery.cycle2.carousel.js"></script>
