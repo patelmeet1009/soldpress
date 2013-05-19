@@ -29,7 +29,9 @@ function soldpress_account_options() {
 
 	<h2 class="nav-tab-wrapper">  
 		<a href="?page=soldpress&tab=display_options" class="nav-tab <?php echo $active_tab == 'display_options' ? 'nav-tab-active' : ''; ?>">General Options</a>  
-		<a href="?page=soldpress&tab=sync_options" class="nav-tab <?php echo $active_tab == 'sync_options' ? 'nav-tab-active' : ''; ?>">Sync Options</a>  
+		<a href="?page=soldpress&tab=sync_options" class="nav-tab <?php echo $active_tab == 'sync_options' ? 'nav-tab-active' : ''; ?>">Sync Options</a> 
+		<a href="?page=soldpress&tab=layout_options" class="nav-tab <?php echo $active_tab == 'layout_options' ? 'nav-tab-active' : ''; ?>">Layout</a>  
+		<a href="?page=soldpress&tab=about_options" class="nav-tab <?php echo $active_tab == 'about_options' ? 'nav-tab-active' : ''; ?>">About</a>  	
 		<a href="?page=soldpress&tab=debug_options" class="nav-tab <?php echo $active_tab == 'debug_options' ? 'nav-tab-active' : ''; ?>">Debug</a>  
 		</h2>  
 	<?php  
@@ -40,25 +42,30 @@ function soldpress_account_options() {
 				<?php settings_fields( 'sc-settings-credentials' ); ?>
 				<h3 class="title">Credtentials</h3>
 				<table class="form-table">
+				   	<tr valign="top">
+					<th scope="row">Url</th>
+						<td>
+							<select name="sc-language" class="" id="sc-language">
+								<option value="http://data.crea.ca/Login.svc/Login" <?php selected( 'http://data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>Production</option>
+								<option value="http://sample.data.crea.ca/Login.svc/Login" <?php selected( 'http://sample.data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>>Development</option>
+							</select>
+						</td>
+					</tr>					
 					<tr valign="top">
 					<th scope="row">Username</th>
-					<td><input type="text" class="regular-text" name="sc-username" value="<?php echo get_option('sc-username','CXLHfDVrziCfvwgCuL8nUahC'); ?>" /></td>
+					<td><input type="text" class="regular-text" name="sc-username" value="<?php echo get_option('sc-username'); ?>" /></td>
 					</tr>
 					<tr valign="top">
 					<th scope="row">Password</th>
-					<td><input type="password" class="regular-text" name="sc-password" value="<?php echo get_option('sc-password','mFqMsCSPdnb5WO1gpEEtDCHH'); ?>" /></td>
-					</tr>      
-					<tr valign="top">
-					<th scope="row">Url</th>
-					<td><input type="text" class="regular-text" name="sc-url" value="<?php echo get_option('sc-url','http://sample.data.crea.ca/Login.svc/Login'); ?>" /></td>
-					</tr>	
+					<td><input type="password" class="regular-text" name="sc-password" value="<?php echo get_option('sc-password'); ?>" /></td>
+					</tr>      						
 				</table>
 				<h3 class="title">General</h3>
 				<table class="form-table">
-					<tr valign="top">
+					<!-- <tr valign="top">
 					<th scope="row">Template Location</th>
-					<td><input type="text" class="regular-text" name="sc-template" value="<?php echo get_option('sc-template','wp-content/plugins/soldpress/template/'); ?>" /></td>
-					</tr>
+					<td><input type="text" class="regular-text" name="sc-template" value="<?php //echo get_option('sc-template','wp-content/plugins/soldpress/template/'); ?>" /></td>
+					</tr>-->
 					<tr valign="top">
 					<th scope="row">Language</th>
 					<td>
@@ -66,6 +73,10 @@ function soldpress_account_options() {
 							<option value="en-CA" <?php selected( 'en-CA', get_option( 'sc-language' ) ); ?>>en-CA</option>
 							<option value="en-FR" <?php selected( 'en-FR', get_option( 'sc-language' ) ); ?>>en-FR</option>
 						</select>
+					</tr>
+					<tr valign="top">
+					<th scope="row">Debug Mode</th>
+					<td><input name="sc-debug" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  /></td>
 					</tr>
 				</table>
 				<?php submit_button(); ?>  
@@ -146,6 +157,65 @@ function soldpress_account_options() {
 				?>
 			</tbody>
 		</table>		
+	<?php } ?>
+	<?php if( $active_tab == 'layout_options' ) {  ?>
+	
+				<h3 class="title">Agent</h3>
+				<table class="form-table">
+					<th scope="row">Display Listing Agent</th>
+						<td>
+							<input name="sc-layout-agentlisting" id ="sc-layout-agentlisting" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-agentlisting' ) ); ?>  />
+						</td>
+					</tr>
+				</table>
+				<h3 class="title">Map</h3>
+				<table class="form-table">
+					<th scope="row">Display Arieal Map</th>
+						<td>
+							<input name="sc-layout-ariealmap" id ="sc-layout-ariealmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-ariealmap' ) ); ?>  />
+						</td>
+					</tr>
+					<th scope="row">Display StreetView Map</th>
+						<td>
+							<input name="sc-layout-streetviewmap" id ="sc-layout-streetviewmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-streetviewmap' ) ); ?>  />
+						</td>
+					</tr>
+				</table>
+				<h3 class="title">Color</h3>
+				<table class="form-table">
+					<th scope="row">Primary Color</th>
+						<td>
+							<input name="sc-layout-primarycolor" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  />
+						</td>
+					</tr>
+					<th scope="row">Secondary Color</th>
+						<td>
+							<input name="sc-layout-secondarycolor" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  />
+						</td>
+					</tr>
+				</table>
+				<h3 class="title">Relator(tm) Analyics</h3>
+				<table class="form-table">
+					<th scope="row">Click Analtics</th>
+						<td>
+							<input name="sc-layout-anyalticclick" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  />
+						</td>
+					</tr>
+					<th scope="row">View Analtics</th>
+						<td>
+							<input name="sc-layout-anyalticview" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  />
+						</td>
+					</tr>
+				</table>
+				<?php submit_button(); ?>  	
+	<?php } ?>
+	<?php if( $active_tab == 'about_options' ) {  ?>
+		A product of Sanskript Solution, Inc.
+		
+		Support
+		
+		Crea 
+				
 	<?php } ?>
 	<?php if( $active_tab == 'debug_options' ) {  ?>
 	<h3 class="title">Log File</h3>

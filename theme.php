@@ -1,5 +1,11 @@
 <?php  
 
+
+function sp_copywrite() {
+    echo '<p><div class="alert alert-error">Warning. This A Beta Version And Not To Be Used In Production. (c) 2013 Sanskript Solutions </div></p>';
+}
+add_action('wp_footer', 'sp_copywrite');
+
 function soldpress_scripts() {
 	wp_enqueue_script('jquery', false, array(), false, true);
 	wp_enqueue_script(

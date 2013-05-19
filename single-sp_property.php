@@ -1,22 +1,13 @@
-<?php if(get_option('sp_debug') == '1'){ ?>   
+<?php if(get_option('sc_debug') == '1'){ ?>   
 <div class="alert alert-warning"><strong>This is a template for a simple listing website. Use it as a starting point to create something more unique </div>
-<?php } ?>   
+<?php } ?> 
+<?php  
+include_once(dirname(__FILE__).'/theme.php');
+include_once(dirname(__FILE__).'/general.php');
+?>
+  
 <?php
-function my_scripts_method() {
-	wp_enqueue_script('jquery', false, array(), false, true);
-	wp_enqueue_script(
-		'bootstrap',
-		'http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.3.1/js/bootstrap.min.js',
-		array('jquery'), 
-        '2.3.1', 
-        true);
-		
-	wp_enqueue_script(
-		'jquery.cycle2',
-		'//cdnjs.cloudflare.com/ajax/libs/jquery.cycle2/20130409/jquery.cycle2.min.js',
-		array('jquery'), 
-        '2', 
-        true);
+function soldpress_analytics() {
 
 	/*	wp_enqueue_script(
 		'analyticsclick',
@@ -32,24 +23,6 @@ function my_scripts_method() {
 add_action( 'wp_enqueue_scripts', 'my_scripts_method' ); // wp_enqueue_scripts action hook to link only on the front-end
 
 
-function soldpress_styles()  
-{ 
-  wp_register_style( 'bootstrap-style', 
-    '//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css', 
-    array(), 
-    '2.3.1', 
-    'all' );
-
-  // enqueing:
-  wp_enqueue_style( 'bootstrap-style' );
-}
-
-add_action('wp_enqueue_scripts', 'soldpress_styles');
-
-function sp_copywrite() {
-    echo '<p><div class="alert alert-error">Warning. This A Beta Version And Not To Be Used In Production. (c) 2013 Sanskript Solutions </div></p>';
-}
-add_action('wp_footer', 'sp_copywrite');
 ?>
 
 <?php get_header(); ?>
@@ -427,4 +400,3 @@ add_action('wp_footer', 'sp_copywrite');
 ©1998-2013 The Canadian Real Estate Association. All rights reserved. MLS®, Multiple Listing Service®, and all related graphics are trademarks of The Canadian Real Estate Association. REALTOR®, REALTORS®, and all related graphics are trademarks of REALTOR® Canada Inc. a corporation owned by The Canadian Real Estate Association and the National Association of REALTORS®.</small> </p>
 <p><small>Powered by SoldPress. <!-- ©2013 Sanskript Solutions, Inc. All rights reserved.--> </small></p>
 <?php get_footer(); ?>
-<script src="http://malsup.github.com/jquery.cycle2.carousel.js"></script>
