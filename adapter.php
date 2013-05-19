@@ -283,14 +283,14 @@ class soldpress_adapter{
 					//List Agent
 					
 					$agentKey = get_post_meta( $post_id ,'dfd_ListAgentKey',true);	
-					$this->WriteLog('Begin Agent Picture Sync' . $post_id . 'AgentKey' . $agentKey);					
+					//$this->WriteLog('Begin Agent Picture Sync' . $post_id . 'AgentKey' . $agentKey);					
 					$this->sync_agentobject($agentKey, 'ThumbnailPhoto',$post_id,'agent');
 					
 					//Co Agent
 					$coagentKey = get_post_meta( $post_id ,'dfd_CoListAgentKey',true);
 					if($coagentKey != "")
 					{					
-						$this->WriteLog('Begin CoAgent Picture Sync' . $post_id . 'CoAgentKey' . $coagentKey);					
+					//	$this->WriteLog('Begin CoAgent Picture Sync' . $post_id . 'CoAgentKey' . $coagentKey);					
 						$this->sync_agentobject($coagentKey, 'ThumbnailPhoto',$post_id,'coagent');
 						update_post_meta($post_id,'sc-sync-picture-agent', true,'coagent');
 					}
@@ -304,8 +304,8 @@ class soldpress_adapter{
 					//List Agent
 					
 					$officeKey = get_post_meta( $post_id ,'dfd_ListOfficeKey',true);	
-					$this->WriteLog('Begin Office Picture Sync' . $post_id . 'AgentKey' . $officeKey);					
-					$this->sync_listingobject($officeKey, 'ThumbnailPhoto',$post_id,'office');
+				//	$this->WriteLog('Begin Office Picture Sync' . $post_id . 'AgentKey' . $officeKey);					
+					$this->sync_listingobject($officeKey, 'ThumbnailPhoto',$post_id);
 					
 				}
 		}
@@ -387,7 +387,7 @@ class soldpress_adapter{
 			$wp_upload_dir = wp_upload_dir();
 			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;		
 			file_put_contents($filePath,$image["Data"]); //We Change This In Settings
-			update_post_meta($post_id,'sc-sync-picture-listing-file', $filename);					
+			update_post_meta($post_id,'sc-sync-picture-office-file', $filename);					
  		}	
 		
 		return true;

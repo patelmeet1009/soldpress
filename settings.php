@@ -85,7 +85,7 @@ function soldpress_account_options() {
 					</tr>
 					<tr valign="top">
 					<th scope="row">Last Update</th>
-					<td><?php echo get_option('sc-lastupdate' )->format('Y-m-d'); ?></td>
+					<td><?php echo get_option('sc-lastupdate' )->format('Y-m-d H:i:s'); ?></td>
 					</tr>
 				</table>
 				<table>
