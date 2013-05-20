@@ -5,9 +5,9 @@ require_once dirname(__FILE__).'/lib/phrets.php';
 
 class soldpress_adapter{
 
-	private $loginURL = 'http://sample.data.crea.ca/Login.svc/Login';
-	private $userId = 'CXLHfDVrziCfvwgCuL8nUahC';
-	private $pass = 'mFqMsCSPdnb5WO1gpEEtDCHH';
+	private $loginURL;//'http://sample.data.crea.ca/Login.svc/Login';
+	private $userId;//'CXLHfDVrziCfvwgCuL8nUahC';
+	private $pass;//'mFqMsCSPdnb5WO1gpEEtDCHH';
 	private $templateLocation = "wp-content/plugins/soldpress/template/";
 	private $service;
 	private $log;
@@ -33,9 +33,9 @@ class soldpress_adapter{
 		$this->service->AddHeader('RETS-Version', 'RETS/1.7.2');
 		$this->service->AddHeader('Accept', '/');	
 		
-		$this->loginURL = get_option("sc-url","http://sample.data.crea.ca/Login.svc/Login");
-		$this->userId = get_option("sc-username","CXLHfDVrziCfvwgCuL8nUahC");
-		$this->pass= get_option("sc-password","mFqMsCSPdnb5WO1gpEEtDCHH");
+		$this->loginURL = get_option("sc-url");
+		$this->userId = get_option("sc-username");
+		$this->pass= get_option("sc-password");
 		$this->templateLocation = get_option("sc-template","wp-content/plugins/soldpress/template/");
 	}
 	
@@ -292,8 +292,10 @@ class soldpress_adapter{
 					{					
 					//	$this->WriteLog('Begin CoAgent Picture Sync' . $post_id . 'CoAgentKey' . $coagentKey);					
 						$this->sync_agentobject($coagentKey, 'ThumbnailPhoto',$post_id,'coagent');
-						update_post_meta($post_id,'sc-sync-picture-agent', true,'coagent');
+						
 					}
+					//We Have Complete The Agent and CoAgent Sunc Process
+					update_post_meta($post_id,'sc-sync-picture-agent', true);
 
 				}
 				
@@ -306,6 +308,8 @@ class soldpress_adapter{
 					$officeKey = get_post_meta( $post_id ,'dfd_ListOfficeKey',true);	
 				//	$this->WriteLog('Begin Office Picture Sync' . $post_id . 'AgentKey' . $officeKey);					
 					$this->sync_listingobject($officeKey, 'ThumbnailPhoto',$post_id);
+					//We Have Complete The Listing Process
+					update_post_meta($post_id,'sc-sync-picture-office', true);
 					
 				}
 		}
@@ -370,9 +374,14 @@ class soldpress_adapter{
 		{	
 			$filename = $id .'-agent-' . $type . '.jpg';				
 			$wp_upload_dir = wp_upload_dir();
-			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;		
-			file_put_contents($filePath,$image["Data"]); //We Change This In Settings
-			update_post_meta($post_id,'sc-sync-picture-'.$metatype.'-file', $filename);		
+			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;
+			if($image["Data"] == ""){	
+				file_put_contents($filePath,$image["Data"]); 
+				update_post_meta($post_id,'sc-sync-picture-'.$metatype.'-file', $filename);	
+			}
+			else{
+				update_post_meta($post_id,'sc-sync-picture-'.$metatype.'-file', '');	
+			}			
  		}	
 		
 		return true;
@@ -385,9 +394,14 @@ class soldpress_adapter{
 		{	
 			$filename = $id .'-listing-' . $type . '.jpg';				
 			$wp_upload_dir = wp_upload_dir();
-			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;		
-			file_put_contents($filePath,$image["Data"]); //We Change This In Settings
-			update_post_meta($post_id,'sc-sync-picture-office-file', $filename);					
+			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;	
+			if($image["Data"] == ""){
+				file_put_contents($filePath,$image["Data"]);
+				update_post_meta($post_id,'sc-sync-picture-office-file', $filename);	
+			}
+			else{
+				update_post_meta($post_id,'sc-sync-picture-office-file', '');	
+			}
  		}	
 		
 		return true;

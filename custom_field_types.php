@@ -1,7 +1,10 @@
 <?php
 
-function custom_post_type() {
 
+
+function custom_post_type() {
+		$slug = get_option('sc-slug','listing');
+		
 		$labels = array(
 			'name'                => _x( 'Listings', 'Post Type General Name', 'text_domain' ),
 			'singular_name'       => _x( 'Listing', 'Post Type Singular Name', 'text_domain' ),
@@ -19,7 +22,7 @@ function custom_post_type() {
 		);
 
 		$rewrite = array(
-			'slug'                => 'listing',
+			'slug'                => $slug,
 			'with_front'          => true,
 			'pages'               => true,
 			'feeds'               => true,

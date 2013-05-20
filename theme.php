@@ -28,6 +28,20 @@ function soldpress_scripts() {
 		array('jquery'), 
         '2', 
         true);
+		
+	wp_enqueue_script(
+		'jquery.cookie.js',
+		plugins_url( 'lib/jquery.cookie/jquery.cookie.js' , __FILE__ ),
+		array('jquery'), 
+		'1.3.1', 
+		false);
+	
+	wp_enqueue_script(
+		'google.maps',
+		'//maps.google.com/maps/api/js?sensor=false&.js',
+		array('jquery'), 
+		'3.0.0', 
+		false);
 }
 
 add_action( 'wp_enqueue_scripts', 'soldpress_scripts' ); 

@@ -1,5 +1,7 @@
 <?php
 
+
+
 add_action( 'admin_menu', 'soldpress_admin_menu' );
 
 function soldpress_admin_menu() {
@@ -8,12 +10,17 @@ function soldpress_admin_menu() {
 }
 
 function register_mysettings() {
+
 	register_setting( 'sc-settings-credentials', 'sc-username' );
 	register_setting( 'sc-settings-credentials', 'sc-password' );
 	register_setting( 'sc-settings-credentials', 'sc-url' );
-	register_setting( 'sc-settings-credential', 'sc-template' );
-	register_setting( 'sc-settings-credential', 'sc-language' );
+	register_setting( 'sc-settings-credentials', 'sc-template' );
+	register_setting( 'sc-settings-credentials', 'sc-language' );
+
+	
 	register_setting( 'sc-settings-sync', 'sc-sync-enabled' );
+	register_setting( 'sc-settings-sync', 'sc-sync-days' );
+	
 	register_setting( 'sc-settings-layout', 'sc-layout-agentlisting' );
 	register_setting( 'sc-settings-layout', 'sc-layout-ariealmap' );
 	register_setting( 'sc-settings-layout', 'sc-layout-streetviewmap' );	
@@ -22,11 +29,15 @@ function register_mysettings() {
 	register_setting( 'sc-settings-layout', 'sc-layout-analyticsclick' );
 	register_setting( 'sc-settings-layout', 'sc-layout-analyticsview' );
 	register_setting( 'sc-settings-layout', 'sc-layout-soldpresslogo' );
+	register_setting( 'sc-settings-layout', 'sc-slug' );
 	
+	register_setting( 'sc-settings-about', 'sc-license' );
 }
 
 function soldpress_account_options() {
 
+	include_once(dirname(__FILE__).'/license.php');
+	
 	if ( !current_user_can( 'manage_options' ) )  {
 			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 	}
@@ -71,10 +82,7 @@ function soldpress_account_options() {
 				</table>
 				<h3 class="title">General</h3>
 				<table class="form-table">
-					<!-- <tr valign="top">
-					<th scope="row">Template Location</th>
-					<td><input type="text" class="regular-text" name="sc-template" value="<?php //echo get_option('sc-template','wp-content/plugins/soldpress/template/'); ?>" /></td>
-					</tr>-->
+					
 					<tr valign="top">
 					<th scope="row">Language</th>
 					<td>
@@ -147,7 +155,6 @@ function soldpress_account_options() {
 							foreach ($jobs as $job => $value) {
 								if($job == 'soldpress_photo_sync' || $job == 'soldpress_listing_sync'){
 									echo '<tr>';
-									//echo '<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>';
 									echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="options-general.php?page=soldpress&tab=sync_options&spa=runevt&job='.$job.'">Run Now</a></div></td>';								
 									echo '<td>'.date("r", $key).'</td>';							
 									$schedule = $value[key($value)];
@@ -177,48 +184,60 @@ function soldpress_account_options() {
 				<?php settings_fields( 'sc-settings-layout' ); ?>
 				<h3 class="title">Agent</h3>
 				<table class="form-table">
+					<tr>
 					<th scope="row">Display Listing Agent</th>
 						<td>
 							<input name="sc-layout-agentlisting" id ="sc-layout-agentlisting" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-agentlisting',1 ) ); ?>  />
 						</td>
 					</tr>
+					<tr valign="top">
+					<th scope="row">Slug</th>
+					<td><input type="text" disabled class="regular-text" id ="sc-slug" name="sc-slug" value="<?php echo get_option('sc-slug','listing'); ?>" /> *(Avalible in Premium)</td>
+					</tr>
 				</table>
 				<h3 class="title">Map</h3>
 				<table class="form-table">
+					<tr>
 					<th scope="row">Display Arieal Map</th>
 						<td>
-							<input name="sc-layout-ariealmap" id ="sc-layout-ariealmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-ariealmap',1 ) ); ?>  />
+							<input name="sc-layout-ariealmap" id ="sc-layout-ariealmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-ariealmap',0 ) ); ?> *(Avalible in Premium) />
 						</td>
 					</tr>
+					<tr>
 					<th scope="row">Display StreetView Map</th>
 						<td>
-							<input name="sc-layout-streetviewmap" id ="sc-layout-streetviewmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-streetviewmap',0 ) ); ?>  />
+							<input name="sc-layout-streetviewmap" id ="sc-layout-streetviewmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-streetviewmap',0 ) ); ?>  *(Avalible in Premium)/>
 						</td>
 					</tr>
+
 				</table>
 				<h3 class="title">Color</h3>
 				<table class="form-table">
+					<tr>
 					<th scope="row">Primary Color</th>
 						<td>
-							<input name="sc-layout-primarycolor" id ="sc-layout-primarycolor" value="" />
+							<input name="sc-layout-primarycolor" id ="sc-layout-primarycolor" value="" /> *(Avalible in Premium)
 						</td>
 					</tr>
+					<tr>
 					<th scope="row">Secondary Color</th>
 						<td>
-							<input name="sc-layout-secondarycolor" id ="sc-layout-secondarycolor" value="" />
+							<input name="sc-layout-secondarycolor" id ="sc-layout-secondarycolor" value="" /> *(Avalible in Premium)
 						</td>
 					</tr>
 				</table>
 				<h3 class="title">Relator(tm) Analytics</h3>
 				<table class="form-table">
+					<tr>
 					<th scope="row">Click Analytics</th>
 						<td>
-							<input name="sc-layout-analyticsclick" id ="sc-layout-analyticsclick" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-analyticsclick',0) ); ?>  />
+							<input name="sc-layout-analyticsclick" id ="sc-layout-analyticsclick" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-analyticsclick',0) ); ?>  /> *(Avalible in Premium)
 						</td>
 					</tr>
+					<tr>
 					<th scope="row">View Analytics</th>
 						<td>
-							<input name="sc-layout-analyticsview" id ="sc-layout-analyticsview" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-analyticsview',0 ) ); ?>  />
+							<input name="sc-layout-analyticsview" id ="sc-layout-analyticsview" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-analyticsview',0 ) ); ?>  /> *(Avalible in Premium)
 						</td>
 					</tr>
 				</table>
@@ -226,11 +245,21 @@ function soldpress_account_options() {
 		</form>
 	<?php } ?>
 	<?php if( $active_tab == 'about_options' ) {  ?>
-		A product of Sanskript Solution, Inc.
-		
-		Licsense Key:  "Premium Beta"
-		
-				
+	
+		<form method="post" action="options.php">
+			<?php settings_fields( 'sc-settings-about' ); ?>	
+				<h3 class="title">License</h3>
+				<table class="form-table">
+					<tr>
+					<th scope="row">License Key</th>
+						<td>
+							<input type="text" class="regular-text" id ="sc-license" name="sc-license" value="<?php echo get_option('sc-license',''); ?>" />
+							
+						</td>
+					</tr>
+				</table>
+		</form>
+		Licsense Key:  <?php echo get_option('sc-license',''); ?> . "Premium Beta"				
 	<?php } ?>
 	<?php if( $active_tab == 'debug_options' ) {  ?>
 	<h3 class="title">Log File</h3>
@@ -269,6 +298,8 @@ function soldpress_account_options() {
 						<?php submit_button('Manual Sync', 'secondary', 'sync', false); ?> 
 						<?php submit_button('Clear Listings', 'secondary', 'delete', false); ?> 
 						<?php submit_button('Delete Log', 'secondary', 'deletelog', false); ?> 
+						<?php submit_button('Delete Photo Meta', 'secondary', 'removephotometadata', false); ?> 
+						
 					</form>
 			<?php if (get_option('sc-status' ) == true) { ?>
 			<div id="message" class="updated"><p>CREA Data Sync Active</p>
@@ -346,6 +377,12 @@ function soldpress_account_options() {
 					wp_delete_post( $mypost->ID, true);
 				// Set to False if you want to send them to Trash.
 			}
+		}
+		
+		if (isset($_POST["removephotometadata"])) {  		
+			global $wpdb;
+			$deleteQuery = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE meta_key = 'sc-sync-picture--file'"); 
+			$wpdb->query($deleteQuery);
 		}
 	}
 

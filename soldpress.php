@@ -3,12 +3,15 @@
 Plugin Name: SoldPress
 Plugin URI: http://www.sanskript.com/products/soldpress
 Description: SoldPress is a WordPress plugin to enable CREA’s members to easily disseminate MLS® listing content on WordPress Sites.
-Version:  0.9.5.2 Beta
+Version:  0.9.5.3 Beta
 Author: Amer Gill
 Author URI: http://www.sanskript.com
 License: GPL2
 */
 
+	define('SOLDPRESS_VERSION', '0953');
+	define('SOLDPRESS_PLUGIN_URL', plugin_dir_url( __FILE__ ));
+	
 	ini_set('max_execution_time', 600);
 	ini_set('mysql.connect_timeout', 600);
 	ini_set('default_socket_timeout', 600);
@@ -41,7 +44,18 @@ License: GPL2
 	add_action('soldpress_photo_sync', 'soldpress_photo');
 
 	function soldpress_activation() {
-
+		
+		//Perform Version Upgrades
+		$currentVerison = get_option( 'sc-version', '0922');
+		
+		if(currentVerison == 0922)
+		{
+			//We need to delete the username and password and get the user to reenter because fundlement changes have occurent to the application
+			update_option( 'sc-version', SOLDPRESS_VERSION);
+			update_option( 'sc-username','' ); 
+			update_option( 'sc-password', SOLDPRESS_VERSION);
+		}
+	
 		update_option( 'sc-status', '');
 		update_option( 'sc-sync-start','' ); 
 		update_option( 'sc-sync-end','' ); 
