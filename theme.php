@@ -21,6 +21,13 @@ function soldpress_scripts() {
 		array('jquery'), 
         '2', 
         true);
+		
+	wp_enqueue_script(
+		'jquery.cycle2.carousel',
+		 plugins_url( 'lib/jquery.cycle2/jquery.cycle2.carousel.js' , __FILE__ ),
+		array('jquery'), 
+        '2', 
+        true);
 }
 
 add_action( 'wp_enqueue_scripts', 'soldpress_scripts' ); 

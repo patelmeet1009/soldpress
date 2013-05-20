@@ -14,6 +14,15 @@ function register_mysettings() {
 	register_setting( 'sc-settings-credential', 'sc-template' );
 	register_setting( 'sc-settings-credential', 'sc-language' );
 	register_setting( 'sc-settings-sync', 'sc-sync-enabled' );
+	register_setting( 'sc-settings-layout', 'sc-layout-agentlisting' );
+	register_setting( 'sc-settings-layout', 'sc-layout-ariealmap' );
+	register_setting( 'sc-settings-layout', 'sc-layout-streetviewmap' );	
+	register_setting( 'sc-settings-layout', 'sc-layout-primarycolor' );
+	register_setting( 'sc-settings-layout', 'sc-layout-secondarycolor' );
+	register_setting( 'sc-settings-layout', 'sc-layout-analyticsclick' );
+	register_setting( 'sc-settings-layout', 'sc-layout-analyticsview' );
+	register_setting( 'sc-settings-layout', 'sc-layout-soldpresslogo' );
+	
 }
 
 function soldpress_account_options() {
@@ -46,7 +55,7 @@ function soldpress_account_options() {
 					<th scope="row">Url</th>
 						<td>
 							<select name="sc-language" class="" id="sc-language">
-								<option value="http://data.crea.ca/Login.svc/Login" <?php selected( 'http://data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>Production</option>
+								<option value="http://data.crea.ca/Login.svc/Login" <?php selected( 'http://data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>>Production</option>
 								<option value="http://sample.data.crea.ca/Login.svc/Login" <?php selected( 'http://sample.data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>>Development</option>
 							</select>
 						</td>
@@ -76,7 +85,11 @@ function soldpress_account_options() {
 					</tr>
 					<tr valign="top">
 					<th scope="row">Debug Mode</th>
-					<td><input name="sc-debug" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  /></td>
+					<td><input name="sc-debug" id ="sc-debug" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  /></td>
+					</tr>
+					<tr valign="top">
+					<th scope="row">Sync Enabled</th>
+					<td><input name="sc-sync-enabled" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-sync-enabled' ) ); ?>  /></td>
 					</tr>
 				</table>
 				<?php submit_button(); ?>  
@@ -135,7 +148,7 @@ function soldpress_account_options() {
 								if($job == 'soldpress_photo_sync' || $job == 'soldpress_listing_sync'){
 									echo '<tr>';
 									//echo '<th scope="row" class="check-column"><input type="checkbox" name="schedules[]" class="entries" value="1"></th>';
-									echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="/wp-admin/options-general.php?page=soldpress&tab=sync_options&spa=runevt&job='.$job.'">Run Now</a></div></td>';								
+									echo '<td><strong>'.$job.'</strong><div class="row-actions" style="margin:0; padding:0;"><a href="options-general.php?page=soldpress&tab=sync_options&spa=runevt&job='.$job.'">Run Now</a></div></td>';								
 									echo '<td>'.date("r", $key).'</td>';							
 									$schedule = $value[key($value)];
 									echo '<td>'.(isset($schedule["schedule"]) ? $schedule["schedule"] : "").'</td>';
@@ -160,11 +173,13 @@ function soldpress_account_options() {
 	<?php } ?>
 	<?php if( $active_tab == 'layout_options' ) {  ?>
 	
+		<form method="post" action="options.php">
+				<?php settings_fields( 'sc-settings-layout' ); ?>
 				<h3 class="title">Agent</h3>
 				<table class="form-table">
 					<th scope="row">Display Listing Agent</th>
 						<td>
-							<input name="sc-layout-agentlisting" id ="sc-layout-agentlisting" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-agentlisting' ) ); ?>  />
+							<input name="sc-layout-agentlisting" id ="sc-layout-agentlisting" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-agentlisting',1 ) ); ?>  />
 						</td>
 					</tr>
 				</table>
@@ -172,12 +187,12 @@ function soldpress_account_options() {
 				<table class="form-table">
 					<th scope="row">Display Arieal Map</th>
 						<td>
-							<input name="sc-layout-ariealmap" id ="sc-layout-ariealmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-ariealmap' ) ); ?>  />
+							<input name="sc-layout-ariealmap" id ="sc-layout-ariealmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-ariealmap',1 ) ); ?>  />
 						</td>
 					</tr>
 					<th scope="row">Display StreetView Map</th>
 						<td>
-							<input name="sc-layout-streetviewmap" id ="sc-layout-streetviewmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-streetviewmap' ) ); ?>  />
+							<input name="sc-layout-streetviewmap" id ="sc-layout-streetviewmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-streetviewmap',0 ) ); ?>  />
 						</td>
 					</tr>
 				</table>
@@ -185,36 +200,36 @@ function soldpress_account_options() {
 				<table class="form-table">
 					<th scope="row">Primary Color</th>
 						<td>
-							<input name="sc-layout-primarycolor" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  />
+							<input name="sc-layout-primarycolor" id ="sc-layout-primarycolor" value="" />
 						</td>
 					</tr>
 					<th scope="row">Secondary Color</th>
 						<td>
-							<input name="sc-layout-secondarycolor" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  />
+							<input name="sc-layout-secondarycolor" id ="sc-layout-secondarycolor" value="" />
 						</td>
 					</tr>
 				</table>
-				<h3 class="title">Relator(tm) Analyics</h3>
+				<h3 class="title">Relator(tm) Analytics</h3>
 				<table class="form-table">
-					<th scope="row">Click Analtics</th>
+					<th scope="row">Click Analytics</th>
 						<td>
-							<input name="sc-layout-anyalticclick" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  />
+							<input name="sc-layout-analyticsclick" id ="sc-layout-analyticsclick" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-analyticsclick',0) ); ?>  />
 						</td>
 					</tr>
-					<th scope="row">View Analtics</th>
+					<th scope="row">View Analytics</th>
 						<td>
-							<input name="sc-layout-anyalticview" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  />
+							<input name="sc-layout-analyticsview" id ="sc-layout-analyticsview" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-analyticsview',0 ) ); ?>  />
 						</td>
 					</tr>
 				</table>
 				<?php submit_button(); ?>  	
+		</form>
 	<?php } ?>
 	<?php if( $active_tab == 'about_options' ) {  ?>
 		A product of Sanskript Solution, Inc.
 		
-		Support
+		Licsense Key:  "Premium Beta"
 		
-		Crea 
 				
 	<?php } ?>
 	<?php if( $active_tab == 'debug_options' ) {  ?>

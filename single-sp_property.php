@@ -26,10 +26,6 @@ add_action( 'wp_enqueue_scripts', 'my_scripts_method' ); // wp_enqueue_scripts a
 ?>
 
 <?php get_header(); ?>
-	<style>
-	
-
-	</style>
 	<h2><?php the_title(); ?></h2>	
 	<div class="well2">
 		<div class="cycle-slideshow" data-cycle-fx="carousel" data-cycle-timeout="2000">
@@ -44,6 +40,23 @@ add_action( 'wp_enqueue_scripts', 'my_scripts_method' ); // wp_enqueue_scripts a
 				}
 			?>			
 		</div>
+		<div id="disclaimer1">Test</div>
+		<script>
+
+			var j = jQuery.noConflict()
+			if (j('#disclaimer').length > 0) {
+				alert('g');	
+				if (j.cookie('disclaimer_accepted') != 'yes') {
+					j('#disclaimer').modal({backdrop:'static',keyboard:false})
+
+					j('#disclaimer').on('hide',function(){
+						j.cookie('disclaimer_accepted','yes',{expires:30});
+					})
+				}	
+			
+			}	
+		</script>
+		
 		<div class="well3">
 			<div class="row">
 				<div class="span4">MLS®: <?php echo get_post_meta($post->ID,'dfd_ListingId',true); ?> </div>	
@@ -252,16 +265,13 @@ add_action( 'wp_enqueue_scripts', 'my_scripts_method' ); // wp_enqueue_scripts a
 							</tbody>
 					</table>	
 				</div>				
-				<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&"></script> <!-- &language=ja -->
+				<script src="http://maps.google.com/maps/api/js?sensor=false&.js"></script> 
 				<script>
 					// Enable the visual refresh
-					google.maps.visualRefresh = true;
+					//google.maps.visualRefresh = true;
 
 					var address = '<?php echo get_post_meta($post->ID,'dfd_UnparsedAddress',true); ?> , <?php echo get_post_meta($post->ID,'dfd_StateOrProvince',true); ?> <?php echo get_post_meta($post->ID,'dfd_PostalCode',true); ?>';	
-
-							
-					var map;
-					
+					var map;				
 					function initialize() {					
 						var geocoder = new google.maps.Geocoder();		
 						geocoder.geocode( { 'address' : address }, function( results, status ) {
@@ -271,26 +281,45 @@ add_action( 'wp_enqueue_scripts', 'my_scripts_method' ); // wp_enqueue_scripts a
 									zoom: 15,
 									center: latlng,
 									mapTypeId: google.maps.MapTypeId.ROADMAP, 
-									//streetViewControl: true
+									streetViewControl: true
 								};
 						  
+															
 								map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-								/*
-								mapstreet = new google.maps.Map(document.getElementById('map-street'), mapOptions);								
-								var panoramaOptions = {
-									position: map.latlngbyaddress,
-									  pov: {
-										heading: 0,
-										pitch: 0,
-										zoom: 1
-									  },
-									visible: true
-								};
 								
-								var panorama = new  google.maps.StreetViewPanorama(document.getElementById("map-street"), panoramaOptions);
-								mapstreet.setStreetView(panorama);
-								panorama.setVisible(true);*/
+								var marker = new google.maps.Marker({
+									position:results[0].geometry.location,								
+									map: map,
+									scrollwheel: false,
+									streetViewControl:true
+								});
 								
+								
+								<?php if(get_option( 'sc-layout-streetviewmap',false)){ ?> 
+								
+									var mapOptionsStreet = {
+										zoom: 14,
+										center: latlng,
+										mapTypeId: google.maps.MapTypeId.ROADMAP, 
+										streetViewControl: true
+									};
+									
+									mapstreet = new google.maps.Map(document.getElementById('map-street'), mapOptionsStreet);	
+									
+									var panoramaOptions = {
+										position: results[0].geometry.location,
+										  pov: {
+											heading: 0,
+											pitch: 0,
+											zoom: 1
+										  },
+										visible: true
+									};
+									
+									var panorama = new  google.maps.StreetViewPanorama(document.getElementById("map-street"), panoramaOptions);
+									mapstreet.setStreetView(panorama);
+									panorama.setVisible(true);
+								<?php }; ?>									
 							}else{
 							//	alert("Geocode was not successful for the following reason: " + status);
 							}
@@ -298,21 +327,31 @@ add_action( 'wp_enqueue_scripts', 'my_scripts_method' ); // wp_enqueue_scripts a
 					}
 					
 					google.maps.event.addDomListener(window, 'load', initialize);
-				</script>				
+				</script>
+				<style>
+					
+				</style>
+
+				<?php if(get_option('sc-layout-ariealmap',true)){ ?> 				
 				<table class="table table-striped table-condensed ">
 						 <caption>Map</caption>
 						 <tbody>
 							<tr>
 								<td>
-									<!--<div id="map-street" class="well-map"></div>-->
-									<div id="map-canvas" class="well-map"></div>									
+									<?php if(get_option('sc-layout-streetviewmap',false)){ ?> 
+										<div id="map-street" class="well-map"></div>
+									<?php }?>
+									
+									<div id="map-canvas" class="well-map"></div>	
+																
 								</td>
 							</tr>
 						</tbody>
 					</table>
+				<?php }?>		
 			</div>
-
-			<div class="span4 well2">
+			<?php if(get_option('sc-layout-agentlisting',true)){ ?> 
+			<div class="span4 well2">			
 				<!-- Agent --><h3>Agent Details</h3>
 				<div class="row-fluid">
 					<div class="well3 span12">
@@ -388,8 +427,9 @@ add_action( 'wp_enqueue_scripts', 'my_scripts_method' ); // wp_enqueue_scripts a
 				<p><small>Data Provided by <?php echo get_post_meta($post->ID,'dfd_ListAOR',true); ?></small></p>
 				<p><small>Last Modified<?php echo get_post_meta($post->ID,'dfd_ModificationTimestamp',true); ?></small></p>		
 					</div>
-				</div>
-			</div>	
+				</div>			
+			</div>
+		<?php }?>			
 		</div>				
 	</div>
 
