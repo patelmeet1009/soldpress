@@ -60,7 +60,7 @@ License: GPL2
 		update_option( 'sc-sync-start','' ); 
 		update_option( 'sc-sync-end','' ); 
 		
-		//Deactive Sync When Reactivation Occurs
+		//Deactive Sync When Activation Occurs
 		update_option( 'sc-sync-enabled',false ); 
 		
 		//Create SoldPress Directory

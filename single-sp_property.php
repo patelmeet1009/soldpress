@@ -107,7 +107,7 @@ CREA may at any time revise these Terms of Use by updating this posting. All use
 				}
 			?>			
 		</div>
-		<?php } ? >
+		<?php } ?>
 		<div class="well3">
 			<div class="row">
 				<div class="span4">MLS®: <?php echo get_post_meta($post->ID,'dfd_ListingId',true); ?> </div>	

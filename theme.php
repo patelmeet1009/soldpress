@@ -34,7 +34,7 @@ function soldpress_scripts() {
 		plugins_url( 'lib/jquery.cookie/jquery.cookie.js' , __FILE__ ),
 		array('jquery'), 
 		'1.3.1', 
-		false);
+		true);
 	
 	wp_enqueue_script(
 		'google.maps',
