@@ -71,43 +71,50 @@ CREA may at any time revise these Terms of Use by updating this posting. All use
 			<button class="btn btn-primary">Accept</button>
 		  </div>
 	</div>
+	<script>				
+			var j = jQuery.noConflict();
+			
+			j( document ).ready(function() {
+				if (j('#sp_disclaimer').length > 0) {
+					if (j.cookie('disclaimer_accepted') != 'yes') {
+						j('#sp_disclaimer').modal({backdrop:'static',keyboard:false})
+						j('#sp_disclaimer').on('hide',function(){
+							j.cookie('disclaimer_accepted','yes',{expires:30,path: '/'});
+						})
+					}			
+				}
+			});			
+	</script>
+	<?php 
+		$sp_slideshow = array();
+		
+		$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
+		if($photos){
+			foreach ($photos as $photo) {
+				$sp_slideshowimage = wp_get_attachment_url($photo->ID,'thumbnail') ;
+				$sp_slideshow[] = $sp_slideshowimage;
+			}
+		}						
+	?>
 	<div class="well2">
+		<?php if($sp_slideshow){ ?>
 		<div class="cycle-slideshow" data-cycle-fx="carousel" data-cycle-timeout="2000">
 			<div class="cycle-prev"></div>
 			<div class="cycle-next"></div>
 			<?php 
-				$photos = get_children( array('post_parent' => get_the_ID(), 'post_status' => 'inherit', 'post_type' => 'attachment', 'post_mime_type' => 'image', 'order' => 'ASC', 'orderby' => 'menu_order ID') );
-				if($photos){
-					foreach ($photos as $photo) {
-						echo '<image src="' . wp_get_attachment_url($photo->ID,'thumbnail') . '">';
-					}
+				foreach($sp_slideshow  as &$sp_slideshowimage){
+					echo '<image src="' . $sp_slideshowimage. '">';
 				}
 			?>			
 		</div>
-		<script>
-
-								
-				var j = jQuery.noConflict();
-				
-				j( document ).ready(function() {
-					if (j('#sp_disclaimer').length > 0) {
-						if (j.cookie('disclaimer_accepted') != 'yes') {
-							j('#sp_disclaimer').modal({backdrop:'static',keyboard:false})
-							j('#sp_disclaimer').on('hide',function(){
-								j.cookie('disclaimer_accepted','yes',{expires:30});
-							})
-						}			
-					}
-				});
-			
-		</script>
+		<?php } ? >
 		<div class="well3">
 			<div class="row">
 				<div class="span4">MLS®: <?php echo get_post_meta($post->ID,'dfd_ListingId',true); ?> </div>	
 				<div class="span4 pull-right"><span class="pull-right"><strong>For Sale: $<?php echo get_post_meta($post->ID,'dfd_ListPrice',true); ?></strong></span></div>
 			</div>					
 		</div>		
-		<img src="http://www.realtor.ca/presentation/images/en-CA/various/realtor.jpg"> MLS® 
+		<img src="<?php echo plugins_url( 'images/realtor.jpg' , __FILE__ ); ?>"> MLS® 
 	</div>	
 	<div class="container-fluid">	
 		<div class="row-fluid">
@@ -284,7 +291,24 @@ CREA may at any time revise these Terms of Use by updating this posting. All use
 					echo '</tbody></table>';
 					
 					?>
-				</div>				
+				</div>		
+				<?php 
+					$rooms = array();
+					for ($i=1; $i<=20; $i++)
+					{	
+						if(get_post_meta($post->ID,'dfd_RoomLevel' . $i ,true) != ''){
+							$room = array(
+							'RoomLevel' =>  get_post_meta($post->ID,'dfd_RoomLevel' . $i ,true),
+							'RoomType' => get_post_meta($post->ID,'dfd_RoomType' . $i ,true),
+							'RoomDimensions' => get_post_meta($post->ID,'dfd_RoomDimensions' . $i ,true),);
+							$rooms[] = $room;
+							
+						 }
+					}
+									
+					//echo var_dump($rooms);
+				?>
+				<?php if($rooms){ ?> 
 				<div class="well3">			
 					<table class="table table-striped table-condensed ">
 							 <caption>Rooms</caption>
@@ -293,22 +317,22 @@ CREA may at any time revise these Terms of Use by updating this posting. All use
 									<th>Level</th>
 									<th>Type</th>
 									<th>Dimensions</th>
-								</tr>									
+								</tr>		
+								
+								
 								<?php
-									for ($i=1; $i<=20; $i++)
-									  {	
-										if(get_post_meta($post->ID,'dfd_RoomLevel' . $i ,true) != ''){
-											 echo "<tr data-dp='".'dfd_RoomLevel' . $i . "'>";
-											 echo "<td>" . get_post_meta($post->ID,'dfd_RoomLevel' . $i ,true) . "</td>";	
-											 echo "<td>" . get_post_meta($post->ID,'dfd_RoomType' . $i ,true) . "</td>";
-											 echo "<td>" . get_post_meta($post->ID,'dfd_RoomDimensions' . $i ,true) . "</td>";
+									foreach($rooms  as &$room){
+										     echo "<tr>";
+											 echo "<td>" . $room['RoomLevel'] . "</td>";	
+											 echo "<td>" . $room['RoomType']. "</td>";	;
+											 echo "<td>". $room['RoomDimensions']. "</td>";	
 											 echo "</tr>";
-										 }
-									  }
-									?>
+									}
+								?>
 							</tbody>
 					</table>	
-				</div>				
+				</div>
+				<?php }?>				
 				<script>
 					// Enable the visual refresh
 					//google.maps.visualRefresh = true;
@@ -371,10 +395,6 @@ CREA may at any time revise these Terms of Use by updating this posting. All use
 					
 					google.maps.event.addDomListener(window, 'load', initialize);
 				</script>
-				<style>
-					
-				</style>
-
 				<?php if(get_option('sc-layout-ariealmap',true)){ ?> 				
 				<table class="table table-striped table-condensed ">
 						 <caption>Map</caption>
@@ -398,9 +418,10 @@ CREA may at any time revise these Terms of Use by updating this posting. All use
 				<!-- Agent --><h3>Agent Details</h3>
 				<div class="row-fluid">
 					<div class="well3 span12">
-						<?php if(get_post_meta($post->ID,'sc-sync-picture-agent',true) != ''){ ?> 
-							<img src="<?php $wp_upload_dir = wp_upload_dir();  echo $wp_upload_dir[baseurl] .'/soldpress/'. get_post_meta($post->ID,'sc-sync-picture-agent-file',true); ?>">
-						<?php }?>
+						<?php if(get_post_meta($post->ID,'sc-sync-picture-agent',true) != ''){
+							if(get_post_meta($post->ID,'sc-sync-picture-agent-file',true) != ''){ ?> 
+							<img src="<?php $wp_upload_dir = wp_upload_dir();  echo $wp_upload_dir['baseurl'] .'/soldpress/'. get_post_meta($post->ID,'sc-sync-picture-agent-file',true); ?>">
+						<?php }}?>
 						<address>
 						  <strong><?php echo get_post_meta($post->ID,'dfd_ListAgentFullName',true); ?></strong><br>
 						<?php echo get_post_meta($post->ID,'dfd_ListAgentDesignation',true); ?><br>
@@ -420,9 +441,10 @@ CREA may at any time revise these Terms of Use by updating this posting. All use
 						  <abbr title="Cell">C:</abbr> <?php echo get_post_meta($post->ID,'dfd_ListAgentCellPhone',true); ?></br>
 						<?php }?> 
 						</address>
-						<?php if(get_post_meta($post->ID,'sc-sync-picture-office',true) != ''){ ?> 
-							<img src="<?php $wp_upload_dir = wp_upload_dir();  echo $wp_upload_dir[baseurl] .'/soldpress/'. get_post_meta($post->ID,'sc-sync-picture-office-file',true); ?>">
-						<?php }?>
+						<?php if(get_post_meta($post->ID,'sc-sync-picture-office',true) != ''){
+							if(get_post_meta($post->ID,'sc-sync-picture-office-file',true) != ''){ ?> 	
+							<img src="<?php $wp_upload_dir = wp_upload_dir();  echo $wp_upload_dir['baseurl'] .'/soldpress/'. get_post_meta($post->ID,'sc-sync-picture-office-file',true); ?>">
+						<?php }}?>
 						<address>
 						<small><?php echo get_post_meta($post->ID,'dfd_ListOfficeName',true); ?></small></br>
 						<?php echo get_post_meta($post->ID,'dfd_ListOfficePhone',true); ?></br>
@@ -434,9 +456,11 @@ CREA may at any time revise these Terms of Use by updating this posting. All use
 				<?php if(get_post_meta($post->ID,'dfd_CoListAgentFullName',true) != ''){ ?>  
 				<div class="row-fluid">			
 					<div class="well3 span12">	
-						<?php if(get_post_meta($post->ID,'sc-sync-picture-agent',true) != ''){ ?> 
-							<img src="<?php $wp_upload_dir = wp_upload_dir();  echo $wp_upload_dir[baseurl] .'/soldpress/'. get_post_meta($post->ID,'sc-sync-picture-coagent-file',true); ?>">
-						<?php }?>
+						<?php if(get_post_meta($post->ID,'sc-sync-picture-agent',true) != ''){
+								if(get_post_meta($post->ID,'sc-sync-picture-coagent-file',true) != ''){
+							?> 
+							<img src="<?php $wp_upload_dir = wp_upload_dir();  echo $wp_upload_dir['baseurl'] .'/soldpress/'. get_post_meta($post->ID,'sc-sync-picture-coagent-file',true); ?>">
+						<?php }}?>
 						<address>
 							<strong><?php echo get_post_meta($post->ID,'dfd_CoListAgentFullName',true); ?></strong><br>
 							<?php echo get_post_meta($post->ID,'dfd_CoListAgentDesignation',true); ?><br>

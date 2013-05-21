@@ -283,14 +283,14 @@ class soldpress_adapter{
 					//List Agent
 					
 					$agentKey = get_post_meta( $post_id ,'dfd_ListAgentKey',true);	
-					//$this->WriteLog('Begin Agent Picture Sync' . $post_id . 'AgentKey' . $agentKey);					
+					$this->WriteLog('Begin Agent Picture Sync' . $post_id . 'AgentKey' . $agentKey);					
 					$this->sync_agentobject($agentKey, 'ThumbnailPhoto',$post_id,'agent');
 					
 					//Co Agent
 					$coagentKey = get_post_meta( $post_id ,'dfd_CoListAgentKey',true);
 					if($coagentKey != "")
 					{					
-					//	$this->WriteLog('Begin CoAgent Picture Sync' . $post_id . 'CoAgentKey' . $coagentKey);					
+						$this->WriteLog('Begin CoAgent Picture Sync' . $post_id . 'CoAgentKey' . $coagentKey);					
 						$this->sync_agentobject($coagentKey, 'ThumbnailPhoto',$post_id,'coagent');
 						
 					}
@@ -306,8 +306,8 @@ class soldpress_adapter{
 					//List Agent
 					
 					$officeKey = get_post_meta( $post_id ,'dfd_ListOfficeKey',true);	
-				//	$this->WriteLog('Begin Office Picture Sync' . $post_id . 'AgentKey' . $officeKey);					
-					$this->sync_listingobject($officeKey, 'ThumbnailPhoto',$post_id);
+					$this->WriteLog('Begin Office Picture Sync' . $post_id . 'AgentKey' . $officeKey);					
+					$this->sync_officeobject($officeKey, 'ThumbnailPhoto',$post_id);
 					//We Have Complete The Listing Process
 					update_post_meta($post_id,'sc-sync-picture-office', true);
 					
@@ -372,34 +372,47 @@ class soldpress_adapter{
 		$record = $this->service->GetObject("Agent", $type, $id);
 		foreach($record as &$image) 
 		{	
-			$filename = $id .'-agent-' . $type . '.jpg';				
-			$wp_upload_dir = wp_upload_dir();
-			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;
-			if($image["Data"] == ""){	
-				file_put_contents($filePath,$image["Data"]); 
-				update_post_meta($post_id,'sc-sync-picture-'.$metatype.'-file', $filename);	
-			}
+			if($image["Success"])
+			{
+				$filename = $id .'-agent-' . $type . '.jpg';				
+				$wp_upload_dir = wp_upload_dir();
+				$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;
+				if($image["Data"] != ""){	
+					file_put_contents($filePath,$image["Data"]); 
+					update_post_meta($post_id,'sc-sync-picture-'.$metatype.'-file', $filename);	
+				}
+				else{
+					update_post_meta($post_id,'sc-sync-picture-'.$metatype.'-file', '');	
+				}	
+			}	
 			else{
-				update_post_meta($post_id,'sc-sync-picture-'.$metatype.'-file', '');	
+				update_post_meta($post_id,'sc-sync-picture-office-file', '');	
 			}			
- 		}	
-		
+ 		}			
 		return true;
 	}
 	
-	public function sync_listingobject($id, $type, $post_id)
+	public function sync_officeobject($id, $type, $post_id)
 	{	
 		$record = $this->service->GetObject("Office", $type, $id);
 		foreach($record as &$image) 
 		{	
-			$filename = $id .'-listing-' . $type . '.jpg';				
-			$wp_upload_dir = wp_upload_dir();
-			$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;	
-			if($image["Data"] == ""){
-				file_put_contents($filePath,$image["Data"]);
-				update_post_meta($post_id,'sc-sync-picture-office-file', $filename);	
-			}
-			else{
+			if($image["Success"])
+			{
+				echo var_dump($image);
+				$filename = $id .'-listing-' . $type . '.jpg';				
+				$wp_upload_dir = wp_upload_dir();
+				$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;	
+				
+				
+				if($image["Data"] != ""){
+					file_put_contents($filePath,$image["Data"]);
+					update_post_meta($post_id,'sc-sync-picture-office-file', $filename);	
+				}
+				else{
+					update_post_meta($post_id,'sc-sync-picture-office-file', '');	
+				}
+			}else{
 				update_post_meta($post_id,'sc-sync-picture-office-file', '');	
 			}
  		}	

@@ -25,7 +25,7 @@
 		$key_info['validdir'] = $validdir;
 		$key_info['product'] = $prod_id;
 
-		$serverurl = "http://www.sanskript.com"; // Your Blog URL Where WLS Installed
+		$serverurl = "http://www.sanskript.com/"; // Your Blog URL Where WLS Installed
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $serverurl."wp-content/plugins/wp-licensing/auth/verify.php");
 		curl_setopt($ch, CURLOPT_POST, 1);
@@ -45,7 +45,7 @@
 		set_option('sp-license-valid',"asdfhjasldfalsdfj29349023jasldfj");
 	} else {
 		// key is not valid so stop it
-		echo "<p>Your license key is Invalid!";
+		echo '<div class="updated"><p>Your license key is Invalid! Test of the license server</p></div>';
 	}
 
  ?>

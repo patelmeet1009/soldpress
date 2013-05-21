@@ -44,6 +44,9 @@ function soldpress_account_options() {
 
 	$active_tab = isset( $_GET[ 'tab' ] ) ? $_GET[ 'tab' ] : 'display_options';  
 ?>
+	<?php if(get_option('sc-sync-enabled') == 0){ ?>
+			<div class="updated"><p>Warning! SoldPress is disabled.<p></div>
+	<?php	}?>
 	
 	<h2><img src="<?php echo plugins_url( '/images/soldpress-m.png' , __FILE__ ); ?>"" width="32px" height="32px">SoldPress Settings</h2>
 
@@ -65,7 +68,7 @@ function soldpress_account_options() {
 				   	<tr valign="top">
 					<th scope="row">Url</th>
 						<td>
-							<select name="sc-language" class="" id="sc-language">
+							<select name="sc-url" class="" id="sc-language">
 								<option value="http://data.crea.ca/Login.svc/Login" <?php selected( 'http://data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>>Production</option>
 								<option value="http://sample.data.crea.ca/Login.svc/Login" <?php selected( 'http://sample.data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>>Development</option>
 							</select>
@@ -95,10 +98,6 @@ function soldpress_account_options() {
 					<th scope="row">Debug Mode</th>
 					<td><input name="sc-debug" id ="sc-debug" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  /></td>
 					</tr>
-					<tr valign="top">
-					<th scope="row">Sync Enabled</th>
-					<td><input name="sc-sync-enabled" id ="sc-sync-enabled" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-sync-enabled' ) ); ?>  /></td>
-					</tr>
 				</table>
 				<?php submit_button(); ?>  
 			</form>
@@ -117,7 +116,9 @@ function soldpress_account_options() {
 					</tr>
 					<tr valign="top">
 					<th scope="row">Last Update</th>
-					<td><?php echo get_option('sc-lastupdate' )->format('Y-m-d H:i:s'); ?></td>
+					<td><?php 
+					if(get_option('sc-lastupdate' ) != ""){echo get_option('sc-lastupdate' )->format('Y-m-d H:i:s'); }?>
+					</td>
 					</tr>
 				</table>
 				<table>
@@ -299,6 +300,7 @@ function soldpress_account_options() {
 						<?php submit_button('Clear Listings', 'secondary', 'delete', false); ?> 
 						<?php submit_button('Delete Log', 'secondary', 'deletelog', false); ?> 
 						<?php submit_button('Delete Photo Meta', 'secondary', 'removephotometadata', false); ?> 
+						<?php submit_button('Clear Sync Settings', 'secondary', 'clearsettings', false); ?> 
 						
 					</form>
 			<?php if (get_option('sc-status' ) == true) { ?>
@@ -381,8 +383,17 @@ function soldpress_account_options() {
 		
 		if (isset($_POST["removephotometadata"])) {  		
 			global $wpdb;
-			$deleteQuery = $wpdb->prepare("DELETE FROM $wpdb->postmeta WHERE meta_key = 'sc-sync-picture--file'"); 
-			$wpdb->query($deleteQuery);
+			$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = 'sc-sync-picture-office-file'");
+			$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = 'sc-sync-picture-coagent-file'");
+			$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = 'sc-sync-picture-agent-file'");
+			$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = 'sc-sync-picture-agent'");
+			$wpdb->query("DELETE FROM $wpdb->postmeta WHERE meta_key = 'sc-sync-picture-office'");
+			
+
+		}
+		
+		if (isset($_POST["clearsettings"])) {  		
+			update_option('sc-lastupdate','');
 		}
 	}
 

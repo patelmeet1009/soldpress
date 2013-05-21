@@ -53,14 +53,14 @@ License: GPL2
 			//We need to delete the username and password and get the user to reenter because fundlement changes have occurent to the application
 			update_option( 'sc-version', SOLDPRESS_VERSION);
 			update_option( 'sc-username','' ); 
-			update_option( 'sc-password', SOLDPRESS_VERSION);
+			update_option( 'sc-password','');
 		}
 	
 		update_option( 'sc-status', '');
 		update_option( 'sc-sync-start','' ); 
 		update_option( 'sc-sync-end','' ); 
 		
-		//Deactive Sync
+		//Deactive Sync When Reactivation Occurs
 		update_option( 'sc-sync-enabled',false ); 
 		
 		//Create SoldPress Directory

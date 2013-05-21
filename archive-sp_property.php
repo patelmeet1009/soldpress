@@ -30,7 +30,7 @@ include_once(dirname(__FILE__).'/general.php');
 							</div>	 			
 							<div class="span8">
 								<a href="<?php the_permalink(); ?>">								
-									<?php the_title(); ?></a></br><?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_ListPrice', true ) ); ?><br>
+									<?php the_title(); ?></a></br>$<?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_ListPrice', true ) ); ?><br>
 									<?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_City', true )); ?><br>
 									<?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_BedroomsTotal', true ) ); ?> Bedrooms |  
 									<?php echo esc_html( get_post_meta( get_the_ID(), 'dfd_BathroomsTotal', true ) ); ?> Bathrooms 
