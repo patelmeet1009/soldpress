@@ -399,7 +399,6 @@ class soldpress_adapter{
 		{	
 			if($image["Success"])
 			{
-				echo var_dump($image);
 				$filename = $id .'-listing-' . $type . '.jpg';				
 				$wp_upload_dir = wp_upload_dir();
 				$filePath = $wp_upload_dir['basedir']. '/soldpress/'.$filename;	
