@@ -247,8 +247,8 @@ class soldpress_adapter{
 				if ($ListingKey == $master['ListingKey']) 
 				{					
 					$isDelete = false; //Found Mark the flag false;
-				}
-				break;					
+					break;
+				}				
 			}	
 			
 			if($isDelete){	

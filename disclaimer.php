@@ -17,13 +17,12 @@
 			});
 
 			function Accept() {
-						alert("dfg");
 						j.cookie('disclaimer_accepted','yes',{expires:30,path: '/'});
 						j("#sp_disclaimer").modal ('hide'); 
 			};			
 	</script>
 	
-	<div id="sp_disclaimer" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="sp_disclaimer" aria-hidden="true" style="z-index:999 !Important">
+	<div id="sp_disclaimer" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="sp_disclaimer" aria-hidden="true" style="z-index:9999 !Important">
 		  <div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 			<h3 id="myModalLabel">Terms of Use Agreement</h3>
