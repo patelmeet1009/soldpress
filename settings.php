@@ -29,6 +29,7 @@ function register_mysettings() {
 	register_setting( 'sc-settings-layout', 'sc-layout-analyticsclick' );
 	register_setting( 'sc-settings-layout', 'sc-layout-analyticsview' );
 	register_setting( 'sc-settings-layout', 'sc-layout-soldpresslogo' );
+	register_setting( 'sc-settings-layout', 'sc-layout-walkscore' );
 	register_setting( 'sc-settings-layout', 'sc-slug' );
 	
 	register_setting( 'sc-settings-about', 'sc-license' );
@@ -193,7 +194,7 @@ function soldpress_account_options() {
 					</tr>
 					<tr valign="top">
 					<th scope="row">Slug</th>
-					<td><input type="text" disabled class="regular-text" id ="sc-slug" name="sc-slug" value="<?php echo get_option('sc-slug','listing'); ?>" /> *(Avalible in Premium)</td>
+					<td><input type="text" class="regular-text" id ="sc-slug" name="sc-slug" value="<?php echo get_option('sc-slug','listing'); ?>" /> *(Avalible in Premium)</td>
 					</tr>
 				</table>
 				<h3 class="title">Map</h3>
@@ -210,7 +211,11 @@ function soldpress_account_options() {
 							<input name="sc-layout-streetviewmap" id ="sc-layout-streetviewmap" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-layout-streetviewmap',0 ) ); ?>  *(Avalible in Premium)/>
 						</td>
 					</tr>
-
+					<th scope="row">Walk Score API Key</th>
+						<td>
+							<input type="text" class="regular-text" id ="sc-layout-walkscore" name="sc-layout-walkscore" value="<?php echo get_option('sc-layout-walkscore',''); ?>" /> *(Avalible in Premium)</td>
+						</td>
+					</tr>
 				</table>
 				<h3 class="title">Color</h3>
 				<table class="form-table">

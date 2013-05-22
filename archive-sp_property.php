@@ -4,7 +4,7 @@ include_once(dirname(__FILE__).'/general.php');
 ?>
 
 <?php get_header(); ?>
-
+<?php include_once(dirname(__FILE__).'/disclaimer.php');?>
 <section>
      <?php if ( have_posts() ) : ?>
 		 <div id="content" role="main">
@@ -48,5 +48,6 @@ include_once(dirname(__FILE__).'/general.php');
 </div>
     </div>
 </section>
-<br/><br />
+<p><small>“MLS®, REALTOR®, and the associated logos are trademarks of The Canadian Real Estate Association</small> </p> </p>
+<p><small>Powered by SoldPress. <!-- ©2013 Sanskript Solutions, Inc. All rights reserved.--> </small></p>
 <?php get_footer(); ?>

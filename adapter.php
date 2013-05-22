@@ -106,7 +106,7 @@ class soldpress_adapter{
 	
 	public function sync_residentialproperty($crit)
 	{	
-
+		
 		$this->WriteLog('Sync Start');
 		global $wpdb;
 		$wpdb->query("set wait_timeout = 1200"); //Thank You (johnorourke) http://stackoverflow.com/questions/14782494/keep-losing-the-database-in-wordpress		
@@ -130,6 +130,7 @@ class soldpress_adapter{
 		$total = count($properties);
 		$this->WriteLog("Retrieved Results Total" .$total );
 		
+		
 		//Get Disconnect Array of Current Posts
 		$posts_array = $wpdb->get_results("select ID,post_name from $wpdb->posts where post_type = 'sp_property'");
 		
@@ -146,7 +147,7 @@ class soldpress_adapter{
 					continue;
 				}
 			}
-			
+						
 			$count = $count + 1;
 			
 			$ListingKey = $rets['ListingKey'];
@@ -158,16 +159,14 @@ class soldpress_adapter{
 					break;
 				}
 			}
-	
+				
 			$postdate  = DateTime::createFromFormat("d/m/Y H:i:s A", $rets['ModificationTimestamp']);	
-			$this->WriteLog($postdate->format('Y-m-d') . " " . $postdate->getTimestamp());
-//it's false if an error occurs) but you should also definitely check DateTime::getLastErrors();
 			$title = $rets['UnparsedAddress'] .' (' . $rets['ListingId'] .')';
 			$content = "";
 			
 			if($post != '') 
 			{				
-					
+					//Check The Master List TO See If Post Exits If No Marke Delete
 					$post->post_title = $title;
 					$post->post_content  = "";
 					$post->post_name = $ListingKey;
@@ -232,7 +231,38 @@ class soldpress_adapter{
 			update_post_meta($post_id,'sc-sync-meta-end', time());			
 		}	
 		
+		//Go Through Master List 
+		//Make A Second Call To Get The Master List For Deleting
+		$this->WriteLog('service->Search (ID=*)');
+		$master_properties = $this->service->Search("Property","Property",'(ID=*)',array("Limit" => '100',"Culture" => $culture));
+		$total = count($master_properties);
+		$this->WriteLog("Retrieved Master List Results Total" .$total );
+			
+		$this->WriteLog("Run Deleteion Process" .$total );
+		foreach($posts_array as $post) {
+			$isDelete =true;		
+			$ListingKey = $post->post_name;		
+			foreach ($master_properties as &$master) 
+			{
+				if ($ListingKey == $master['ListingKey']) 
+				{					
+					$isDelete = false; //Found Mark the flag false;
+				}
+				break;					
+			}	
+			
+			if($isDelete){	
+				$this->WriteLog('Delete Post:' . $ListingKey);	
+				$post->post_status = "trash";
+				wp_update_post($post);
+			}
+			else
+			{
+				$this->WriteLog('Found Post:' . $ListingKey);
+			}
+		}		
 
+			
 		$this->WriteLog('End Sync');		
 		
 		update_option( 'sc-soldpress_listing_sync-end',time() ); 
