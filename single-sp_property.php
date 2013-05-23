@@ -59,25 +59,49 @@ add_action( 'wp_enqueue_scripts', 'soldpress_analytics' ); // wp_enqueue_scripts
 		</div>
 		<div class="row">
 				<div class="span4"><img src="<?php echo plugins_url( 'images/realtor.jpg' , __FILE__ ); ?>"> <img src="<?php echo plugins_url( 'images/mls.jpg' , __FILE__ ); ?>"> </div>	
-				<div class="span4 pull-right">	<div  class="pull-right" style="position: relative; width:160px; height: 40px; background: url(http://cdn2.walk.sc/images/widget/back-blue3.gif) top left no-repeat;overflow:hidden;border:0;outline:0;margin:0;padding:0;">  <h1 style="position: absolute; left: 125px; top: 4px;border:0;outline:0;margin:0;padding:0;text-align: left; text-decoration:none; font-style: normal; vertical-align: baseline; background: none;font:16px 'trebuchet ms', Geneva, Arial, Helvetica, sans-serif; font-weight: bold; color:#4b76c6;">33</h1>  <p style="position: absolute; left: 8px; top: 25px;border:0;outline:0;margin:0;padding:0;text-align: left; text-decoration:none; font-style: normal; vertical-align: baseline; background: none;font: 11px/11px Verdana, Arial, Helvetica, sans-serif; font-weight: normal; color: #666; vertical-align: top;width: 152px; text-align: center;"><span style="background-color: #eff4ff; padding:0 2px;">Car-Dependent</span></p>  <a href="http://www.walkscore.com/score/<?php echo get_post_meta($post->ID,'dfd_UnparsedAddress',true); ?> , <?php echo get_post_meta($post->ID,'dfd_StateOrProvince',true); ?> <?php echo get_post_meta($post->ID,'dfd_PostalCode',true); ?>?utm_medium=overlay_link&utm_campaign=widget3" target="_blank" style="position:absolute;top:0;left:0;display:block;background:url(http://www.walkscore.com/images/fulltrans.png) 0 0 repeat;z-index:5;text-indent:-999999px;width:160px;height:40px;border:0;outline:0;margin:0;padding:0;">Walk Score</a></div></div>
-		</div>			
-
-		<?php
-			/*	 function getWalkScore($lat, $lon, $address) {
+				<div class="span4 pull-right">	<?php
+				 function getWalkScore($lat, $lon, $address) {
+				 
+				  //Call Google To Get Lat and Long
 				  $address=urlencode($address);
-				  $url = "http://api.walkscore.com/score?format=json&address=$address";
-				  $url .= '&lat=$lat&lon=$lon&wsapikey="'. get_option('sc-layout-walkscore',true).'"';
-				  $str = @file_get_contents($url); 
-				  return $str; 
+				  $googleapiurl = "http://maps.googleapis.com/maps/api/geocode/json?address=$address&sensor=false";
+				  $geo = @file_get_contents($googleapiurl);	
+				  
+				  $result = json_decode($geo, true);
+				  //var_dump($result);
+				  if($result['status'] == 'OK'){
+				   
+					  $location = $result['results'][0]['geometry']['location'];
+					  $lat = $location['lat'];
+					  $lon = $location['lng'];
+					  //Let Record Lat and Long For Future Requests
+					  
+					 
+					  $url = "http://api.walkscore.com/score?format=json&address=$address";
+					  $url .= '&lat=' . $lat . '&lon=' . $lon . '&wsapikey='. get_option('sc-layout-walkscore',true);
+					//  echo $url;
+					  $str = @file_get_contents($url); 
+					  return $str; 				  
+				  }
 				 } 
-
+				
 				 $lat = $_GET['lat']; 
 				 $lon = $_GET['lon']; 
 				 $address = stripslashes(get_post_meta($post->ID,'dfd_UnparsedAddress',true) . ', ' . get_post_meta($post->ID,'dfd_City',true) . ', ' . get_post_meta($post->ID,'dfd_StateOrProvince',true). ' ' . get_post_meta($post->ID,'dfd_PostalCode',true));
 				 $json = getWalkScore($lat,$lon,$address);
 				 
-				 echo $json;*/
-		?>
+
+				$result = json_decode($json, true);
+				 if($result["status"] == '1')
+				 {
+					$walkscore = '<div id="walkscore-div pull-right"><p><a target="_blank" href="'. $result["ws_link"].'"><img src="'. $result["logo_url"].'"><span class="walkscore-scoretext">'. $result["walkscore"].'</span></a><span id="ws_info"><a href=". $result["more_info_link"]." target="_blank"><img src="'. $result["more_info_icon"].'" width="13" height="13" "=""></a></span></p></div>';
+					echo $walkscore;
+				 }
+				 
+		?></div>
+		</div>			
+
+		
 	
 	</div>	
 	<div class="container-fluid">	
