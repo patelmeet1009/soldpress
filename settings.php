@@ -73,6 +73,7 @@ function admin_soldpress_styles()
 	
    wp_enqueue_style( 'soldpress-style' );
 }
+
 add_action('admin_enqueue_script', 'admin_soldpress_styles');
 
 
