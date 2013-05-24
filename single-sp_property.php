@@ -1,31 +1,22 @@
-<?php if(get_option('sc_debug') == '1'){ ?>   
-<div class="alert alert-warning"><strong>This is a template for a simple listing website. Use it as a starting point to create something more unique </div>
-<?php } ?> 
-<?php  
-include_once(dirname(__FILE__).'/theme.php');
-include_once(dirname(__FILE__).'/general.php');
-?>
-  
-<?php
-function soldpress_analytics() {
+	<?php if(get_option('sc_debug') == '1'){ ?>   
+	<div class="alert alert-warning"><strong>This is a template for a simple listing website. Use it as a starting point to create something more unique </div>
+	<?php } ?> 
+	<?php  
+	include_once(dirname(__FILE__).'/theme.php');
+	include_once(dirname(__FILE__).'/general.php');
+	?>
+	 <?php
 
-	/*	wp_enqueue_script(
-		'analyticsclick',
-		get_post_meta($post->ID,'dfd_AnalyticsClick',true),
-		array(''), 
-        '1', 
-        true);*/
-		
-	//	get_post_meta($post->ID,'dfd_AnalyticsClick',true);
+		function soldpress_analytics() {
+			$s = get_post_meta($post->ID,'dfd_AnalyticsClick',true);
+			$s = str_replace("<![CDATA[","",$s);
+			$s = str_replace("]]>","",$s);
+			echo $s;
+		}
+		add_action('wp_head', 'soldpress_analytics');
 
-}
-
-add_action( 'wp_enqueue_scripts', 'soldpress_analytics' ); // wp_enqueue_scripts action hook to link only on the front-end
-
-
-?>
-
-<?php get_header(); ?>
+	?>
+	<?php get_header(); ?>
 	<h2><?php the_title(); ?></h2>	
 	<?php include_once(dirname(__FILE__).'/disclaimer.php');?>	
 	<?php 
@@ -59,44 +50,40 @@ add_action( 'wp_enqueue_scripts', 'soldpress_analytics' ); // wp_enqueue_scripts
 		</div>
 		<div class="row">
 				<div class="span4"><img src="<?php echo plugins_url( 'images/realtor.jpg' , __FILE__ ); ?>"> <img src="<?php echo plugins_url( 'images/mls.jpg' , __FILE__ ); ?>"> </div>	
-				<div class="span4 pull-right">	<?php
-				 function getWalkScore($lat, $lon, $address) {
-				 
-				  //Call Google To Get Lat and Long
-				  $address=urlencode($address);
-				  $googleapiurl = "http://maps.googleapis.com/maps/api/geocode/json?address=$address&sensor=false";
-				  $geo = @file_get_contents($googleapiurl);	
-				  
-				  $result = json_decode($geo, true);
-				  //var_dump($result);
-				  if($result['status'] == 'OK'){
-				   
-					  $location = $result['results'][0]['geometry']['location'];
-					  $lat = $location['lat'];
-					  $lon = $location['lng'];
-					  //Let Record Lat and Long For Future Requests
-					  
+				<div class="span4 pull-right">	
+				<?php
+					
+					if(get_option( 'sc-layout-walkscore',false)){				
+						 function getWalkScore($lat, $lon, $address) {					 
+							  //Call Google To Get Lat and Long
+							  $address=urlencode($address);
+							  $googleapiurl = "http://maps.googleapis.com/maps/api/geocode/json?address=$address&sensor=false";
+							  $geo = @file_get_contents($googleapiurl);								  
+							  $result = json_decode($geo, true);
+							  if($result['status'] == 'OK'){							   
+								  $location = $result['results'][0]['geometry']['location'];
+								  $lat = $location['lat'];
+								  $lon = $location['lng'];							 
+								  $url = "http://api.walkscore.com/score?format=json&address=$address";
+								  $url .= '&lat=' . $lat . '&lon=' . $lon . '&wsapikey='. get_option('sc-layout-walkscore',true);
+								  $str = @file_get_contents($url); 
+								  return $str; 				  
+							  }
+							  //We Need To Store Lat Long
+						 } 
+						
+						 $lat = $_GET['lat']; 
+						 $lon = $_GET['lon']; 
+						 $address = stripslashes(get_post_meta($post->ID,'dfd_UnparsedAddress',true) . ', ' . get_post_meta($post->ID,'dfd_City',true) . ', ' . get_post_meta($post->ID,'dfd_StateOrProvince',true). ' ' . get_post_meta($post->ID,'dfd_PostalCode',true));
+						 $json = getWalkScore($lat,$lon,$address);						
+						 $result = json_decode($json, true);
+						 if($result["status"] == '1')
+						 {
+							$walkscore = '<div id="walkscore-div" class="pull-right"><p><a target="_blank" href="'. $result["ws_link"].'"><img src="'. $result["logo_url"].'"><span class="walkscore-scoretext">'. $result["walkscore"].'</span></a><span id="ws_info"><a href=". $result["more_info_link"]." target="_blank"><img src="'. $result["more_info_icon"].'" width="13" height="13" "=""></a></span></p></div>';
+							echo $walkscore;
 					 
-					  $url = "http://api.walkscore.com/score?format=json&address=$address";
-					  $url .= '&lat=' . $lat . '&lon=' . $lon . '&wsapikey='. get_option('sc-layout-walkscore',true);
-					//  echo $url;
-					  $str = @file_get_contents($url); 
-					  return $str; 				  
-				  }
-				 } 
-				
-				 $lat = $_GET['lat']; 
-				 $lon = $_GET['lon']; 
-				 $address = stripslashes(get_post_meta($post->ID,'dfd_UnparsedAddress',true) . ', ' . get_post_meta($post->ID,'dfd_City',true) . ', ' . get_post_meta($post->ID,'dfd_StateOrProvince',true). ' ' . get_post_meta($post->ID,'dfd_PostalCode',true));
-				 $json = getWalkScore($lat,$lon,$address);
-				 
-
-				$result = json_decode($json, true);
-				 if($result["status"] == '1')
-				 {
-					$walkscore = '<div id="walkscore-div pull-right"><p><a target="_blank" href="'. $result["ws_link"].'"><img src="'. $result["logo_url"].'"><span class="walkscore-scoretext">'. $result["walkscore"].'</span></a><span id="ws_info"><a href=". $result["more_info_link"]." target="_blank"><img src="'. $result["more_info_icon"].'" width="13" height="13" "=""></a></span></p></div>';
-					echo $walkscore;
-				 }
+						}
+					}
 				 
 		?></div>
 		</div>			
@@ -488,9 +475,17 @@ add_action( 'wp_enqueue_scripts', 'soldpress_analytics' ); // wp_enqueue_scripts
 		</div>				
 	</div>
 
-<!-- empty element for pager links -->
-<?php //echo get_post_meta($post->ID,'dfd_AnalyticsClick',true); ?>
-<?php //echo get_post_meta($post->ID,'dfd_AnalyticsView',true); ?>
+	<?php
+		$s = get_post_meta($post->ID,'dfd_AnalyticsClick',true);
+		$s = str_replace("<![CDATA[","",$s);
+		$s = str_replace("]]>","",$s);
+		echo $s;
+		
+		$s = get_post_meta($post->ID,'dfd_AnalyticsView',true);
+		$s = str_replace("<![CDATA[","",$s);
+		$s = str_replace("]]>","",$s);
+		echo $s;
+	?>
 
 <p><small>“MLS®, REALTOR®, and the associated logos are trademarks of The Canadian Real Estate Association</small> </p> </p>
 <p><small>Powered by SoldPress. <!-- ©2013 Sanskript Solutions, Inc. All rights reserved.--> </small></p>

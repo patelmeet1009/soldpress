@@ -1,7 +1,5 @@
 <?php
 
-
-
 add_action( 'admin_menu', 'soldpress_admin_menu' );
 
 function soldpress_admin_menu() {
@@ -12,11 +10,11 @@ function soldpress_admin_menu() {
 function register_mysettings() {
 
 	register_setting( 'sc-settings-credentials', 'sc-username' );
-	register_setting( 'sc-settings-credentials', 'sc-password' );
+	register_setting( 'sc-settings-credentials', 'sc-password'/*, 'sanitize_password' */ );
 	register_setting( 'sc-settings-credentials', 'sc-url' );
 	register_setting( 'sc-settings-credentials', 'sc-template' );
 	register_setting( 'sc-settings-credentials', 'sc-language' );
-
+	register_setting( 'sc-settings-credentials', 'sc-debug' );
 	
 	register_setting( 'sc-settings-sync', 'sc-sync-enabled' );
 	register_setting( 'sc-settings-sync', 'sc-sync-days' );
@@ -34,6 +32,49 @@ function register_mysettings() {
 	
 	register_setting( 'sc-settings-about', 'sc-license' );
 }
+
+function sanitize_password( $new ) {
+
+	/*$adapter= new soldpress_adapter();
+	if($adapter->connect())
+	{
+		return $adapter-> logserverinfo();		
+	}*/
+}
+
+function admin_soldpress_scripts() {
+	wp_enqueue_script('jquery', false, array(), false, true);
+	wp_enqueue_script(
+		'bootstrap',
+		 plugins_url( 'lib/bootstrap/js/bootstrap.min.js' , __FILE__ ), 
+		array('jquery'), 
+        '2.3.1', 
+        true);
+}
+
+add_action( 'admin_enqueue_script', 'admin_soldpress_scripts' ); 
+
+function admin_soldpress_styles()  
+{ 
+
+  wp_register_style( 'bootstrap-style', 
+     plugins_url( 'lib/bootstrap/css/bootstrap.min.css' , __FILE__ ), 
+    array(), 
+    '2.3.1', 
+    'all' );
+	
+  wp_enqueue_style( 'bootstrap-style' );
+  
+  wp_register_style( 'soldpress-style', 
+    plugins_url( 'style/soldpress.css' , __FILE__ ), 
+    array(), 
+    '0.9.5', 
+    'all' );
+	
+   wp_enqueue_style( 'soldpress-style' );
+}
+add_action('admin_enqueue_script', 'admin_soldpress_styles');
+
 
 function soldpress_account_options() {
 
@@ -56,55 +97,66 @@ function soldpress_account_options() {
 		<a href="?page=soldpress&tab=sync_options" class="nav-tab <?php echo $active_tab == 'sync_options' ? 'nav-tab-active' : ''; ?>">Sync Options</a> 
 		<a href="?page=soldpress&tab=layout_options" class="nav-tab <?php echo $active_tab == 'layout_options' ? 'nav-tab-active' : ''; ?>">Layout</a>  
 		<a href="?page=soldpress&tab=about_options" class="nav-tab <?php echo $active_tab == 'about_options' ? 'nav-tab-active' : ''; ?>">About</a>  	
+		<?php if(get_option('sc-debug',false) == '1'){ ?> 
 		<a href="?page=soldpress&tab=debug_options" class="nav-tab <?php echo $active_tab == 'debug_options' ? 'nav-tab-active' : ''; ?>">Debug</a>  
+		<?php }?>
 		</h2>  
 	<?php  
 
 	 if( $active_tab == 'display_options' ) {  ?>
 			
-			<form method="post" action="options.php">
-				<?php settings_fields( 'sc-settings-credentials' ); ?>
-				<h3 class="title">Credtentials</h3>
-				<table class="form-table">
-				   	<tr valign="top">
-					<th scope="row">Url</th>
-						<td>
-							<select name="sc-url" class="" id="sc-language">
-								<option value="http://data.crea.ca/Login.svc/Login" <?php selected( 'http://data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>>Production</option>
-								<option value="http://sample.data.crea.ca/Login.svc/Login" <?php selected( 'http://sample.data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>>Development</option>
-							</select>
-						</td>
-					</tr>					
-					<tr valign="top">
-					<th scope="row">Username</th>
-					<td><input type="text" class="regular-text" name="sc-username" value="<?php echo get_option('sc-username'); ?>" /></td>
-					</tr>
-					<tr valign="top">
-					<th scope="row">Password</th>
-					<td><input type="password" class="regular-text" name="sc-password" value="<?php echo get_option('sc-password'); ?>" /></td>
-					</tr>      						
-				</table>
-				<h3 class="title">General</h3>
-				<table class="form-table">
-					
-					<tr valign="top">
-					<th scope="row">Language</th>
+
+		
+		<form method="post" action="options.php">
+			<?php settings_fields( 'sc-settings-credentials' ); ?>
+			<h3 class="title">Credtentials</h3>
+			<table class="form-table">
+				<tr valign="top">
+				<th scope="row">Url</th>
 					<td>
-						<select name="sc-language" class="" id="sc-language">
-							<option value="en-CA" <?php selected( 'en-CA', get_option( 'sc-language' ) ); ?>>en-CA</option>
-							<option value="en-FR" <?php selected( 'en-FR', get_option( 'sc-language' ) ); ?>>en-FR</option>
+						<select name="sc-url" class="" id="sc-language">
+							<option value="http://data.crea.ca/Login.svc/Login" <?php selected( 'http://data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>>Production</option>
+							<option value="http://sample.data.crea.ca/Login.svc/Login" <?php selected( 'http://sample.data.crea.ca/Login.svc/Login', get_option( 'sc-url' ) ); ?>>Development</option>
 						</select>
-					</tr>
-					<tr valign="top">
-					<th scope="row">Debug Mode</th>
-					<td><input name="sc-debug" id ="sc-debug" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  /></td>
-					</tr>
-				</table>
-				<?php submit_button(); ?>  
-			</form>
+					</td>
+				</tr>					
+				<tr valign="top">
+				<th scope="row">Username</th>
+				<td><input type="text" class="regular-text" name="sc-username" value="<?php echo get_option('sc-username'); ?>" /></td>
+				</tr>
+				<tr valign="top">
+				<th scope="row">Password</th>
+				<td><input type="password" class="regular-text" name="sc-password" value="<?php echo get_option('sc-password'); ?>" /></td>
+				</tr>      						
+			</table>
+			<h3 class="title">General</h3>
+			<table class="form-table">
+				
+				<tr valign="top">
+				<th scope="row">Language</th>
+				<td>
+					<select name="sc-language" class="" id="sc-language">
+						<option value="en-CA" <?php selected( 'en-CA', get_option( 'sc-language' ) ); ?>>en-CA</option>
+						<option value="en-FR" <?php selected( 'en-FR', get_option( 'sc-language' ) ); ?>>en-FR</option>
+					</select>
+				</tr>
+				<tr valign="top">
+				<th scope="row">Debug Mode</th>
+				<td><input name="sc-debug" id ="sc-debug" value="1" type="checkbox" <?php checked( '1', get_option( 'sc-debug' ) ); ?>  /></td>
+				</tr>
+			</table>
+			<?php submit_button(); ?>  
+		</form>
+			
 	<form method="post" id="test_connection">    
 			<?php submit_button('Test Connection', 'secondary', 'test_connection', false); ?> 
 	</form>	
+	
+	<div class="herounit">
+			List the way you want!		
+			Get the page designed just how you want and when you're ready, click the button below.
+	</div>
+	
 	<?php } ?>
 	<?php if( $active_tab == 'sync_options' ) {  ?>
 		<h3 class="title">General</h3>
@@ -182,6 +234,8 @@ function soldpress_account_options() {
 	<?php } ?>
 	<?php if( $active_tab == 'layout_options' ) {  ?>
 	
+		This tab is available in the Premium Version.
+				
 		<form method="post" action="options.php">
 				<?php settings_fields( 'sc-settings-layout' ); ?>
 				<h3 class="title">Agent</h3>
@@ -259,13 +313,18 @@ function soldpress_account_options() {
 					<tr>
 					<th scope="row">License Key</th>
 						<td>
-							<input type="text" class="regular-text" id ="sc-license" name="sc-license" value="<?php echo get_option('sc-license',''); ?>" />
-							
+							<input type="text" class="regular-text" id ="sc-license" name="sc-license" value="<?php echo get_option('sc-license',''); ?>" />						
+						</td>
+					</tr>
+					<tr>
+					<th scope="row">License Type</th>
+						<td>
+							<?php echo get_option('sc-license-type',''); ?>					
 						</td>
 					</tr>
 				</table>
-		</form>
-		Licsense Key:  <?php echo get_option('sc-license',''); ?> . "Premium Beta"				
+				<?php submit_button(); ?>  
+		</form>			
 	<?php } ?>
 	<?php if( $active_tab == 'debug_options' ) {  ?>
 	<h3 class="title">Log File</h3>
