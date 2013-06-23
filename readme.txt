@@ -76,11 +76,6 @@ The default template location is wp-content/plugins/soldpress/template/
 
 **You are required to register for a data feed a http://tools.realtorlink.ca. An email containing user name and password is sent to the email address submitted as Technical Contact.**
 
-
-= Sample Data Feed Default Credentials =
-
-A sample service is available which provides a wide variety of sample data. A small set of property, office and agent data is available from this service.
-
 == Frequently Asked Questions ==
 
 = Where do I get authentication credentials? =
