@@ -8,11 +8,11 @@ Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-SoldPress is a WordPress plugin to enable CREA's members to easily intergate MLS® listing content on WordPress Sites.
+Get Live MLS® data directly with this WordPress Plugin..
 
 == Description ==
 
-[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily intergate MLS® listing content on their WordPress Sites. It helps ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly.
+[SoldPress](http://www.sanskript.com/products/soldpress) is a WordPress plugin to enable members of The Canadian Real Estate Assoiciation to easily intergate MLS® listing content on their WordPress Sites.  
 
 SoldPress is designed to connect directly to CREA's Data Distribution Facility API without the need to integrate with Third Party Vendors. 
 
@@ -20,7 +20,7 @@ You may register for a data feed a http://tools.realtorlink.ca. An email contain
 
 Your site is required to comply with CREA [Data Distribution Policy and Rules](http://www.realtorlink.ca/portal/server.pt/document/3400226/data_distribution_facility_policy_and_rules_updated_april_30%2C_2012).
 
-[SoldPress Premium](http://soldpress.sanskript.com) is avaliable to Agents/Brokers who want a complete package.
+[SoldPress Premium](http://soldpress.sanskript.com) is avaliable to Agents/Brokers who want a complete package that ensure that listing content that is displayed is accurate, up to date, and uses CREA's trademarks correctly. SoldPress Premium  provides full compliance with Data Distribution Policy and Rules.
 
 **Copyright**
 
