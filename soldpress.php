@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /*
 Plugin Name: SoldPress
 Plugin URI: http://www.sanskript.com/products/soldpress

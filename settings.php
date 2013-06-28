@@ -4,10 +4,10 @@ add_action( 'admin_menu', 'soldpress_admin_menu' );
 
 function soldpress_admin_menu() {
 	add_options_page( 'SoldPress Plugin Options', 'SoldPress', 'manage_options', 'soldpress', 'soldpress_account_options' );
-	add_action( 'admin_init', 'register_mysettings' );
+	add_action( 'admin_init', 'soldpress_register_settings' );
 }
 
-function register_mysettings() {
+function soldpress_register_settings() {
 	register_setting( 'sc-settings-group', 'sc-username' );
 	register_setting( 'sc-settings-group', 'sc-password' );
 	register_setting( 'sc-settings-group', 'sc-url' );
@@ -34,6 +34,7 @@ function soldpress_account_options() {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05
+}
 
 .center {
 text-align: center;
@@ -43,7 +44,7 @@ margin-bottom: auto;
 margin-top: auto;
 }		  
 		  
-}
+
 </style>
 <h2>SoldPress Settings</h2>
 
